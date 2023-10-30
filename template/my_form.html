@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload File and Data</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <h1>Upload File and Data</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <label for="first_condition_value">First Condition Value:</label>
+        <input type="number" name="first_condition_value">
+        <label for="second_condition_value">Second Condition Value:</label>
+        <input type="number" name="second_condition_value">
+        <label for="first_condition_value">First amount:</label>
+        <input type="number" name="first_amount">
+        <label for="second_condition_value">Second Amount:</label>
+        <input type="number" name="second_amount">
+        <label for="second_condition_value">Third Amount:</label>
+        <input type="number" name="third_amount">
+        <label for="second_condition_value">Rejection Amount:</label>
+        <input type="number" name="rejection_amount">
+        <label for="second_condition_value">BadOrder Amount</label>
+        <input type="number" name="bad_order_amount">
+
+
+        <button type="submit">Upload and Process</button>
+    </form>
+    <a id="download-link" style="display: none" download="modified_data.xlsx">Download Processed Data</a>
+    <script src="static/scripts.js"></script>
+</body>
+</html>
