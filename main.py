@@ -16,7 +16,7 @@ app.mount("/static", StaticFiles(directory="template/static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def read_item(request: Request):
-    return templates.TemplateResponse("my_form.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 app.include_router(salary_router)

@@ -40,23 +40,15 @@ async def upload_file_and_data(
         axis=1
     )
 
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, sheet_name='Sheet1', index=False)
-
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
-        temp_file.write(output.getvalue())
-
-# Get the path of the temporary file
-    temp_file_path = temp_file.name
+        with pd.ExcelWriter(temp_file.name, engine='xlsxwriter') as writer:
+            df.to_excel(writer, sheet_name='Sheet1', index=False)
 
     # Set the response headers to make the file downloadable
-    # output.seek(0)
     content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    response = FileResponse(temp_file_path, media_type=content_type)
-    response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx'
+    response = FileResponse(temp_file.name, media_type=content_type)
+    response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx"'
 
     return response
-
 
     
