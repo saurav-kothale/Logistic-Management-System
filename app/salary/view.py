@@ -2,44 +2,44 @@ def is_weedend(date):
     return date.weekday() >= 5
 
 
-def calculate_amount(
-        row, 
-        first_condition = None, 
-        second_condition = None, 
-        first_amount = None, 
-        second_amount = None, 
-        third_amount = None,
-        rejection_amount = None
-):
-    order_done = row['Parcel DONE ORDERS']
-    day_type = row['Weekday_or_Weekend']
-    rejection = row['REJECTION']
-    bad_order = row['BAD ORDER']
-    amount = 0
+# def calculate_amount(
+#         row, 
+#         first_condition = None, 
+#         second_condition = None, 
+#         first_amount = None, 
+#         second_amount = None, 
+#         third_amount = None,
+#         rejection_amount = None
+# ):
+#     order_done = row['Parcel DONE ORDERS']
+#     day_type = row['Weekday_or_Weekend']
+#     rejection = row['REJECTION']
+#     bad_order = row['BAD ORDER']
+#     amount = 0
     
-    if day_type == 'Weekday':
+#     if day_type == 'Weekday':
 
-        if order_done < 19:
-            amount = order_done * 25
-        elif 19 <= order_done <= 25:
-            amount = order_done * 30
-        elif order_done > 25:
-            amount = order_done * 35
-    elif day_type == 'Weekend':
-        if order_done < 19:
-            amount = order_done * 27
-        elif 19 <= order_done <= 25:
-            amount = order_done * 32
-        elif order_done > 25:
-            amount = order_done * 37
+#         if order_done < 19:
+#             amount = order_done * 25
+#         elif 19 <= order_done <= 25:
+#             amount = order_done * 30
+#         elif order_done > 25:
+#             amount = order_done * 35
+#     elif day_type == 'Weekend':
+#         if order_done < 19:
+#             amount = order_done * 27
+#         elif 19 <= order_done <= 25:
+#             amount = order_done * 32
+#         elif order_done > 25:
+#             amount = order_done * 37
 
-    if rejection >= 2:
-        amount -= 10 * rejection
+#     if rejection >= 2:
+#         amount -= 10 * rejection
 
-    if bad_order >= 2:
-        amount -= 10 * bad_order
+#     if bad_order >= 2:
+#         amount -= 10 * bad_order
 
-    return amount
+#     return amount
 
 
 def week_or_weekend(row):
@@ -110,11 +110,11 @@ def calculate_amount_for_surat(row,
             else:
                 amount = third_amount*order_done if third_amount is not None else order_done * 37
 
-        if rejection >= 2:
-            amount -= 10 * rejection if rejection_amount is None else rejection_amount*rejection
+    if rejection >= 2:
+        amount -= 10 * rejection if rejection_amount is None else rejection_amount*rejection
 
-        if bad_order >= 2:
-            amount -= 10 * bad_order if bad_orders_amount is None else bad_orders_amount*bad_order
+    if bad_order >= 2:
+        amount -= 10 * bad_order if bad_orders_amount is None else bad_orders_amount*bad_order
 
 
     return amount

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from salary.route import salary_router
+from app.salary.route import salary_router
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
