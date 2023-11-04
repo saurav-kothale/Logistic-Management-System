@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status , Depends
-from database.db import SessionLocal
-from app.User.user.model.user import User
-from app.User.user.schema.user import (
+from database.database import SessionLocal
+from app.user.user.model.user import User
+from app.user.user.schema.user import (
     ResetPasswordData,
     UserLoginData,
     UserSignupData,
