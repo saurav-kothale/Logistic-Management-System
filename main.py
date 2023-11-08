@@ -9,10 +9,10 @@ import uvicorn
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="template")
+templates = Jinja2Templates(directory="template/login-form-07")
 
 # Serve static files (CSS and JS)
-app.mount("/static", StaticFiles(directory="template/static"), name="static")
+app.mount("/static", StaticFiles(directory="template/login-form-07/static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def read_item(request: Request):
