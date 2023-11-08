@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status , Depends
 from database.database import SessionLocal
-from app.user.user.model.user import User
-from app.user.user.schema.user import (
+from app.User.user.model.user import User
+from app.User.user.schema.user import (
     ResetPasswordData,
     UserLoginData,
     UserSignupData,
@@ -10,9 +10,11 @@ from app.user.user.schema.user import (
 from datetime import timedelta
 
 from werkzeug.security import generate_password_hash , check_password_hash
-from fastapi_jwt_auth import AuthJWT
 from fastapi.encoders import jsonable_encoder
 from uuid import uuid4
+from app.utils.util import signJWT, decodeJWT, get_current_user
+from app.utils.auth_bearer import JWTBearer
+
 
 signup_router = APIRouter()
 db = SessionLocal()
@@ -68,12 +70,11 @@ login_router = APIRouter()
 
 
 @login_router.post("/login", status_code=status.HTTP_201_CREATED)
-def log_in(user_data : UserLoginData , Authorize : AuthJWT = Depends()):
+def log_in(user_data : UserLoginData):
     db_user = db.query(User).filter(User.username == user_data.username).first()
     if db_user and check_password_hash(db_user.password , user_data.password):
 
-        expires = timedelta(days = 1) 
-        access_token = Authorize.create_access_token(subject = db_user.user_id , expires_time = expires)
+        access_token = signJWT(user_data.username)
 
         response = {
             "access" : access_token,
@@ -88,12 +89,9 @@ def log_in(user_data : UserLoginData , Authorize : AuthJWT = Depends()):
 protected_router = APIRouter()
  
 
-@protected_router.get("/protected") 
-def protected (Authorize : AuthJWT = Depends()):
-    Authorize.jwt_required()
-
-    current_user = Authorize.get_jwt_subject()
-
+@protected_router.get("/protected", dependencies=[Depends(JWTBearer())]) 
+def protected (token: str = Depends(JWTBearer())):
+    current_user = get_current_user(token)
     return {"user" : current_user}
 
 
