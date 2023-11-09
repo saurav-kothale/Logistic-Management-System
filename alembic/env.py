@@ -4,10 +4,26 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+from app.User.user.model.user import User
+from database.database import Base
+import os
+from decouple import config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+USER_NAME = config("DB_USER_NAME")
+DB_PASSWORD  = config("DB_PASSWORD")
+DB_PORT = config("DB_PORT")
+DB_NAME = config("DB_NAME")
+DB_HOST = config("DB_HOST")
+
+connection_string = f'postgresql://{USER_NAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+print(connection_string)
+
+
 config = context.config
+config.set_main_option('sqlalchemy.url', connection_string)
+
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -16,9 +32,9 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.user.user.model.user import Base
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
-# target_metadata = None
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

@@ -2,15 +2,19 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
+from decouple import config
 
-DB_USER = os.environ.get("DB_USER")
-DB_PASSWORD = os.environ.get("PASSWORD")
-DB_PORT = os.environ.get("PORT")
-DB_NAME = os.environ.get("DB_NAME")
-DB_HOST = os.environ.get("DB_HOST")
+USER_NAME = config("DB_USER_NAME")
+DB_PASSWORD  = config("DB_PASSWORD")
+DB_PORT = config("DB_PORT")
+DB_NAME = config("DB_NAME")
+DB_HOST = config("DB_HOST")
+
+connection_string = f"postgresql://{USER_NAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 
 Base = declarative_base()
 
-engine = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+engine = create_engine(connection_string)
 
 SessionLocal = sessionmaker(bind=engine)
