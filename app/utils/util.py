@@ -15,9 +15,11 @@ def token_response(token: str):
 
 
 def signJWT(user_id: str) -> Dict[str, str]:
+    expiration_datetime = datetime.utcnow() + timedelta(days=1)
+    expires = expiration_datetime.isoformat()
     payload = {
         "user_id": user_id,
-        "expires":  datetime.isoformat()+ timedelta(days=1)
+        "expires":  expires
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 

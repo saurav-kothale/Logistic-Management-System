@@ -11,7 +11,7 @@ class UserLoginData(BaseModel):
     password: str
 
     class config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserSignupData(BaseModel):
@@ -24,14 +24,14 @@ class UserSignupData(BaseModel):
     retype_password: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ResetPasswordData(BaseModel):
     username: str
 
     class config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Settings(BaseModel):

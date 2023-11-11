@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.salary.route import salary_router
+from app.User.views.route import login_router, signup_router
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -20,6 +21,9 @@ def read_item(request: Request):
 
 
 app.include_router(salary_router)
+app.include_router(signup_router)
+app.include_router(login_router)
+
 
 
 
