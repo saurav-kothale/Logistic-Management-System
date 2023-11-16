@@ -66,6 +66,7 @@ h2 {
       background: #fff; }
     .content .contents .form-group.field--not-empty label, .content .bg .form-group.field--not-empty label {
       margin-top: -20px; }
+      
   .content .contents .form-control, .content .bg .form-control {
     border: none;
     padding: 0;
