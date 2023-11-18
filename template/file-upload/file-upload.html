@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .search-container {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 1490px;
+    }
+
+    .dropdown {
+        padding: 8px;
+        margin-left: 10px;
+        border-radius: 5px;
+        width: 130px;
+    }
+
+    .upload-btn {
+      padding: 8px;
+      background-color: #4caf50;
+      margin-left: 10px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 130px;
+      height: 40px;
+    }
+    
+    .nav-bar{
+        background-color: #4caf50;
+        display: flex;
+        justify-content: center ;
+        height: 60px;
+        margin: 20px;
+    }
+
+    .main-item{
+        display: flex;
+        height: 60px;
+        margin: 20px;
+    }
+  </style>
+  <title>Search and Upload</title>
+</head>
+<body>
+    <div class="nav-bar">
+        <h2>File System</h2>
+    </div>
+
+    <div class="main-item">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search">
+            <select class="dropdown">
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+              <option value="option3">Option 3</option>
+            </select>
+            <div class="upload-file">
+                <input type="file" id="fileInput" style="display:none" />
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Upload</button>
+            </div>
+          </div>
+    </div>
+
+  <!-- Your other content goes here -->
+
+</body>
+</html>

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script defer ="js/script.js" br></script>
     <style>
 
     </style>
@@ -18,7 +19,7 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a href="#" class="active">
+                    <a href="https://www.youtube.com/watch?v=woE-wZXiY-Q" class="active">
                         <span class="icon"><i class="fas fa-home"></i></span>
                         <span class="item">Home</span>
                     </a>
@@ -32,13 +33,13 @@
                 <li>
                     <a href="#">
                         <span class="icon"><i class="fas fa-user-friends"></i></span>
-                        <span class="item">Rider Salary</span>
+                        <span class="item">File System</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="#" onclick=>
                         <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
-                        <span class="item">Staff Salary</span>
+                        <span class="item">Slab Calculation</span>
                     </a>
                 </li>
                 <li>
@@ -72,20 +73,25 @@
                 <div class="hamburger">
                     <a href="#">
                         <i class="fas fa-bars"></i>
+                        
                     </a>
+                    
+                </div>
+                <div class="nav-heading">
+                    <Header>
+                        <h1>Evify Dashboard</h1> 
+                    </Header>
                 </div>
             </div>
 
         </div>
         
-    </div>
-    
-    <script>
-        var hamburger = document.querySelector(".hamburger");
-        hamburger.addEventListener("click", function(){
-            document.querySelector("body").classList.toggle("active");
-        })
         
-    </script>
+    </div>
+<script>
+    var hamburger = document.querySelector(".hamburger");
+    hamburger.addEventListener("click", function(){
+    document.querySelector("body").classList.toggle("active");
+    })</script>
 </body>
 </html>

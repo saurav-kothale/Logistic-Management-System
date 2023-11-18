@@ -14,7 +14,7 @@ body{
 }
 
 .wrapper .sidebar{
-    background: rgb(5, 68, 104);
+    background: #14213d;
     position: fixed;
     top: 0;
     left: 0;
@@ -65,7 +65,7 @@ body{
 }
 
 .wrapper .section .top_navbar{
-  background: rgb(7, 105, 185);
+  background: #fca311;
   height: 50px;
   display: flex;
   align-items: center;
@@ -118,9 +118,10 @@ body {
 }
 
 header {
-  background-color: #0769b9; /* Navbar background color */
-  color: #fff;
+  color: #ffff;
   padding: 10px 0;
+  text-align: center;
+  align-items: center;
 }
 
 nav ul {
@@ -157,13 +158,14 @@ main {
   margin: 100px auto;
 }
 
-h1 {
-  font-size: 24px;
-  margin: 0 0 10px;
-}
-
 p {
   font-size: 16px;
   margin: 0 0 20px;
 }
+
+.nav-heading{
+  width: 100%;
+}
+
+
 
