@@ -71,10 +71,10 @@ login_router = APIRouter()
 
 @login_router.post("/login", status_code=status.HTTP_201_CREATED)
 def log_in(user_data : UserLoginData):
-    db_user = db.query(User).filter(User.username == user_data.username).first()
+    db_user = db.query(User).filter(User.email_id == user_data.email_id).first()
     if db_user and check_password_hash(db_user.password , user_data.password):
 
-        access_token = signJWT(user_data.username)
+        access_token = signJWT(user_data.email_id)
 
         response = {
             "access" : access_token,
