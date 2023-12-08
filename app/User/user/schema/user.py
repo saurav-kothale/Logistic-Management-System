@@ -7,7 +7,7 @@ load_dotenv()
 
 
 class UserLoginData(BaseModel):
-    username: str
+    email_id: str
     password: str
 
     class config:
