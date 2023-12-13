@@ -12,7 +12,7 @@ file_router = APIRouter()
 BUCKET_NAME = "evifysalary"
 
 @file_router.get("/uploadfile/")
-async def create_upload_file(file: UploadFile):
+async def create_upload_files(file: UploadFile):
 
     return {"filename": file.filename}
 
