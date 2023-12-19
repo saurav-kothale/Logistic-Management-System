@@ -1,7 +1,8 @@
 from app.file_system.config import s3_client
 import logging
 import boto3
-from botocore.exceptions import ClientError
+
+
 
 def upload_file(file_name, bucket, object_name=None):
     """Upload a file to an S3 bucket
@@ -22,7 +23,20 @@ def upload_file(file_name, bucket, object_name=None):
     try:
         with open(file_name, "rb") as f:
             response = s3_client.upload_fileobj(f, bucket, object_name)
-    except ClientError as e:
+    except Exception as e:
         logging.error(e)
         return False
     return True
+
+def upload_file_content(file, bucket_name, file_key):
+    try:
+        s3_client.upload_fileobj(file, bucket_name, file_key)
+    except Exception as e:
+        return False
+    
+    return True
+
+
+def read_s3_contents(bucket_name, key):
+    response = s3_client.get_object(bucket_name, key)
+    return response['Body'].read()

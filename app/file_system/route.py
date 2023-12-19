@@ -25,7 +25,7 @@ async def create_upload_file(file: UploadFile):
         file_key = f"uploads/{file_id}/{file.filename}"
 
         # Upload the file to S3
-        s3_client.upload_fileobj(file.file, BUCKET_NAME, file_key)
+        # s3_client.upload_fileobj(file.file, BUCKET_NAME, file_key)
     
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
