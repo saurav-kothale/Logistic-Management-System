@@ -9,7 +9,7 @@ from pydantic import Json
 from sqlalchemy import table
 
 from app.file_system.route import BUCKET_NAME
-from .view import is_weekend, week_or_weekend, calculate_amount_for_zomato_surat, calculate_amount_for_surat_swiggy
+from .view import is_weekend, week_or_weekend, calculate_amount_for_zomato_surat, calculate_amount_for_surat_swiggy, calculate_amount_for_bbnow_surat
 import io
 from fastapi.responses import FileResponse
 import tempfile
@@ -194,8 +194,99 @@ async def calculate_swiggy_surat(
     # response = FileResponse(temp_file.name, media_type=content_type)
     # response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx"'
 
-    return {"file_key" : file_key}
+    return {
+        "file_id" : file_id,
+        "file_name" : file_name
+    }
     
+
+@salary_router.post("/calculate_bb_now_surat/{file_id}/{file_name}")
+async def calculate_bb_now_surat(
+    file_id : str,
+    file_name : str,
+    file: UploadFile = File(...),
+    orders_less_then: int = Form(13),
+    order_amount1 : int = Form(400),
+    from_order : int = Form(1),
+    to_order : int = Form(14),
+    order_amount2 : int = Form(30),
+    order_grether_than : int = Form(15),
+    order_amount3 : int = Form(35)
+):
+    
+    df = pd.read_excel(file.file)
+
+    table = pd.pivot_table(
+        data=df[df["CLIENT NAME"] == "BB now"],
+        index=["DRIVER_ID", "CITY NAME", "CLIENT NAME", "REJECTION",  "BAD ORDER"],
+        aggfunc={"Parcel DONE ORDERS" : "sum"}
+    ).reset_index()
+
+    attendance_count = df[df["CLIENT NAME"] == "BB now"]["DRIVER_ID"].value_counts().reset_index()
+    attendance_count.columns = ["DRIVER_ID", "Attendance"]
+
+    result = pd.merge(table,
+        attendance_count,
+        on="DRIVER_ID",
+        how="left"
+    )
+
+    result["Average"] = round(
+        result["Parcel DONE ORDERS"]/result["Attendance"]
+    )
+
+    result["Final Amount"] = result.apply(
+        calculate_amount_for_bbnow_surat,
+        args=(
+            orders_less_then,
+            order_amount1,
+            from_order,
+            to_order,
+            order_amount2,
+            order_grether_than,
+            order_amount3
+        ),  
+        axis=1
+    )
+
+    final_result = result[["DRIVER_ID", "CITY NAME", "CLIENT NAME", 
+                           "REJECTION", "BAD ORDER", "Final Amount"]]
+    
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+    # except exception as e:
+    #     return {"error" : e}
+    
+    file_data = response['Body'].read()
+
+    df2 = pd.read_excel(io.BytesIO(file_data))
+    
+    df3 = pd.concat([df2, final_result], ignore_index=True)
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+        with pd.ExcelWriter(temp_file.name, engine='xlsxwriter') as writer:
+            df3.to_excel(writer, sheet_name='Sheet1', index=True)
+
+            # file_key = f"uploads/{file_id}/modified.xlsx"
+        s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
+
+
+    return {
+        "message" : "calculated successfully",
+        "file_id" : file_id,
+        "file_name" : file_name
+    }
+
+    
+
+
+
+
+
+
+
+
 
 @salary_router.get("/getfile/{file_id}/{file_name}")
 def getfile(file_id : str, file_name : str):
