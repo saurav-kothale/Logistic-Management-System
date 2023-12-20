@@ -1,3 +1,6 @@
+from functools import total_ordering
+
+
 def is_weekend(date):
     return date.weekday() >= 5
 
@@ -133,5 +136,33 @@ def calculate_amount_for_surat_swiggy(row,
     if bad_orders > maximum_bad_order:
         amount -= bad_orders * 10 if bad_orders_amount is None else bad_orders_amount * bad_orders
 
+
+    return amount
+
+
+def calculate_amount_for_bbnow_surat(
+        row,
+        orders_less_then,
+        order_amount1,
+        from_order,
+        to_order,
+        order_amount2,
+        order_grether_than,
+        order_amount3
+
+):
+    orders = row["Parcel DONE ORDERS"]
+    average = row["Average"]
+    attendance = row["Attendance"]
+    amount = 0
+
+    if average <= orders_less_then:
+        amount = attendance*order_amount1
+
+    elif orders_less_then < average <= to_order:
+        amount = orders*order_amount2
+    
+    elif average >= order_grether_than:
+        amount = (order_amount2*to_order) + (orders-to_order)*order_amount3
 
     return amount
