@@ -166,3 +166,62 @@ def calculate_amount_for_bbnow_surat(
         amount = (order_amount2*to_order) + (orders-to_order)*order_amount3
 
     return amount
+
+
+def calculate_amount_for_ecom_surat(
+        row,
+        from_order,
+        to_order,
+        first_amount,
+        second_condition_from,
+        second_condition_to,
+        second_condition_amount,
+        third_condition,
+        third_condition_amount,
+
+):
+    
+    orders = row["Pracel DONE ORDERS"]
+    amount = 0
+
+    if from_order <= orders <= to_order:
+        amount = orders*first_amount
+
+    elif second_condition_from <= orders <= second_condition_to:
+        amount = orders * second_condition_amount
+
+    elif orders >= third_condition:
+        amount = orders * third_condition_amount
+
+    return amount
+
+
+def calculate_amount_for_flipcart_surat(
+        row,
+        from_order,
+        to_order,
+        first_amount,
+        second_condition_from,
+        second_condition_to,
+        second_condition_amount,
+        third_condition,
+        third_condition_amount,
+
+):
+    
+    orders = row["Pracel DONE ORDERS"]
+    amount = 0
+
+    if from_order <= orders <= to_order:
+        amount = orders*first_amount
+
+    elif second_condition_from <= orders <= second_condition_to:
+        amount = orders * second_condition_amount
+
+    elif orders >= third_condition:
+        amount = orders * third_condition_amount
+
+    return amount
+    
+
+    
