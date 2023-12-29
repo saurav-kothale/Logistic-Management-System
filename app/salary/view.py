@@ -181,7 +181,7 @@ def calculate_amount_for_ecom_surat(
 
 ):
     
-    orders = row["Pracel DONE ORDERS"]
+    orders = row["Parcel DONE ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:
@@ -196,7 +196,7 @@ def calculate_amount_for_ecom_surat(
     return amount
 
 
-def calculate_amount_for_flipcart_surat(
+def calculate_amount_for_flipkart_surat(
         row,
         from_order,
         to_order,
@@ -209,7 +209,7 @@ def calculate_amount_for_flipcart_surat(
 
 ):
     
-    orders = row["Pracel DONE ORDERS"]
+    orders = row["Parcel DONE ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:
