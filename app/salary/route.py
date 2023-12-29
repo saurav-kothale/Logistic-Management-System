@@ -16,7 +16,7 @@ from .view import (
     calculate_amount_for_surat_swiggy, 
     calculate_amount_for_bbnow_surat,
     calculate_amount_for_ecom_surat,
-    calculate_amount_for_flipcart_surat
+    calculate_amount_for_flipkart_surat
 )
 import io
 from fastapi.responses import FileResponse
@@ -100,7 +100,7 @@ async def calculate_zomato_surat(
     # content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     # response = FileResponse(temp_file.name, media_type=content_type)
     # response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx"'
-
+    
     return {
         "message" : "Successfully Calculated Salary for Zomato Surat",
         "file_id" : file_id,
@@ -194,6 +194,7 @@ async def calculate_swiggy_surat(
     # response = FileResponse(temp_file.name, media_type=content_type)
     # response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx"'
 
+    # return response
     return {
         "file_id" : file_id,
         "file_name" : file_name
@@ -264,12 +265,29 @@ async def calculate_bb_now_surat(
     
     df3 = pd.concat([df2, final_result], ignore_index=True)
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
-        with pd.ExcelWriter(temp_file.name, engine='xlsxwriter') as writer:
-            df3.to_excel(writer, sheet_name='Sheet1', index=True)
+    with tempfile.NamedTemporaryFile(
+        delete=False, suffix=".xlsx"
+    ) as temp_file:
+        with pd.ExcelWriter(
+            temp_file.name, engine='xlsxwriter'
+        ) as writer:
+            df3.to_excel(
+                writer, sheet_name='Sheet1', index=True
+            )
 
             # file_key = f"uploads/{file_id}/modified.xlsx"
-        s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
+        s3_client.upload_file(
+            temp_file.name, "evify-salary-calculated", file_key
+        )
+
+    # Set the response headers to make the file downloadable
+    # content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    # response = FileResponse(
+    #     temp_file.name, media_type=content_type
+    # )
+    # response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx"'
+
+    # return response
 
 
     return {
@@ -290,12 +308,12 @@ def calculate_ecom_surat(
     second_condition_from : int = Form(41),
     second_condition_to : int = Form(55),
     second_condition_amount : int = Form(15),
-    third_condition : int = Form(55),
+    third_condition : int = Form(56),
     third_condition_amount : int = Form(16)
 ):
     df = pd.read_excel(file.file)
 
-    df = df[(df['CITY NAME'] == "Surat") & (df['CLIENT NAME'] == 'ECOM')]
+    df = df[(df['CITY NAME'] == "Surat") & (df['CLIENT NAME'] == 'E-com')]
     df["Final Amount"] = df.apply(
         calculate_amount_for_ecom_surat,
         args=(
@@ -311,6 +329,7 @@ def calculate_ecom_surat(
 
         axis = 1
     )
+
 
     table = pd.pivot_table(
         data=df,
@@ -344,9 +363,16 @@ def calculate_ecom_surat(
         "file_id" : file_id,
         "file_name" : file_name
     }
+    # content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    # response = FileResponse(
+    #     temp_file.name, media_type=content_type
+    # )
+    # response.headers['Content-Disposition'] = 'attachment; filename="modified_data.xlsx"'
+
+    # return response
 
 
-@salary_router.post("/calculate_ecom_surat/{file_id}/{file_name}")
+@salary_router.post("/calculate_flipkart_surat/{file_id}/{file_name}")
 def calculate_flipcart_surat(
     file_id : str,
     file_name: str,
@@ -360,11 +386,11 @@ def calculate_flipcart_surat(
     third_condition : int = Form(55),
     third_condition_amount : int = Form(14)
 ):
-    df = pd.read_csv(file.file)
+    df = pd.read_excel(file.file)
 
-    df = df[(df['CITY NAME'] == "Surat") & (df['CLIENT NAME'] == 'FLIPKART')]
+    df = df[(df['CITY NAME'] == "Surat") & (df['CLIENT NAME'] == 'Flipkart')]
     df["Final Amount"] = df.apply(
-        calculate_amount_for_flipcart_surat,
+        calculate_amount_for_flipkart_surat,
         args=(
             from_order,
             to_order,
@@ -407,10 +433,17 @@ def calculate_flipcart_surat(
         s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
 
 
-    return {
-        "file_id" : file_id,
-        "file_name" : file_name
-    }
+    # return {
+    #     "file_id" : file_id,
+    #     "file_name" : file_name
+    # }
+    content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    response = FileResponse(
+        temp_file.name, media_type=content_type
+    )
+    response.headers['Content-Disposition'] = 'attachment; filename="calculated_{file_name}"'
+
+    return response
     
     
 
@@ -420,6 +453,5 @@ def getfile(file_id : str, file_name : str):
     file_key = f"uploads/{file_id}/{file_name}"
     response = s3_client.get_object(Bucket=BUCKET_NAME, Key=file_key)
     file_data = response['Body'].read()
-    breakpoint()
     df = pd.read_excel(file_data)
     return {"message" : "successfully converted to df"}
