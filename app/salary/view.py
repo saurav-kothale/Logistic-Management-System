@@ -222,6 +222,74 @@ def calculate_amount_for_flipkart_surat(
         amount = orders * third_condition_amount
 
     return amount
+
+
+def calculate_document_amount(
+    row,
+    first_from_condition,
+    first_to_condition,
+    first_amount,
+    second_from_condition,
+    second_to_condition,
+    second_amount,
+    third_from_condition,
+    third_to_condition,
+    third_amount,
+    order_greater_than,
+    order_amount
+
+):
+
+    orders = row["Document DONE ORDERS"]
+    amount = 0
+
+    if first_from_condition <= orders <= first_to_condition:
+      amount = first_amount * orders
+  
+    elif second_from_condition <= orders <= second_to_condition:
+      amount = second_amount * orders
+
+    elif third_from_condition <= orders <= third_to_condition:
+      amount = third_amount * orders
+
+    elif orders >= order_greater_than:
+      amount = order_amount * orders
+
+    return amount
+
+
+def calculate_parcel_amount(
+    row,
+    first_from_condition,
+    first_to_condition,
+    first_amount,
+    second_from_condition,
+    second_to_condition,
+    second_amount,
+    third_from_condition,
+    third_to_condition,
+    third_amount,
+    order_greater_than,
+    order_amount
+
+):
+
+    orders = row["Parcel DONE ORDERS"]
+    amount = 0
+
+    if first_from_condition <= orders <= first_to_condition:
+      amount = first_amount * orders
+  
+    elif second_from_condition <= orders <= second_to_condition:
+      amount = second_amount * orders
+
+    elif third_from_condition <= orders <= third_to_condition:
+      amount = third_amount * orders
+
+    elif orders >= order_greater_than:
+      amount = order_amount * orders
+
+    return amount
     
 
     
