@@ -5,6 +5,10 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.User.user.model.user import User
+from app.client.model import Client
+from app.vendor.model import Vendor
+from app.file_system.model import FileInfo
+from app.salary.model import SalaryFile
 from database.database import Base
 import os
 from decouple import config
@@ -18,7 +22,6 @@ DB_NAME = config("DB_NAME")
 DB_HOST = config("DB_HOST")
 
 connection_string = f'postgresql://{USER_NAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-print(connection_string)
 
 
 config = context.config

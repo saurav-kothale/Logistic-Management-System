@@ -1,8 +1,20 @@
 from functools import total_ordering
+import re
+
+from sqlalchemy import false, true
 
 
 def is_weekend(date):
     return date.weekday() >= 5
+
+
+def validate_filename(file_name):
+    pattern = r'^\d{2}+_\d{4}_[a-z]+\.xlsx$'
+
+    if re.match(pattern, file_name):
+        return True
+    else:
+        return False
 
 
 def week_or_weekend(row):
