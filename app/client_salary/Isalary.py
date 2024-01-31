@@ -5,3 +5,4 @@ class ISalary(ABC):
     @abstractmethod
     def calculate(self):
         pass
+
