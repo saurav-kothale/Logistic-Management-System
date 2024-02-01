@@ -9,8 +9,6 @@ from fastapi.responses import JSONResponse
 import pandas as pd
 from pydantic import Json
 from sqlalchemy import false, table
-
-from app.file_system.route import BUCKET_NAME
 from .view import (
     is_weekend, week_or_weekend, 
     calculate_amount_for_zomato_surat, 
@@ -29,11 +27,16 @@ from app.file_system.s3_events import read_s3_contents,s3_client, upload_file
 import uuid
 from database.database import SessionLocal
 from app.salary.model import SalaryFile
+from decouple import config
+
+
 
 
 
 salary_router = APIRouter()
 db = SessionLocal()
+row_bucket = config("ROW_BUCKET")
+processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 @salary_router.post("/calculate_zomato_surat")
 async def calculate_zomato_surat(
@@ -621,7 +624,7 @@ def calculate_bluedart(
 @salary_router.get("/get_samplefile")
 def getfile():
     file_key = f"uploads/month_year_city.xlsx"
-    response = s3_client.get_object(Bucket=BUCKET_NAME, Key=file_key)
+    response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
     file_data = response['Body'].read()
     df = pd.read_excel(io.BytesIO(file_data))
 

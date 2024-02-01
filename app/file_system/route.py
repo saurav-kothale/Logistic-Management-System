@@ -12,12 +12,15 @@ from app.salary.model import SalaryFile
 from app.salary.view import validate_filename
 from app.file_system.model import FileInfo
 from database.database import SessionLocal
+from decouple import config
 
 
 file_router = APIRouter()
 db = SessionLocal()
+row_bucket = config("ROW_BUCKET")
+processed_bucket = config("PROCESSED_FILE_BUCKET")
 
-BUCKET_NAME = "evifysalary"
+
 
 @file_router.get("/uploadfile/")
 async def create_upload_files(file: UploadFile):
@@ -37,7 +40,7 @@ async def create_upload_file(file: UploadFile):
             file_key = f"uploads/{file_id}/{file.filename}"
 
             # Upload the file to S3
-            s3_client.upload_fileobj(file.file, BUCKET_NAME, file_key)
+            s3_client.upload_fileobj(file.file, row_bucket, file_key)
 
             new_file = FileInfo(
                 file_key = file_key,
@@ -67,7 +70,7 @@ async def download_raw_file(file_key: str = Path(..., description="File Key")):
 
     try:
         # Use Boto3 to download the file from S3
-        response = s3_client.get_object(Bucket=BUCKET_NAME, Key=file_key)
+        response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
         file_data = response['Body'].read()
 
         # Return the file as a StreamingResponse with Excel content type
@@ -86,7 +89,7 @@ async def download_salary_file(file_key:str):
 
     try:
         # Use Boto3 to download the file from S3
-        response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
         file_data = response['Body'].read()
 
         # Return the file as a StreamingResponse with Excel content type
