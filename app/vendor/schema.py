@@ -11,7 +11,7 @@ class BankDetails(BaseModel):
         from_attributes = True
 
 class VendorSchema(BaseModel):
-    vendor_name : str
+    vender_name : str
     working_city : str
     register_address : str
     GST_number : str

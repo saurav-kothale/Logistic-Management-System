@@ -1,6 +1,7 @@
 from typing import List
 from xml.sax import default_parser_list
 from fastapi import APIRouter, HTTPException, status, UploadFile, File
+from app.file_system.s3_events import upload_file
 from app.vendor.schema import VendorSchema
 from database.database import SessionLocal
 from app.vendor.model import Vendor
@@ -10,8 +11,8 @@ db = SessionLocal()
 
 
 @vendor_router.post("/vender")
-def create_vender(vendor : VendorSchema):
-    old_vendor = db.query(Vendor).filter(Vendor.vendor_name == vendor.vendor_name).first()
+def create_vender(vender : VendorSchema, document : UploadFile):
+    old_vendor = db.query(Vendor).filter(Vendor.vendor_name == vender.vender_name).first()
 
     if old_vendor is not None:
         raise HTTPException (status_code=status.HTTP_400_BAD_REQUEST, detail = "vendor name already exist5")
@@ -25,16 +26,16 @@ def create_vender(vendor : VendorSchema):
     #     )
 
     new_vendor = Vendor(
-        vendor_name = vendor.vendor_name,
-        working_city = vendor.working_city,
-        register_address = vendor.register_address,
-        GST_number = vendor.GST_number,
-        HSN_code = vendor.HSN_code,
-        PAN_number = vendor.PAN_number,
-        chapter_head = vendor.chapter_head,
-        email = vendor.email,
-        mobile_number = vendor.mobile_number,
-        bank_details = dict(vendor.bank_details),
+        vendor_name = vender.vender_name,
+        working_city = vender.working_city,
+        register_address = vender.register_address,
+        GST_number = vender.GST_number,
+        HSN_code = vender.HSN_code,
+        PAN_number = vender.PAN_number,
+        chapter_head = vender.chapter_head,
+        email = vender.email,
+        mobile_number = vender.mobile_number,
+        bank_details = dict(vender.bank_details),
         document = "my doc"
     )
 
