@@ -43,7 +43,7 @@ async def create_upload_file(file: UploadFile):
             s3_client.upload_fileobj(file.file, row_bucket, file_key)
 
             new_file = FileInfo(
-                file_key = file_key,
+                filekey = file_key,
                 file_name = file.filename,
                 file_type = "excel",
                 created_at = datetime.now()

@@ -125,7 +125,7 @@ async def calculate_zomato_surat(
         db.commit()
 
         try:
-            s3_client.upload_fileobj(temp_file, "evify-salary-calculated", file_key)
+            s3_client.upload_fileobj(temp_file, processed_bucket, file_key)
 
         except exception as e:
             return {"error" : e}
@@ -209,7 +209,7 @@ async def calculate_swiggy_surat(
 
     file_key = f"uploads/{file_id}/{file_name}"
 
-    response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response['Body'].read()
     swiggy_surat_table = pd.DataFrame(table_reset)
@@ -224,7 +224,7 @@ async def calculate_swiggy_surat(
             df3.to_excel(writer, sheet_name='Sheet1', index=False)
 
             # file_key = f"uploads/{file_id}/modified.xlsx"
-        s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
 
     return {
@@ -299,7 +299,7 @@ async def calculate_bb_now_surat(
     
     file_key = f"uploads/{file_id}/{file_name}"
 
-    response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
     # except exception as e:
     #     return {"error" : e}
     
@@ -319,7 +319,7 @@ async def calculate_bb_now_surat(
             )
 
         s3_client.upload_file(
-            temp_file.name, "evify-salary-calculated", file_key
+            temp_file.name, processed_bucket, file_key
         )
 
 
@@ -385,7 +385,7 @@ def calculate_ecom_surat(
 
     file_key = f"uploads/{file_id}/{file_name}"
 
-    response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
     
     file_data = response['Body'].read()
     ecom_surat_table = pd.DataFrame(table_reset)
@@ -399,7 +399,7 @@ def calculate_ecom_surat(
         with pd.ExcelWriter(temp_file.name, engine='xlsxwriter') as writer:
             df3.to_excel(writer, sheet_name='Sheet1', index=False)
 
-        s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
 
     return {
@@ -463,7 +463,7 @@ def calculate_flipcart_surat(
 
     file_key = f"uploads/{file_id}/{file_name}"
 
-    response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
     
     file_data = response['Body'].read()
     flipkart_surat_table = pd.DataFrame(table_reset)
@@ -477,7 +477,7 @@ def calculate_flipcart_surat(
         with pd.ExcelWriter(temp_file.name, engine='xlsxwriter') as writer:
             df3.to_excel(writer, sheet_name='Sheet1', index=False)
 
-        s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
 
     return {
@@ -580,7 +580,7 @@ def calculate_bluedart(
 
     file_key = f"uploads/{file_id}/{file_name}"
 
-    response = s3_client.get_object(Bucket="evify-salary-calculated", Key=file_key)
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
     
     file_data = response['Body'].read()
     bluedart_table = pd.DataFrame(table_reset)
@@ -608,7 +608,7 @@ def calculate_bluedart(
         with pd.ExcelWriter(temp_file.name, engine='xlsxwriter') as writer:
             df3.to_excel(writer, sheet_name='Sheet1', index=False)
 
-        s3_client.upload_file(temp_file.name, "evify-salary-calculated", file_key)
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
 
     return FileResponse(
