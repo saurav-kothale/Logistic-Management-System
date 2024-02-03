@@ -11,7 +11,7 @@ db = SessionLocal()
 
 
 @vendor_router.post("/vender")
-def create_vender(vender : VendorSchema, document : UploadFile):
+def create_vender(vender : VendorSchema):
     old_vendor = db.query(Vendor).filter(Vendor.vendor_name == vender.vender_name).first()
 
     if old_vendor is not None:
