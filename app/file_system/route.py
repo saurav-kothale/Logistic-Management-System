@@ -13,6 +13,7 @@ from app.salary.view import validate_filename
 from app.file_system.model import FileInfo
 from database.database import SessionLocal
 from decouple import config
+from sqlalchemy.exc import SQLAlchemyError
 
 
 file_router = APIRouter()
@@ -105,6 +106,7 @@ async def download_salary_file(file_key:str):
 
 @file_router.get("/salayfiles")
 def get_salary_files():
+
     db_files = db.query(SalaryFile).all()
 
     if db_files is None:
@@ -118,9 +120,11 @@ def get_salary_files():
         "status" : status.HTTP_200_OK,
         "message" : "Files Fetch Successfully"
     }
+    
 
 @file_router.get("/rawfiles")
 def get_raw_files():
+
     db_files = db.query(FileInfo).all()
 
     if db_files is None:

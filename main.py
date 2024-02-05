@@ -21,7 +21,6 @@ app.include_router(file_router)
 app.include_router(client_router)
 app.include_router(vendor_router)
 
-allowed_origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,

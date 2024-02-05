@@ -15,6 +15,6 @@ connection_string = f"postgresql://{USER_NAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}
 
 Base = declarative_base()
 
-engine = create_engine(connection_string)
+engine = create_engine(connection_string, pool_pre_ping=True)
 
 SessionLocal = sessionmaker(bind=engine)
