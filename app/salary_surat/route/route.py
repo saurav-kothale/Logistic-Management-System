@@ -56,7 +56,7 @@ async def calculate_zomato_surat(
     maximum_bad_orders: int = Form(2),
     bad_order_amount: int = Form(10),
 ):
-
+    
     df = pd.read_excel(file.file)
     df["DATE"] = pd.to_datetime(df["DATE"])
 

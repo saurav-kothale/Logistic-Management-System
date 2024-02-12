@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from fastapi import UploadFile, Form
 
-class SuratZomatoSchema(BaseModel):
+class SuratZomatoStructure2(BaseModel):
     zomato_first_order_start: int = 1 
     zomato_first_order_end: int = 29
     zomato_first_order_amount: int = 30
