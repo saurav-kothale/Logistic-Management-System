@@ -13,6 +13,7 @@ from app.vendor.route import vendor_router
 from app.salary_ahmedabad.route.route import ahmedabad_router
 from app.salary_surat.route.zomato_structure2 import surat_zomato_structure2_router
 from app.salary_surat.route.swiggy_structure2 import surat_swiggy_structure2_router
+from app.salary_surat.route.master_api.zomato import master_router
 
 
 app = FastAPI()
@@ -27,6 +28,7 @@ app.include_router(vendor_router)
 app.include_router(ahmedabad_router, prefix="/ahmedabad")
 app.include_router(surat_zomato_structure2_router, prefix= "/surat")
 app.include_router(surat_swiggy_structure2_router, prefix='/surat')
+app.include_router(master_router, prefix='/surat')
 
 
 app.add_middleware(
