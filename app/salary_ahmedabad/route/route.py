@@ -69,10 +69,10 @@ def claculate_salary(
         "file_name": file.filename,
     }
 
-    content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    response = FileResponse(temp_file.name, media_type=content_type)
-    response.headers["Content-Disposition"] = (
-        'attachment; filename="month_year_city.xlsx"'
-    )
+    # content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    # response = FileResponse(temp_file.name, media_type=content_type)
+    # response.headers["Content-Disposition"] = (
+    #     'attachment; filename="month_year_city.xlsx"'
+    # )
 
-    return response
+    # return response
