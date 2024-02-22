@@ -1,22 +1,26 @@
-from app.salary_ahmedabad.schema.flipkart import AhemedabadFlipkartSchema
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile
+from app.salary_ahmedabad.schema.big_basket import AhmedabadBigBascketSchema
+from app.salary_ahmedabad.view.big_basket import calculate_big_basket_biker_salary, calculate_big_basket_micro_salary,create_table
 import pandas as pd
-from app.salary_ahmedabad.view.flipkart import calculate_flipkart_salary, create_table
 import io
 import tempfile
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
 
 
-ahmedabad_flipkart_router = APIRouter()
+ahmedabadbigbascket = APIRouter()
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
-@ahmedabad_flipkart_router.post("/flipkart/structure1")
-def get_salary(data : AhemedabadFlipkartSchema, file: UploadFile = File(...)):
+@ahmedabadbigbascket.post("/bigbasket/structure1")
+def get_salary(data : AhmedabadBigBascketSchema, file : UploadFile):
     df = pd.read_excel(file.file)
 
-    df["Total_Earning"] = df.apply(lambda row : calculate_flipkart_salary(row, data), axis=1)
+    df["Biker Amount"] = df.apply(lambda row : calculate_big_basket_biker_salary(row, data), axis=1)
+
+    df["Micro Amount"] = df.apply(lambda row : calculate_big_basket_micro_salary(row, data), axis=1)
+
+    df["Total_Earning"] = df["Biker Amount"] + df["Micro Amount"]
 
     table = create_table(df)
 
@@ -26,11 +30,11 @@ def get_salary(data : AhemedabadFlipkartSchema, file: UploadFile = File(...)):
 
     file_data = response["Body"].read()
 
-    flipkart_ahmedabad = pd.DataFrame(table)
+    big_basket_ahmedabad = pd.DataFrame(table)
 
     df2 = pd.read_excel(io.BytesIO(file_data))
 
-    df3 = pd.concat([df2, flipkart_ahmedabad], ignore_index=True)
+    df3 = pd.concat([df2, big_basket_ahmedabad], ignore_index=True)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
@@ -40,3 +44,5 @@ def get_salary(data : AhemedabadFlipkartSchema, file: UploadFile = File(...)):
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
     return {"file_id": data.file_id, "file_name": data.file_name}
+
+

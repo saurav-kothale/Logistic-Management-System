@@ -10,7 +10,7 @@ import uvicorn
 from app.file_system.route import file_router
 from app.client.route import client_router
 from app.vendor.route import vendor_router
-from app.salary_ahmedabad.route.route import ahmedabad_router
+from app.salary_ahmedabad.route.zomato import ahmedabad_router
 from app.salary_surat.route.zomato_structure2 import surat_zomato_structure2_router
 from app.salary_surat.route.swiggy_structure2 import surat_swiggy_structure2_router
 from app.salary_surat.route.master_api.zomato import master_router
