@@ -2,8 +2,8 @@ from pydantic import BaseModel
 from fastapi import UploadFile, Form
 
 class SuratSwiggySchema(BaseModel):
-    file_id: str
-    file_name : str
+    # file_id: str
+    # file_name : str
     swiggy_first_order_start: int = 1 
     swiggy_first_order_end: int = 29
     swiggy_first_order_amount: int = 30

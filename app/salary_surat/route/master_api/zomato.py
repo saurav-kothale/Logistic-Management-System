@@ -6,7 +6,7 @@ from app.salary_surat.schema.swiggy_structure2 import SuratSwiggySchema
 from app.salary_surat.schema.zomato_structure1 import SuratZomatoStructure1
 from app.salary_surat.schema.zomato_structure2 import SuratZomatoStructure2
 import pandas as pd
-from app.salary_surat.view.zomato_structure1 import calculate_zomato_surat
+from app.salary_surat.view.zomato_structure2 import calculate_salary_surat
 # from app.salary_surat.route.zomato_structure2 import calculate_zomato_salary_structure2
 
 master_router = APIRouter()

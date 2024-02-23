@@ -1,8 +1,6 @@
-from app.salary_ahmedabad.view.Isalary import ISalary
 import pandas as pd
 
-
-def calculate_salary_ahmedabad(row, data):
+def calculate_salary_surat(row, data):
 
     order_done = row["Parcel DONE ORDERS"]
     job_type = row["WORK_TYPE"]
@@ -56,7 +54,3 @@ def add_bonus(row):
         Total_Amount = Total_Amount + 500
 
     return Total_Amount
-
-    
-
-        

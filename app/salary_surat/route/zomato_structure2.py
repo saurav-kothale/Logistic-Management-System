@@ -3,7 +3,7 @@ from fastapi import APIRouter, Body, UploadFile, File, Form, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy import false
 from app.salary_surat.schema.zomato_structure2 import SuratZomatoStructure2
-from app.salary_ahmedabad.view.zomato import (
+from app.salary_surat.view.zomato_structure2 import (
     add_bonus,
     calculate_salary_surat,
     create_table,
@@ -32,13 +32,13 @@ def claculate_salary(data: SuratZomatoStructure2 = Depends(), file: UploadFile =
 
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    df["Total_Earning"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+    df = df[(df["CITY NAME"] == "Surat") & (df["CLIENT NAME"] == "zomato")]
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Total_Earning"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
 
     table = create_table(df).reset_index()
 
-    table["Total_Amount"] = add_bonus(table)
+    table["Total_Amount"] = table.apply(add_bonus, axis=1)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

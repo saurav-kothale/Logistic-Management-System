@@ -1,18 +1,16 @@
-from app.salary_ahmedabad.view.Isalary import ISalary
 import pandas as pd
 
-
-def calculate_salary_ahmedabad(row, data):
+def calculate_salary_surat(row, data):
 
     order_done = row["Parcel DONE ORDERS"]
-    job_type = row["WORK_TYPE"]
+    job_type = row["Work_Type"]
     amount = 0
 
-    if data.zomato_first_order_start <= order_done <= data.zomato_first_order_end:
-        amount = order_done * data.zomato_first_order_amount
+    if data.swiggy_first_order_start <= order_done <= data.swiggy_first_order_end:
+        amount = order_done * data.swiggy_first_order_amount
 
-    elif data.zomato_order_greter_than < order_done:
-        amount = order_done * data.zomato_second_order_amount
+    elif data.swiggy_order_greter_than < order_done:
+        amount = order_done * data.swiggy_second_order_amount
 
     if job_type == "Full Time" and order_done < 20:
         amount = amount - 100
@@ -27,7 +25,7 @@ def create_table(dataframe):
     
     table = pd.pivot_table(
             data= dataframe,
-            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME","WORK_TYPE"],
+            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME","Work_Type"],
             aggfunc={
             "REJECTION": "sum",
             "BAD ORDER": "sum",
@@ -46,17 +44,12 @@ def create_table(dataframe):
 def add_bonus(row):
 
     order_done = row["Parcel DONE ORDERS"]
-    job_type = row["WORK_TYPE"]
     Total_Amount = row["Total_Earning"]
 
-    if (job_type == "Full Time").any() & (order_done >= 700).any():
+    if (row["Work_Type"] == "Full Time") and (order_done >= 700):
         Total_Amount = Total_Amount + 1000
 
-    elif (job_type == "Part Time") & (order_done >= 400):
+    elif (row["Work_Type"] == "Part Time") and (order_done >= 400):
         Total_Amount = Total_Amount + 500
 
     return Total_Amount
-
-    
-
-        

@@ -5,7 +5,7 @@ from sqlalchemy import false
 from app.salary_ahmedabad.schema.schema import AhmedabadZomatoSchema
 from app.salary_ahmedabad.view.zomato import (
     add_bonus,
-    calculate_salary_surat,
+    calculate_salary_ahmedabad,
     create_table,
 )
 import pandas as pd
@@ -32,7 +32,7 @@ def claculate_salary(
     df = pd.read_excel(file.file)
 
     df["Total_Earning"] = df.apply(
-        lambda row: calculate_salary_surat(row, data), axis=1
+        lambda row: calculate_salary_ahmedabad(row, data), axis=1
     )
 
     table = create_table(df).reset_index()
@@ -64,7 +64,7 @@ def claculate_salary(
             return {"error": e}
 
     return {
-        "message": "Successfully Calculated Salary for Zomato Surat",
+        "message": "Successfully Calculated Salary for Zomato Ahmedabad",
         "file_id": file_id,
         "file_name": file.filename,
     }
