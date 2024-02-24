@@ -7,6 +7,7 @@ from app.salary_surat.view.zomato_structure2 import (
     add_bonus,
     calculate_salary_surat,
     create_table,
+    calculate_bike_charges
 )
 import pandas as pd
 import tempfile, json
@@ -34,11 +35,18 @@ def claculate_salary(data: SuratZomatoStructure2 = Depends(), file: UploadFile =
 
     df = df[(df["CITY NAME"] == "Surat") & (df["CLIENT NAME"] == "zomato")]
 
-    df["Total_Earning"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+    df["Order_Amount"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+
+    df["Bike_Charges"] = df.apply(lambda row : calculate_bike_charges(row, data), axis=1)
 
     table = create_table(df).reset_index()
 
-    table["Total_Amount"] = table.apply(add_bonus, axis=1)
+    table["Bonus"] = table.apply(lambda row : add_bonus(row, data), axis=1)
+
+    table["Panalties"] = table["IGCC AMOUNT"]
+
+    table["Final_Amount"] = table["Order_Amount"] + table["Bonus"] - table["Panalties"] - table["Bike_Charges"]
+ 
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
