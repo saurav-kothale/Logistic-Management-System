@@ -19,8 +19,8 @@ def validate_filename(file_name):
 
 
 def week_or_weekend(row):
-    city_name = row["CITY NAME"]
-    client_name = row["CLIENT NAME"]
+    city_name = row["CITY_NAME"]
+    client_name = row["CLIENT_NAME"]
     date = row["DATE"]
 
     if (
@@ -35,6 +35,28 @@ def week_or_weekend(row):
             return False
         
     return ""
+
+
+def calculate_panalties(
+        row,
+        maximum_rejection,
+        rejection_amount, 
+        maximum_bad_order,
+        bad_orders_amount
+):
+    rejection = row['REJECTION']
+    bad_orders = row['BAD_ORDER']
+    amount = 0
+    
+    if rejection > maximum_rejection:
+        amount -= rejection * 10 if rejection_amount is None else rejection * rejection_amount
+
+
+    if bad_orders > maximum_bad_order:
+        amount -= bad_orders * 10 if bad_orders_amount is None else bad_orders_amount * bad_orders
+
+
+    return amount
 
 
 def calculate_amount_for_zomato_surat(row, 
@@ -55,9 +77,9 @@ def calculate_amount_for_zomato_surat(row,
                           bad_orders_amount
                           ):
     
-    order_done = row['Parcel DONE ORDERS']
+    order_done = row['PARCEL_DONE_ORDERS']
     rejection = row['REJECTION']
-    bad_orders = row['BAD ORDER']
+    bad_orders = row['BAD_ORDER']
     date = row["DATE"]
     amount = 0
     
@@ -93,6 +115,8 @@ def calculate_amount_for_zomato_surat(row,
 
 
     return amount
+
+
 
 
 def calculate_amount_for_surat_swiggy(row, 
@@ -113,9 +137,9 @@ def calculate_amount_for_surat_swiggy(row,
                           bad_orders_amount
                           ):
     
-    order_done = row['Parcel DONE ORDERS']
+    order_done = row['PARCEL_DONE_ORDERS']
     rejection = row['REJECTION']
-    bad_orders = row['BAD ORDER']
+    bad_orders = row['BAD_ORDER']
     date = row["DATE"]
     amount = 0
     
@@ -141,14 +165,6 @@ def calculate_amount_for_surat_swiggy(row,
         else:
             amount = order_done*week_amount
 
-    
-    if rejection > maximum_rejection:
-        amount -= rejection * 10 if rejection_amount is None else rejection * rejection_amount
-
-
-    if bad_orders > maximum_bad_order:
-        amount -= bad_orders * 10 if bad_orders_amount is None else bad_orders_amount * bad_orders
-
 
     return amount
 
@@ -164,7 +180,7 @@ def calculate_amount_for_bbnow_surat(
         order_amount3
 
 ):
-    orders = row["Parcel DONE ORDERS"]
+    orders = row["PARCEL_DONE_ORDERS"]
     average = row["Average"]
     attendance = row["Attendance"]
     amount = 0
@@ -194,7 +210,7 @@ def calculate_amount_for_ecom_surat(
 
 ):
     
-    orders = row["Parcel DONE ORDERS"]
+    orders = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:
@@ -222,7 +238,7 @@ def calculate_amount_for_flipkart_surat(
 
 ):
     
-    orders = row["Parcel DONE ORDERS"]
+    orders = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:
@@ -253,7 +269,7 @@ def calculate_document_amount(
 
 ):
 
-    orders = row["Document DONE ORDERS"]
+    orders = row["DOCUMENT_DONE_ORDER"]
     amount = 0
 
     if first_from_condition <= orders <= first_to_condition:
@@ -287,7 +303,7 @@ def calculate_parcel_amount(
 
 ):
 
-    orders = row["Parcel DONE ORDERS"]
+    orders = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if first_from_condition <= orders <= first_to_condition:
@@ -307,7 +323,7 @@ def calculate_parcel_amount(
 
 def calculate_salary_surat(row, data):
 
-    order_done = row["Parcel DONE ORDERS"]
+    order_done = row["PARCEL_DONE_ORDERS"]
     job_type = row["jobtype"]
     amount = 0
 
@@ -317,7 +333,7 @@ def calculate_salary_surat(row, data):
     elif data.zomato_order_greter_than < order_done:
         amount = order_done * data.zomato_second_order_amount
 
-    if job_type == "fulltime" & order_done < 20:
+    if job_type == "full time" & order_done < 20:
         amount = amount - 100
 
     if job_type == "partime" & order_done < 12:
@@ -330,12 +346,12 @@ def create_table(dataframe):
     
     table = pd.pivot_table(
             data= dataframe,
-            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
             aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
+            "BAD_ORDER": "sum",
             "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
@@ -349,16 +365,16 @@ def create_table(dataframe):
 
 def add_bonus(row):
 
-    order_done = row["Parcel DONE ORDERS"]
-    job_type = row["Job Type"]
-    Total_Amount = row["Total Amount"]
+    order_done = row["PARCEL_DONE_ORDERS"]
+    job_type = row["WORK_TYPE"]
+    order_amount = row["ORDER_AMOUNT"]
 
-    if job_type == "fulltime" & order_done >= 700:
-        Total_Amount = Total_Amount + 1000
+    if job_type == "full time" & order_done >= 700:
+        order_amount = order_amount + 1000
 
-    elif job_type == "parttime" & order_done >= 400:
-        Total_Amount = Total_Amount + 500
+    elif job_type == "part time" & order_done >= 400:
+        order_amount = order_amount + 500
 
-    return Total_Amount
+    return order_amount
 
     

@@ -2,7 +2,7 @@ import pandas as pd
 
 def calculate_salary_surat(row, data):
 
-    order_done = row["Parcel DONE ORDERS"]
+    order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if data.zomato_first_order_start <= order_done <= data.zomato_first_order_end:
@@ -15,14 +15,14 @@ def calculate_salary_surat(row, data):
 
 
 def calculate_bike_charges(row, data):
-    order_done = row["Parcel DONE ORDERS"]
-    job_type = row["Work_Type"]
+    order_done = row["PARCEL_DONE_ORDERS"]
+    job_type = row["WORK_TYPE"]
     amount = 0
 
-    if job_type == "Full Time" and order_done < data.vahicle_charges_order_fulltime:
+    if job_type == "full time" and order_done < data.vahicle_charges_order_fulltime:
         amount = data.vahicle_charges_fulltime
 
-    elif job_type == "Part Time" and order_done < data.vahicle_charges_order_partime:
+    elif job_type == "part time" and order_done < data.vahicle_charges_order_partime:
         amount = data.vahicle_charges_partime
 
     return amount
@@ -35,16 +35,16 @@ def create_table(dataframe):
     
     table = pd.pivot_table(
             data= dataframe,
-            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME","Work_Type"],
+            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME","WORK_TYPE"],
             aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Order_Amount": "sum",
-            "Bike_Charges": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "ORDER_AMOUNT": "sum",
+            "BIKE_CHARGES": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
         }
        )
@@ -54,13 +54,13 @@ def create_table(dataframe):
 
 def add_bonus(row, data):
 
-    order_done = row["Parcel DONE ORDERS"]
+    order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
-    if (row["Work_Type"] == "Full Time") and (order_done >= data.bonus_order_fulltime):
+    if (row["WORK_TYPE"] == "full time") and (order_done >= data.bonus_order_fulltime):
         amount = data.bonus_amount_fulltime
 
-    elif (row["Work_Type"] == "Part Time") and (order_done >= data.bonus_order_partime):
+    elif (row["WORK_TYPE"] == "part time") and (order_done >= data.bonus_order_partime):
         amount = data.bonus_amount_partime
 
     return amount

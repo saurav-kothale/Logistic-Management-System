@@ -8,7 +8,7 @@ from fastapi import APIRouter, UploadFile, Form, File, status, HTTPException
 from fastapi.responses import JSONResponse
 import pandas as pd
 from pydantic import Json
-from sqlalchemy import false, table
+from sqlalchemy import TableClause, false, table
 from ..view.view import (
     is_weekend,
     week_or_weekend,
@@ -19,6 +19,7 @@ from ..view.view import (
     calculate_amount_for_flipkart_surat,
     calculate_document_amount,
     calculate_parcel_amount,
+    calculate_panalties,
 )
 import io
 from fastapi.responses import FileResponse
@@ -56,12 +57,12 @@ async def calculate_zomato_surat(
     maximum_bad_orders: int = Form(2),
     bad_order_amount: int = Form(10),
 ):
-    
+
     df = pd.read_excel(file.file)
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    df = df[(df["CITY NAME"] == "Surat") & (df["CLIENT NAME"] == "Zomato")]
-    df["Total_Earning"] = df.apply(
+    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Zomato")]
+    df["Order_Amount"] = df.apply(
         calculate_amount_for_zomato_surat,
         args=(
             first_order_from,
@@ -75,6 +76,13 @@ async def calculate_zomato_surat(
             order_grether_than,
             week_amount,
             weekend_amount,
+        ),
+        axis=1,
+    )
+
+    df["Panalties"] = df.apply(
+        calculate_panalties,
+        args=(
             maximum_rejection,
             rejection_amount,
             bad_order_amount,
@@ -83,23 +91,26 @@ async def calculate_zomato_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
-        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
         aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "Order_Amount": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "Total_Orders": "sum",
+            "Panalties": "sum",
         },
     ).reset_index()
+
+    table["Final_Amount"] = table["Order_Amount"] - table["Panalties"]
 
     zomato_surat_table = pd.DataFrame(table)
 
@@ -159,7 +170,7 @@ async def calculate_swiggy_surat(
     df = pd.read_excel(file.file)
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    df = df[(df["CITY NAME"] == "Surat") & (df["CLIENT NAME"] == "Swiggy")]
+    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Swiggy")]
     df["Total_Earning"] = df.apply(
         calculate_amount_for_surat_swiggy,
         args=(
@@ -182,25 +193,39 @@ async def calculate_swiggy_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Panalties"] = df.apply(
+        calculate_panalties,
+        args=(
+            maximum_rejection,
+            rejection_amount,
+            bad_order_amount,
+            maximum_bad_orders,
+        ),
+        axis=1,
+    )
+
+    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
-        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
         aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "Order_Amount": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "Total_Orders": "sum",
+            "Panalties": "sum",
         },
     )
 
     table_reset = table.reset_index()
+
+    table_reset["Final_Amount"] = table_reset["Order_Amount"] - table_reset["Panalties"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -239,21 +264,21 @@ async def calculate_bb_now_surat(
 
     df = pd.read_excel(file.file)
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
-        data=df[(df["CLIENT NAME"] == "BB now") & (df["CITY NAME"] == "Surat")],
+        data=df[(df["CLIENT_NAME"] == "BB now") & (df["CITY_NAME"] == "Surat")],
         index=[
             "DRIVER_ID",
             "DRIVER_NAME",
-            "CITY NAME",
-            "CLIENT NAME",
+            "CITY_NAME",
+            "CLIENT_NAME",
             "REJECTION",
-            "BAD ORDER",
+            "BAD_ORDER",
         ],
         aggfunc={
             "Total_Orders": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
@@ -262,15 +287,15 @@ async def calculate_bb_now_surat(
     ).reset_index()
 
     attendance_count = (
-        df[df["CLIENT NAME"] == "BB now"]["DRIVER_ID"].value_counts().reset_index()
+        df[df["CLIENT_NAME"] == "BB now"]["DRIVER_ID"].value_counts().reset_index()
     )
     attendance_count.columns = ["DRIVER_ID", "Attendance"]
 
     result = pd.merge(table, attendance_count, on="DRIVER_ID", how="left")
 
-    result["Average"] = round(result["Parcel DONE ORDERS"] / result["Attendance"])
+    result["Average"] = round(result["PARCEL_DONE_ORDERS"] / result["Attendance"])
 
-    result["Total_Earning"] = result.apply(
+    result["Order_Amount"] = result.apply(
         calculate_amount_for_bbnow_surat,
         args=(
             orders_less_then,
@@ -284,20 +309,23 @@ async def calculate_bb_now_surat(
         axis=1,
     )
 
+    result["Final_Amount"] = result["Order_Amount"]
+
     final_result = result[
         [
             "DRIVER_ID",
-            "CITY NAME",
-            "CLIENT NAME",
+            "CITY_NAME",
+            "CLIENT_NAME",
             "REJECTION",
-            "BAD ORDER",
-            "Total_Earning",
+            "BAD_ORDER",
+            "Order_Amount",
             "Total_Orders",
-            "Parcel DONE ORDERS",
+            "PARCEL_DONE_ORDERS",
             "CUSTOMER_TIP",
             "RAIN ORDER",
             "IGCC AMOUNT",
             "ATTENDANCE",
+            "Final_Amount",
         ]
     ]
 
@@ -341,8 +369,8 @@ def calculate_ecom_surat(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[(df["CITY NAME"] == "Surat") & (df["CLIENT NAME"] == "E-com")]
-    df["Total_Earning"] = df.apply(
+    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "E-com")]
+    df["Order_Amount"] = df.apply(
         calculate_amount_for_ecom_surat,
         args=(
             from_order,
@@ -357,16 +385,16 @@ def calculate_ecom_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
-        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
         aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "Order_Amount": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
@@ -376,6 +404,8 @@ def calculate_ecom_surat(
     )
 
     table_reset = table.reset_index()
+
+    table_reset["Final_Amount"] = table_reset["Order_Amount"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -413,8 +443,8 @@ def calculate_flipcart_surat(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[(df["CITY NAME"] == "Surat") & (df["CLIENT NAME"] == "Flipkart")]
-    df["Total_Earning"] = df.apply(
+    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Flipkart")]
+    df["Order_Amount"] = df.apply(
         calculate_amount_for_flipkart_surat,
         args=(
             from_order,
@@ -429,16 +459,16 @@ def calculate_flipcart_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
-        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
         aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "Order_Amount": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
@@ -448,6 +478,7 @@ def calculate_flipcart_surat(
     )
 
     table_reset = table.reset_index()
+    table_reset["Final_Amount"] = table_reset["Order_Amount"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -499,7 +530,7 @@ def calculate_bluedart(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[df["CLIENT NAME"].isin(["Bluedart Biker", "Bluedart ven"])]
+    df = df[df["CLIENT_NAME"].isin(["Bluedart Biker", "Bluedart ven"])]
     df["document_amount"] = df.apply(
         calculate_document_amount,
         args=(
@@ -536,18 +567,18 @@ def calculate_bluedart(
         axis=1,
     )
 
-    df["Total_Earning"] = df["document_amount"] + df["parcel_amount"]
+    df["Order_Amount"] = df["document_amount"] + df["parcel_amount"]
 
-    df["Total_Orders"] = df["Document DONE ORDERS"] + df["Parcel DONE ORDERS"]
+    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
-        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
         aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "Order_Amount": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN ORDER": "sum",
             "IGCC AMOUNT": "sum",
@@ -557,6 +588,8 @@ def calculate_bluedart(
     )
 
     table_reset = table.reset_index()
+
+    table_reset["Final_Amount"] = table_reset["Order_Amount"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -569,29 +602,32 @@ def calculate_bluedart(
 
     df3 = pd.concat([df2, bluedart_table], ignore_index=True)
 
-    df3["Vender_fee (@6%)"] = (df3["Total_Earning"] * 0.06) + (df3["Total_Earning"])
+    df3["Vender_fee (@6%)"] = (df3["Final_Amount"] * 0.06) + (df3["Final_Amount"])
 
     df3["Final Payble Amount (@18%)"] = (df3["Vender_fee (@6%)"] * 0.18) + (
         df3["Vender_fee (@6%)"]
     )
 
-    column_order = [
-        "CITY NAME",
-        "CLIENT NAME",
+    desire_order = [
+        "CITY_NAME",
+        "CLIENT_NAME",
         "DRIVER_ID",
         "DRIVER_NAME",
         "ATTENDANCE",
         "Total_Orders",
-        "BAD ORDER",
+        "BAD_ORDER",
         "REJECTION",
         "IGCC AMOUNT",
         "CUSTOMER_TIP",
-        "Total_Earning",
-        "Vender_fee (@6%)",
+        "Order_Amount",
+        "Panalties" "Bonus",
+        "Bike_Charges" "Final_Amount" "Vender_fee (@6%)",
         "Final Payble Amount (@18%)",
     ]
 
-    df3 = df3[column_order]
+    common_columns = list(set(desire_order).intersection(df3.columns))
+
+    df3 = df3[common_columns]
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

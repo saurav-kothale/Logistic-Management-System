@@ -16,7 +16,11 @@ processed_bucket = config("PROCESSED_FILE_BUCKET")
 def get_salary(data : AhemedabadEcomSchema, file: UploadFile = File(...)):
     df = pd.read_excel(file.file)
 
-    df["Total_Earning"] = df.apply(lambda row : calculate_ecom_salary(row, data), axis=1)
+    df["DATE"] = pd.to_datetime(df["DATE"])
+
+    df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "ecom")]
+
+    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_ecom_salary(row, data), axis=1)
 
     table = create_table(df)
 

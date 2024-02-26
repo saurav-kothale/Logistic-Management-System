@@ -1,10 +1,6 @@
 from fastapi import FastAPI
 from app.salary_surat.route.route import salary_router
 from app.User.views.route import login_router, signup_router
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
-from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from app.file_system.route import file_router

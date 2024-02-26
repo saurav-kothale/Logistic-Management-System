@@ -1,7 +1,7 @@
 import pandas as pd
 
 def calculate_big_basket_biker_salary(row, data):
-    order_done = row["Parcel DONE ORDERS"]
+    order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if data.biker_from_delivery <= order_done <= data.biker_to_delivery:
@@ -13,7 +13,7 @@ def calculate_big_basket_biker_salary(row, data):
     return amount
 
 def calculate_big_basket_micro_salary(row, data):
-    order_done = row["Parcel DONE ORDERS"]
+    order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if data.micro_from_delivery <= order_done <= data.micro_to_delivery:
@@ -29,17 +29,17 @@ def create_table(dataframe):
     
     table = pd.pivot_table(
             data= dataframe,
-            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
             aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "ORDER_AMOUNT": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
         }
        )
 

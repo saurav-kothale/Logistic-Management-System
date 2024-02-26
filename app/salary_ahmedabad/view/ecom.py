@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def calculate_ecom_salary(row, data):
-    order_done = row["Parcel DONE ORDERS"]
+    order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
     if data.from_order <= order_done <= data.to_order:
@@ -12,7 +12,7 @@ def calculate_ecom_salary(row, data):
         amount = order_done * data.second_amount
 
     elif data.order_greter_than <= order_done:
-        amount = order_done * data.order_amount
+        amount = order_done * data.ORDER_AMOUNT
 
     return amount
 
@@ -21,17 +21,17 @@ def create_table(dataframe):
     
     table = pd.pivot_table(
             data= dataframe,
-            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT NAME", "CITY NAME"],
+            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
             aggfunc={
             "REJECTION": "sum",
-            "BAD ORDER": "sum",
-            "Total_Earning": "sum",
-            "Parcel DONE ORDERS": "sum",
+            "BAD_ORDER": "sum",
+            "ORDER_AMOUNT": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
         }
        )
 

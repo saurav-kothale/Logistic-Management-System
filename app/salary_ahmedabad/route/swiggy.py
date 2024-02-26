@@ -5,6 +5,7 @@ from app.salary_ahmedabad.view.swiggy_structure2 import (
     calculate_salary_ahmedabad,
     create_table,
     add_bonus,
+    calculate_bike_charges
 )
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
@@ -23,13 +24,21 @@ def claculate_salary(
 
     df = pd.read_excel(file.file)
 
-    df["Total_Amount"] = df.apply(
-        lambda row: calculate_salary_ahmedabad(row, data), axis=1
-    )
+    df["DATE"] = pd.to_datetime(df["DATE"])
+
+    df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "swiggy")]
+
+    df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_ahmedabad(row, data), axis=1)
+
+    df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
 
     table = create_table(df).reset_index()
 
-    table["Total_Amount"] = add_bonus(table)
+    table["BONUS"] = table.apply(lambda row : add_bonus(row, data), axis=1)
+
+    table["PANALTIES"] = table["IGCC_AMOUNT"]
+
+    table["FINAL_AMOUNT"] = table["ORDER_AMOUNT"] + table["BONUS"] - table["PANALTIES"] - table["BIKE_CHARGES"]
 
     file_key = f"uploads/{data.file_id}/{data.file_name}"
 
@@ -37,11 +46,11 @@ def claculate_salary(
 
     file_data = response["Body"].read()
 
-    swiggy_surat_table = pd.DataFrame(table)
+    swiggy_ahmedabad_table = pd.DataFrame(table)
 
     df2 = pd.read_excel(io.BytesIO(file_data))
 
-    df3 = pd.concat([df2, swiggy_surat_table], ignore_index=True)
+    df3 = pd.concat([df2, swiggy_ahmedabad_table], ignore_index=True)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

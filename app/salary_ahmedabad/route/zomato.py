@@ -2,10 +2,11 @@ from logging import exception
 from fastapi import APIRouter, Body, UploadFile, File, Form, Depends
 from fastapi.responses import FileResponse
 from sqlalchemy import false
-from app.salary_ahmedabad.schema.schema import AhmedabadZomatoSchema
+from app.salary_ahmedabad.schema.zomato import AhmedabadZomatoSchema
 from app.salary_ahmedabad.view.zomato import (
     add_bonus,
     calculate_salary_ahmedabad,
+    calculate_bike_charges,
     create_table,
 )
 import pandas as pd
@@ -31,13 +32,21 @@ def claculate_salary(
 
     df = pd.read_excel(file.file)
 
-    df["Total_Earning"] = df.apply(
-        lambda row: calculate_salary_ahmedabad(row, data), axis=1
-    )
+    df["DATE"] = pd.to_datetime(df["DATE"])
+
+    df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "zomato")]
+
+    df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_ahmedabad(row, data), axis=1)
+
+    df["BIKE_CHARGES"] = df.apply(lambda row : calculate_bike_charges(row, data), axis=1)
 
     table = create_table(df).reset_index()
 
-    table["Total_Earning"] = add_bonus(table)
+    table["BONUS"] = table.apply(lambda row : add_bonus(row, data), axis=1)
+
+    table["PANALTIES"] = table["IGCC_AMOUNT"]
+
+    table["FINAL_AMOUNT"] = table["ORDER_AMOUNT"] + table["BONUS"] - table["PANALTIES"] - table["BIKE_CHARGES"]
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

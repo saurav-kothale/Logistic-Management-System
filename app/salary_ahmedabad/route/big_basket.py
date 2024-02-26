@@ -16,11 +16,11 @@ processed_bucket = config("PROCESSED_FILE_BUCKET")
 def get_salary(data : AhmedabadBigBascketSchema, file : UploadFile):
     df = pd.read_excel(file.file)
 
-    df["Biker Amount"] = df.apply(lambda row : calculate_big_basket_biker_salary(row, data), axis=1)
+    df["BIKER_AMOUNT"] = df.apply(lambda row : calculate_big_basket_biker_salary(row, data), axis=1)
 
-    df["Micro Amount"] = df.apply(lambda row : calculate_big_basket_micro_salary(row, data), axis=1)
+    df["MICRO_AMOUNT"] = df.apply(lambda row : calculate_big_basket_micro_salary(row, data), axis=1)
 
-    df["Total_Earning"] = df["Biker Amount"] + df["Micro Amount"]
+    df["ORDER_AMOUNT"] = df["BIKER_AMOUNT"] + df["MICRO_AMOUNT"]
 
     table = create_table(df)
 
