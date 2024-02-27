@@ -61,8 +61,8 @@ async def calculate_zomato_surat(
     df = pd.read_excel(file.file)
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Zomato")]
-    df["Order_Amount"] = df.apply(
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
+    df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_zomato_surat,
         args=(
             first_order_from,
@@ -80,7 +80,7 @@ async def calculate_zomato_surat(
         axis=1,
     )
 
-    df["Panalties"] = df.apply(
+    df["PANALTIES"] = df.apply(
         calculate_panalties,
         args=(
             maximum_rejection,
@@ -91,7 +91,7 @@ async def calculate_zomato_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -99,18 +99,18 @@ async def calculate_zomato_surat(
         aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "Order_Amount": "sum",
+            "ORDER_AMOUNT": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
-            "Panalties": "sum",
+            "TOTAL_ORDERS": "sum",
+            "PANALTIES": "sum",
         },
     ).reset_index()
 
-    table["Final_Amount"] = table["Order_Amount"] - table["Panalties"]
+    table["FINAL_AMOUNT"] = table["ORDER_AMOUNT"] - table["PANALTIES"]
 
     zomato_surat_table = pd.DataFrame(table)
 
@@ -170,8 +170,8 @@ async def calculate_swiggy_surat(
     df = pd.read_excel(file.file)
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Swiggy")]
-    df["Total_Earning"] = df.apply(
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
+    df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_surat_swiggy,
         args=(
             first_order_from,
@@ -193,7 +193,7 @@ async def calculate_swiggy_surat(
         axis=1,
     )
 
-    df["Panalties"] = df.apply(
+    df["PANALTIES"] = df.apply(
         calculate_panalties,
         args=(
             maximum_rejection,
@@ -204,7 +204,7 @@ async def calculate_swiggy_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -212,20 +212,20 @@ async def calculate_swiggy_surat(
         aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "Order_Amount": "sum",
+            "ORDER_AMOUNT": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "Total_Orders": "sum",
-            "Panalties": "sum",
+            "PANALTIES": "sum",
         },
     )
 
     table_reset = table.reset_index()
 
-    table_reset["Final_Amount"] = table_reset["Order_Amount"] - table_reset["Panalties"]
+    table_reset["Final_Amount"] = table_reset["ORDER_AMOUNT"] - table_reset["PANALTIES"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -264,10 +264,10 @@ async def calculate_bb_now_surat(
 
     df = pd.read_excel(file.file)
 
-    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
-        data=df[(df["CLIENT_NAME"] == "BB now") & (df["CITY_NAME"] == "Surat")],
+        data=df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")],
         index=[
             "DRIVER_ID",
             "DRIVER_NAME",
@@ -277,25 +277,27 @@ async def calculate_bb_now_surat(
             "BAD_ORDER",
         ],
         aggfunc={
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
         },
     ).reset_index()
 
-    attendance_count = (
-        df[df["CLIENT_NAME"] == "BB now"]["DRIVER_ID"].value_counts().reset_index()
-    )
-    attendance_count.columns = ["DRIVER_ID", "Attendance"]
+    # attendance_count = (
+    #     df[df["CLIENT_NAME"] == "bb now"]["DRIVER_ID"].value_counts().reset_index()
+    # )
+    # attendance_count.columns = ["DRIVER_ID", "ATTENDANCE"]
 
-    result = pd.merge(table, attendance_count, on="DRIVER_ID", how="left")
+    # breakpoint()
 
-    result["Average"] = round(result["PARCEL_DONE_ORDERS"] / result["Attendance"])
+    # result = pd.merge(table, attendance_count, on="DRIVER_ID", how="left")
 
-    result["Order_Amount"] = result.apply(
+    table["AVERAGE"] = round(table["PARCEL_DONE_ORDERS"] / table["ATTENDANCE"])
+
+    table["ORDER_AMOUNT"] = table.apply(
         calculate_amount_for_bbnow_surat,
         args=(
             orders_less_then,
@@ -309,23 +311,29 @@ async def calculate_bb_now_surat(
         axis=1,
     )
 
-    result["Final_Amount"] = result["Order_Amount"]
+    table["FINAL_AMOUNT"] = table["ORDER_AMOUNT"]
 
-    final_result = result[
+    table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
+
+    table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
+        table["VENDER_FEE (@6%)"]
+    )
+
+    final_result = table[
         [
             "DRIVER_ID",
             "CITY_NAME",
             "CLIENT_NAME",
             "REJECTION",
             "BAD_ORDER",
-            "Order_Amount",
-            "Total_Orders",
+            "ORDER_AMOUNT",
+            "TOTAL_ORDERS",
             "PARCEL_DONE_ORDERS",
             "CUSTOMER_TIP",
-            "RAIN ORDER",
-            "IGCC AMOUNT",
+            "RAIN_ORDER",
+            "IGCC_AMOUNT",
             "ATTENDANCE",
-            "Final_Amount",
+            "FINAL_AMOUNT",
         ]
     ]
 
@@ -339,7 +347,7 @@ async def calculate_bb_now_surat(
 
     df2 = pd.read_excel(io.BytesIO(file_data))
 
-    df3 = pd.concat([df2, final_result], ignore_index=True)
+    df3 = pd.concat([df2, table], ignore_index=True)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
             df3.to_excel(writer, sheet_name="Sheet1", index=False)
@@ -351,6 +359,20 @@ async def calculate_bb_now_surat(
         "file_id": file_id,
         "file_name": file_name,
     }
+
+    # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+    #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+    #         df3.to_excel(writer, sheet_name="Sheet1", index=False)
+
+    #         # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+
+    #     content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    #     response = FileResponse(temp_file.name, media_type=content_type)
+    #     response.headers["Content-Disposition"] = (
+    #         'attachment; filename="month_year_city.xlsx"'
+    #     )
+
+    # return response
 
 
 @salary_router.post("/ecom/structure1/{file_id}/{file_name}")
@@ -369,8 +391,8 @@ def calculate_ecom_surat(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "E-com")]
-    df["Order_Amount"] = df.apply(
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "ecom")]
+    df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_ecom_surat,
         args=(
             from_order,
@@ -385,7 +407,7 @@ def calculate_ecom_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -393,19 +415,26 @@ def calculate_ecom_surat(
         aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "Order_Amount": "sum",
+            "ORDER_AMOUNT": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
+
         },
     )
 
     table_reset = table.reset_index()
 
-    table_reset["Final_Amount"] = table_reset["Order_Amount"]
+    table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
+
+    table_reset["VENDER_FEE (@6%)"] = (table_reset["FINAL_AMOUNT"] * 0.06) + (table_reset["FINAL_AMOUNT"])
+
+    table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (table_reset["VENDER_FEE (@6%)"] * 0.18) + (
+        table_reset["VENDER_FEE (@6%)"]
+    )
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -426,6 +455,19 @@ def calculate_ecom_surat(
 
     return {"file_id": file_id, "file_name": file_name}
 
+    # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+    #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+    #         df3.to_excel(writer, sheet_name="Sheet1", index=False)
+
+    #         # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+
+    #     content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    #     response = FileResponse(temp_file.name, media_type=content_type)
+    #     response.headers["Content-Disposition"] = (
+    #         'attachment; filename="month_year_city.xlsx"'
+    # )
+
+    # return response
 
 @salary_router.post("/flipkart/structure1/{file_id}/{file_name}")
 def calculate_flipcart_surat(
@@ -443,8 +485,8 @@ def calculate_flipcart_surat(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Flipkart")]
-    df["Order_Amount"] = df.apply(
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "flipkart")]
+    df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_flipkart_surat,
         args=(
             from_order,
@@ -459,7 +501,7 @@ def calculate_flipcart_surat(
         axis=1,
     )
 
-    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -467,18 +509,24 @@ def calculate_flipcart_surat(
         aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "Order_Amount": "sum",
+            "ORDER_AMOUNT": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
         },
     )
 
     table_reset = table.reset_index()
-    table_reset["Final_Amount"] = table_reset["Order_Amount"]
+    table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
+
+    table_reset["VENDER_FEE (@6%)"] = (table_reset["FINAL_AMOUNT"] * 0.06) + (table_reset["FINAL_AMOUNT"])
+
+    table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (table_reset["VENDER_FEE (@6%)"] * 0.18) + (
+        table_reset["VENDER_FEE (@6%)"]
+    )
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -498,6 +546,19 @@ def calculate_flipcart_surat(
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
     return {"file_id": file_id, "file_name": file_name}
+    # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+    #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+    #         df3.to_excel(writer, sheet_name="Sheet1", index=False)
+
+    #         # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+
+    #     content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    #     response = FileResponse(temp_file.name, media_type=content_type)
+    #     response.headers["Content-Disposition"] = (
+    #         'attachment; filename="month_year_city.xlsx"'
+    # )
+
+    # return response
 
 
 @salary_router.post("/bluedart/structure/{file_id}/{file_name}")
@@ -530,8 +591,8 @@ def calculate_bluedart(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[df["CLIENT_NAME"].isin(["Bluedart Biker", "Bluedart ven"])]
-    df["document_amount"] = df.apply(
+    df = df[df["CLIENT_NAME"].isin(["bluedart biker", "bluedart ven"])]
+    df["DOCUMENT_AMOUNT"] = df.apply(
         calculate_document_amount,
         args=(
             from_order_document,
@@ -549,7 +610,7 @@ def calculate_bluedart(
         axis=1,
     )
 
-    df["parcel_amount"] = df.apply(
+    df["PARCEL_AMOUNT"] = df.apply(
         calculate_parcel_amount,
         args=(
             from_order_parcel,
@@ -567,9 +628,9 @@ def calculate_bluedart(
         axis=1,
     )
 
-    df["Order_Amount"] = df["document_amount"] + df["parcel_amount"]
+    df["ORDER_AMOUNT"] = df["DOCUMENT_AMOUNT"] + df["PARCEL_AMOUNT"]
 
-    df["Total_Orders"] = df["DOCUMENT_DONE_ORDER"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -577,19 +638,19 @@ def calculate_bluedart(
         aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "Order_Amount": "sum",
+            "ORDER_AMOUNT": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
         },
     )
 
     table_reset = table.reset_index()
 
-    table_reset["Final_Amount"] = table_reset["Order_Amount"]
+    table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -602,10 +663,10 @@ def calculate_bluedart(
 
     df3 = pd.concat([df2, bluedart_table], ignore_index=True)
 
-    df3["Vender_fee (@6%)"] = (df3["Final_Amount"] * 0.06) + (df3["Final_Amount"])
+    df3["VENDER_FEE (@6%)"] = (df3["FINAL_AMOUNT"] * 0.06) + (df3["FINAL_AMOUNT"])
 
-    df3["Final Payble Amount (@18%)"] = (df3["Vender_fee (@6%)"] * 0.18) + (
-        df3["Vender_fee (@6%)"]
+    df3["FINAL PAYBLE AMOUNT (@18%)"] = (df3["VENDER_FEE (@6%)"] * 0.18) + (
+        df3["VENDER_FEE (@6%)"]
     )
 
     desire_order = [
@@ -614,26 +675,29 @@ def calculate_bluedart(
         "DRIVER_ID",
         "DRIVER_NAME",
         "ATTENDANCE",
-        "Total_Orders",
+        "TOTAL_ORDERS",
         "BAD_ORDER",
         "REJECTION",
-        "IGCC AMOUNT",
+        "IGCC_AMOUNT",
         "CUSTOMER_TIP",
-        "Order_Amount",
-        "Panalties" "Bonus",
-        "Bike_Charges" "Final_Amount" "Vender_fee (@6%)",
-        "Final Payble Amount (@18%)",
+        "ORDER_AMOUNT",
+        "PANALTIES",
+        "BONUS",
+        "BIKE_CHARGES",
+        "FINAL_AMOUNT",
+        "VENDER_FEE (@6%)",
+        "FINAL PAYBLE AMOUNT (@18%)",
     ]
 
-    common_columns = list(set(desire_order).intersection(df3.columns))
+    # common_columns = list(set(desire_order).intersection(df3.columns))
 
-    df3 = df3[common_columns]
+    # df3 = df3[common_columns]
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
             df3.to_excel(writer, sheet_name="Sheet1", index=False)
 
-        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+        # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
     return FileResponse(
         temp_file.name,

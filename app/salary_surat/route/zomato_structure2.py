@@ -32,25 +32,33 @@ def claculate_salary(
 
     df = pd.read_excel(file.file)
 
-    df["DATE"] = pd.to_datetime(df["DATE"])
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
 
-    df["Order_Amount"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
-    df["Bike_Charges"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
+    df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+
+    df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
 
     table = create_table(df).reset_index()
 
-    table["Bonus"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+    table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
 
-    table["Panalties"] = table["IGCC AMOUNT"]
+    table["PANALTIES"] = table["IGCC_AMOUNT"]
 
-    table["Final_Amount"] = (
-        table["Order_Amount"]
-        + table["Bonus"]
-        - table["Panalties"]
-        - table["Bike_Charges"]
+    table["FINAL_AMOUNT"] = (
+        table["ORDER_AMOUNT"]
+        + table["BONUS"]
+        - table["PANALTIES"]
+        - table["BIKE_CHARGES"]
+    )
+
+    table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
+
+    table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
+        table["VENDER_FEE (@6%)"]
     )
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:

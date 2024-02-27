@@ -24,25 +24,36 @@ def claculate_salary(data: SuratSwiggySchema = Depends(), file: UploadFile = Fil
 
     df = pd.read_excel(file.file)
 
-    df["DATE"] = pd.to_datetime(df["DATE"])
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
-    df = df[(df["CITY_NAME"] == "Surat") & (df["CLIENT_NAME"] == "Swiggy")]
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
 
-    df["Order_Amount"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
-    df["Bike_Charges"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
+    df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+
+    df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
+
 
     table = create_table(df).reset_index()
 
-    table["Bonus"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+    print(table)
 
-    table["Panalties"] = table["IGCC AMOUNT"]
+    table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
 
-    table["Final_Amount"] = (
-        table["Order_Amount"]
-        + table["Bonus"]
-        - table["Panalties"]
-        - table["Bike_Charges"]
+    table["PANALTIES"] = table["IGCC_AMOUNT"]
+
+    table["FINAL_AMOUNT"] = (
+        table["ORDER_AMOUNT"]
+        + table["BONUS"]
+        - table["PANALTIES"]
+        - table["BIKE_CHARGES"]
+    )
+
+    table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
+
+    table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
+        table["VENDER_FEE (@6%)"]
     )
 
     file_key = f"uploads/{data.file_id}/{data.file_name}"
@@ -68,7 +79,9 @@ def claculate_salary(data: SuratSwiggySchema = Depends(), file: UploadFile = Fil
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
-    #         table.to_excel(writer, sheet_name="Sheet1", index=False)
+    #         df3.to_excel(writer, sheet_name="Sheet1", index=False)
+
+    #         # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
     #     content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     #     response = FileResponse(temp_file.name, media_type=content_type)

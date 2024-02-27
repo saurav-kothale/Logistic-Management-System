@@ -39,13 +39,14 @@ def create_table(dataframe):
             aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "Order_Amount": "sum",
-            "Bike_Charges": "sum",
+            "ORDER_AMOUNT": "sum",
+            "BIKE_CHARGES": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
+            "TOTAL_ORDERS": "sum"
         }
        )
 

@@ -46,6 +46,7 @@ def create_table(dataframe):
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
+            "TOTAL_ORDERS": "sum"
         }
        )
 

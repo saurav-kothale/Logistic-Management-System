@@ -181,8 +181,8 @@ def calculate_amount_for_bbnow_surat(
 
 ):
     orders = row["PARCEL_DONE_ORDERS"]
-    average = row["Average"]
-    attendance = row["Attendance"]
+    average = row["AVERAGE"]
+    attendance = row["ATTENDANCE"]
     amount = 0
 
     if average <= orders_less_then:
@@ -265,11 +265,11 @@ def calculate_document_amount(
     third_to_condition,
     third_amount,
     order_greater_than,
-    order_amount
+    ORDER_AMOUNT
 
 ):
 
-    orders = row["DOCUMENT_DONE_ORDER"]
+    orders = row["DOCUMENT_DONE_ORDERS"]
     amount = 0
 
     if first_from_condition <= orders <= first_to_condition:
@@ -282,7 +282,7 @@ def calculate_document_amount(
       amount = third_amount * orders
 
     elif orders >= order_greater_than:
-      amount = order_amount * orders
+      amount = ORDER_AMOUNT * orders
 
     return amount
 
@@ -299,7 +299,7 @@ def calculate_parcel_amount(
     third_to_condition,
     third_amount,
     order_greater_than,
-    order_amount
+    ORDER_AMOUNT
 
 ):
 
@@ -316,7 +316,7 @@ def calculate_parcel_amount(
       amount = third_amount * orders
 
     elif orders >= order_greater_than:
-      amount = order_amount * orders
+      amount = ORDER_AMOUNT * orders
 
     return amount
     
@@ -353,8 +353,8 @@ def create_table(dataframe):
             "Total_Earning": "sum",
             "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
-            "RAIN ORDER": "sum",
-            "IGCC AMOUNT": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "Total_Orders": "sum",
         }
@@ -367,14 +367,14 @@ def add_bonus(row):
 
     order_done = row["PARCEL_DONE_ORDERS"]
     job_type = row["WORK_TYPE"]
-    order_amount = row["ORDER_AMOUNT"]
+    ORDER_AMOUNT = row["ORDER_AMOUNT"]
 
     if job_type == "full time" & order_done >= 700:
-        order_amount = order_amount + 1000
+        ORDER_AMOUNT = ORDER_AMOUNT + 1000
 
     elif job_type == "part time" & order_done >= 400:
-        order_amount = order_amount + 500
+        ORDER_AMOUNT = ORDER_AMOUNT + 500
 
-    return order_amount
+    return ORDER_AMOUNT
 
     
