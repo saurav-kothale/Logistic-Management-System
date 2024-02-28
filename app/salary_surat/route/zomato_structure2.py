@@ -8,6 +8,8 @@ from app.salary_surat.view.zomato_structure2 import (
     calculate_salary_surat,
     create_table,
     calculate_bike_charges,
+    calculate_rejection,
+    calculate_bad_orders
 )
 import pandas as pd
 import tempfile, json
@@ -42,11 +44,15 @@ def claculate_salary(
 
     df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
 
+    df["REJECTION_AMOUNT"] = df.apply(lambda row : calculate_rejection(row, data), axis=1)
+
+    df["BAD_ORDER_AMOUNT"] = df.apply(lambda row : calculate_bad_orders(row, data), axis=1)
+
     table = create_table(df).reset_index()
 
     table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
 
-    table["PANALTIES"] = table["IGCC_AMOUNT"]
+    table["PANALTIES"] = table["IGCC_AMOUNT"] + table["REJECTION_AMOUNT"] + table["BAD_ORDER_AMOUNT"]
 
     table["FINAL_AMOUNT"] = (
         table["ORDER_AMOUNT"]

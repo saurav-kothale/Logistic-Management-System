@@ -28,6 +28,8 @@ def claculate_salary(
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "swiggy")]
 
+    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
+
     df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_ahmedabad(row, data), axis=1)
 
     df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
@@ -39,6 +41,12 @@ def claculate_salary(
     table["PANALTIES"] = table["IGCC_AMOUNT"]
 
     table["FINAL_AMOUNT"] = table["ORDER_AMOUNT"] + table["BONUS"] - table["PANALTIES"] - table["BIKE_CHARGES"]
+
+    table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
+
+    table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
+        table["VENDER_FEE (@6%)"]
+    )
 
     file_key = f"uploads/{data.file_id}/{data.file_name}"
 

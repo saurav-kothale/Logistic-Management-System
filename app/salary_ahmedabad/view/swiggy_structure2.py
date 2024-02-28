@@ -64,3 +64,23 @@ def add_bonus(row, data):
         amount = data.bonus_amount_partime
 
     return amount
+
+
+def calculate_rejection(row, data):
+    rejection = row["REJECTION"]
+    amount = 0
+
+    if rejection >= data.rejection:
+        amount = rejection * data.rejection_amount
+
+    return amount
+
+
+def calculate_bad_orders(row, data):
+    bad_order = row["BAD_ORDER"]
+    amount = 0
+
+    if bad_order >= data.bad_order:
+        amount = bad_order * data.bad_order_amount
+
+    return amount

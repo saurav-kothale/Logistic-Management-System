@@ -17,6 +17,11 @@ class SuratSwiggySchema(BaseModel):
     bonus_amount_fulltime: int = 1000
     bonus_order_partime: int = 400
     bonus_amount_partime: int = 500
+    rejection: int = 2
+    rejection_amount : int = 20
+    bad_order : int = 2
+    bad_order_amount : int = 20
+
 
     class Config:
         from_attributes = True

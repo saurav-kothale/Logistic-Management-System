@@ -46,7 +46,9 @@ def create_table(dataframe):
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "TOTAL_ORDERS": "sum"
+            "TOTAL_ORDERS": "sum",
+            "REJECTION_AMOUNT": "sum",
+            "BAD_ORDER_AMOUNT": "sum"
         }
        )
 
@@ -63,5 +65,25 @@ def add_bonus(row, data):
 
     elif (row["WORK_TYPE"] == "part time") and (order_done >= data.bonus_order_partime):
         amount = data.bonus_amount_partime
+
+    return amount
+
+
+def calculate_rejection(row, data):
+    rejection = row["REJECTION"]
+    amount = 0
+
+    if rejection >= data.rejection:
+        amount = rejection * data.rejection_amount
+
+    return amount
+
+
+def calculate_bad_orders(row, data):
+    bad_order = row["BAD_ORDER"]
+    amount = 0
+
+    if bad_order >= data.bad_order:
+        amount = bad_order * data.bad_order_amount
 
     return amount
