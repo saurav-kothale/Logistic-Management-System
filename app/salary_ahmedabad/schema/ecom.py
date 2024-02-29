@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class AhemedabadEcomSchema(BaseModel):
-    file_id : str
-    file_name: str
+    # file_id : str
+    # file_name: str
     from_order: int = 1
     to_order: int = 40
     first_amount : int = 13

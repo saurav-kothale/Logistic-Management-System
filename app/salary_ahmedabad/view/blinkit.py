@@ -5,10 +5,10 @@ def calculate_blinkit_salary(row, data):
     amount = 0
 
     if data.from_order <= order_done <= data.to_order:
-        amount = order_done * data.first_amount
+        amount = order_done * data.first_order_amount
 
     elif order_done >= data.order_greter_than:
-        amount = order_done * data.ORDER_AMOUNT
+        amount = order_done * data.second_order_amount
 
     return amount
 

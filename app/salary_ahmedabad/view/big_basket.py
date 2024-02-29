@@ -1,7 +1,7 @@
 import pandas as pd
 
 def calculate_big_basket_biker_salary(row, data):
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["BIKE"]
     amount = 0
 
     if data.biker_from_delivery <= order_done <= data.biker_to_delivery:
@@ -13,7 +13,7 @@ def calculate_big_basket_biker_salary(row, data):
     return amount
 
 def calculate_big_basket_micro_salary(row, data):
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["MICRO"]
     amount = 0
 
     if data.micro_from_delivery <= order_done <= data.micro_to_delivery:
@@ -33,8 +33,9 @@ def create_table(dataframe):
             aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
+            "BIKE": "sum",
+            "MICRO" : "sum",
             "ORDER_AMOUNT": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",

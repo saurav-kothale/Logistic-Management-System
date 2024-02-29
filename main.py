@@ -10,6 +10,10 @@ from app.salary_ahmedabad.route.zomato import ahmedabad_router
 from app.salary_surat.route.zomato_structure2 import surat_zomato_structure2_router
 from app.salary_surat.route.swiggy_structure2 import surat_swiggy_structure2_router
 from app.salary_surat.route.master_api.zomato import master_router
+from app.salary_ahmedabad.route.flipkart import ahmedabad_flipkart_router
+from app.salary_ahmedabad.route.ecom import ahmedabad_ecom_router
+from app.salary_ahmedabad.route.blinkit import ahmedabad_blinkit_router
+from app.salary_ahmedabad.route.big_basket import ahmedabadbigbascket
 
 
 app = FastAPI()
@@ -25,6 +29,11 @@ app.include_router(ahmedabad_router, prefix="/ahmedabad")
 app.include_router(surat_zomato_structure2_router, prefix= "/surat")
 app.include_router(surat_swiggy_structure2_router, prefix='/surat')
 app.include_router(master_router, prefix='/surat')
+app.include_router(ahmedabad_flipkart_router, prefix='/ahmedabad')
+app.include_router(ahmedabad_ecom_router, prefix='/ahmedabad')
+app.include_router(ahmedabad_blinkit_router, prefix='/ahmedabad')
+app.include_router(ahmedabadbigbascket, prefix="/ahmedabad")
+
 
 
 app.add_middleware(
