@@ -59,7 +59,7 @@ async def calculate_zomato_surat(
 ):
 
     df = pd.read_excel(file.file)
-    df["DATE"] = pd.to_datetime(df["DATE"])
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
     df["ORDER_AMOUNT"] = df.apply(
@@ -168,7 +168,7 @@ async def calculate_swiggy_surat(
 ):
 
     df = pd.read_excel(file.file)
-    df["DATE"] = pd.to_datetime(df["DATE"])
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
     df["ORDER_AMOUNT"] = df.apply(
@@ -218,14 +218,14 @@ async def calculate_swiggy_surat(
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
-            "Total_Orders": "sum",
+            "TOTAL_ORDERS": "sum",
             "PANALTIES": "sum",
         },
     )
 
     table_reset = table.reset_index()
 
-    table_reset["Final_Amount"] = table_reset["ORDER_AMOUNT"] - table_reset["PANALTIES"]
+    table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"] - table_reset["PANALTIES"]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -273,8 +273,8 @@ async def calculate_bb_now_surat(
             "DRIVER_NAME",
             "CITY_NAME",
             "CLIENT_NAME",
-            "REJECTION",
-            "BAD_ORDER",
+            # "REJECTION",
+            # "BAD_ORDER",
         ],
         aggfunc={
             "TOTAL_ORDERS": "sum",
@@ -283,6 +283,8 @@ async def calculate_bb_now_surat(
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
+            "REJECTION" : "sum",
+            "BAD_ORDER": "sum"
         },
     ).reset_index()
 
@@ -390,7 +392,7 @@ def calculate_ecom_surat(
     third_condition_amount: int = Form(16),
 ):
     df = pd.read_excel(file.file)
-
+    breakpoint()
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "ecom")]
     df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_ecom_surat,
@@ -709,7 +711,7 @@ def calculate_bluedart(
 
 @salary_router.get("/samplefile")
 def getfile():
-    file_key = f"uploads/month_year_city.xlsx"
+    file_key = f"uploads/b2e9547c-eaae-4417-8dd5-effd3aabae88/mm_yyyy_city.xlsx"
     response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
     file_data = response["Body"].read()
     df = pd.read_excel(io.BytesIO(file_data))
@@ -718,10 +720,9 @@ def getfile():
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
             df.to_excel(writer, sheet_name="Sheet1", index=False)
 
-    content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    response = FileResponse(temp_file.name, media_type=content_type)
-    response.headers["Content-Disposition"] = (
-        'attachment; filename="month_year_city.xlsx"'
+    return FileResponse(
+        temp_file.name,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f"attachment; filename=month_year_city.xlsx"},
+        filename="month_year_city.xlsx",
     )
-
-    return response

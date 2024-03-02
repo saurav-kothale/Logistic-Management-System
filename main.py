@@ -14,7 +14,7 @@ from app.salary_ahmedabad.route.flipkart import ahmedabad_flipkart_router
 from app.salary_ahmedabad.route.ecom import ahmedabad_ecom_router
 from app.salary_ahmedabad.route.blinkit import ahmedabad_blinkit_router
 from app.salary_ahmedabad.route.big_basket import ahmedabadbigbascket
-
+from app.salary_ahmedabad.route.bbnow import ahmedabadbbnow_router
 
 app = FastAPI()
 
@@ -33,6 +33,8 @@ app.include_router(ahmedabad_flipkart_router, prefix='/ahmedabad')
 app.include_router(ahmedabad_ecom_router, prefix='/ahmedabad')
 app.include_router(ahmedabad_blinkit_router, prefix='/ahmedabad')
 app.include_router(ahmedabadbigbascket, prefix="/ahmedabad")
+app.include_router(ahmedabadbbnow_router, prefix="/ahmedabad")
+
 
 
 

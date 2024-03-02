@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class AhmedabadBigBascketSchema(BaseModel):
-    # file_id: str
-    # file_name: str
+    file_id: str
+    file_name: str
     biker_from_delivery: int = 1
     biker_to_delivery: int = 15
     biker_first_amount: int = 30

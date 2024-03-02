@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class AhmedabadBlinkitSchema(BaseModel):
-    # file_id : str
-    # file_name: str
+    file_id : str
+    file_name: str
     from_order : int = 1
     to_order : int = 19
     first_order_amount : int = 24

@@ -67,36 +67,36 @@ def claculate_salary(
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
             table.to_excel(writer, sheet_name="Sheet1", index=False)
 
-    #     file_id = uuid.uuid4()
-    #     file_key = f"uploads/{file_id}/{file.filename}"
+        file_id = uuid.uuid4()
+        file_key = f"uploads/{file_id}/{file.filename}"
 
-    #     new_file = SalaryFile(
-    #         filekey=file_key,
-    #         file_name=file.filename,
-    #         file_type=".xlsx",
-    #         created_at=datetime.now(),
-    #     )
+        new_file = SalaryFile(
+            filekey=file_key,
+            file_name=file.filename,
+            file_type=".xlsx",
+            created_at=datetime.now(),
+        )
 
-    #     db.add(new_file)
+        db.add(new_file)
 
-    #     db.commit()
+        db.commit()
 
-    #     try:
-    #         s3_client.upload_fileobj(temp_file, processed_bucket, file_key)
+        try:
+            s3_client.upload_fileobj(temp_file, processed_bucket, file_key)
 
-    #     except exception as e:
-    #         return {"error": e}
+        except exception as e:
+            return {"error": e}
 
-    # return {
-    #     "message": "Successfully Calculated Salary for Zomato Ahmedabad",
-    #     "file_id": file_id,
-    #     "file_name": file.filename,
-    # }
+    return {
+        "message": "Successfully Calculated Salary for Zomato Ahmedabad",
+        "file_id": file_id,
+        "file_name": file.filename,
+    }
 
-    content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    response = FileResponse(temp_file.name, media_type=content_type)
-    response.headers["Content-Disposition"] = (
-        'attachment; filename="month_year_city.xlsx"'
-    )
+    # content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    # response = FileResponse(temp_file.name, media_type=content_type)
+    # response.headers["Content-Disposition"] = (
+    #     'attachment; filename="month_year_city.xlsx"'
+    # )
 
-    return response
+    # return response
