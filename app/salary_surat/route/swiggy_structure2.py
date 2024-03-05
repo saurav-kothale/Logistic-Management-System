@@ -32,6 +32,20 @@ def claculate_salary(data: SuratSwiggySchema = Depends(), file: UploadFile = Fil
 
     df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
+    driver_totals = (
+        df.groupby("DRIVER_ID")
+        .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .reset_index()
+    )
+
+    driver_totals["AVERAGE"] = round(
+        driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"]
+    ,0)
+
+    df = pd.merge(
+        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
+    )
+
     df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
 
     df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
