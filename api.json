@@ -1,0 +1,2971 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/surat/zomato/structure1": {
+            "post": {
+                "summary": "Calculate Zomato Surat",
+                "operationId": "calculate_zomato_surat_surat_zomato_structure1_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_calculate_zomato_surat_surat_zomato_structure1_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/swiggy/structure1/{file_id}/{file_name}": {
+            "post": {
+                "summary": "Calculate Swiggy Surat",
+                "operationId": "calculate_swiggy_surat_surat_swiggy_structure1__file_id___file_name__post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_calculate_swiggy_surat_surat_swiggy_structure1__file_id___file_name__post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/bbnow/structure1/{file_id}/{file_name}": {
+            "post": {
+                "summary": "Calculate Bb Now Surat",
+                "operationId": "calculate_bb_now_surat_surat_bbnow_structure1__file_id___file_name__post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_calculate_bb_now_surat_surat_bbnow_structure1__file_id___file_name__post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/ecom/structure1/{file_id}/{file_name}": {
+            "post": {
+                "summary": "Calculate Ecom Surat",
+                "operationId": "calculate_ecom_surat_surat_ecom_structure1__file_id___file_name__post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_calculate_ecom_surat_surat_ecom_structure1__file_id___file_name__post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/flipkart/structure1/{file_id}/{file_name}": {
+            "post": {
+                "summary": "Calculate Flipcart Surat",
+                "operationId": "calculate_flipcart_surat_surat_flipkart_structure1__file_id___file_name__post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_calculate_flipcart_surat_surat_flipkart_structure1__file_id___file_name__post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/bluedart/structure/{file_id}/{file_name}": {
+            "post": {
+                "summary": "Calculate Bluedart",
+                "operationId": "calculate_bluedart_surat_bluedart_structure__file_id___file_name__post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_calculate_bluedart_surat_bluedart_structure__file_id___file_name__post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/samplefile": {
+            "get": {
+                "summary": "Getfile",
+                "operationId": "getfile_surat_samplefile_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "summary": "Create User",
+                "operationId": "create_user_signup_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserSignupData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "Log In",
+                "operationId": "log_in_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserLoginData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/uploadfile/": {
+            "get": {
+                "summary": "Create Upload Files",
+                "operationId": "create_upload_files_uploadfile__get",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_create_upload_files_uploadfile__get"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/uploadfile": {
+            "post": {
+                "summary": "Create Upload File",
+                "operationId": "create_upload_file_uploadfile_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_create_upload_file_uploadfile_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/download_raw_file/{file_key}": {
+            "get": {
+                "summary": "Download Raw File",
+                "operationId": "download_raw_file_download_raw_file__file_key__get",
+                "parameters": [
+                    {
+                        "name": "file_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "File Key",
+                            "title": "File Key"
+                        },
+                        "description": "File Key"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/download_salary_file/{file_key}": {
+            "get": {
+                "summary": "Download Salary File",
+                "operationId": "download_salary_file_download_salary_file__file_key__get",
+                "parameters": [
+                    {
+                        "name": "file_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Key"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/salayfiles": {
+            "get": {
+                "summary": "Get Salary Files",
+                "operationId": "get_salary_files_salayfiles_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rawfiles": {
+            "get": {
+                "summary": "Get Raw Files",
+                "operationId": "get_raw_files_rawfiles_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clients": {
+            "post": {
+                "summary": "Create Vender",
+                "operationId": "create_vender_clients_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClientSchema"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clients/getclients": {
+            "get": {
+                "summary": "Get Clients",
+                "operationId": "get_clients_clients_getclients_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "clients/{client_id}": {
+            "get": {
+                "summary": "Get Client",
+                "operationId": "get_clientclients__client_id__get",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Client Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clients/{client_id}": {
+            "patch": {
+                "summary": "Update Client",
+                "operationId": "update_client_clients__client_id__patch",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Client Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClientSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Client",
+                "operationId": "delete_client_clients__client_id__delete",
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Client Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vender": {
+            "post": {
+                "summary": "Create Vender",
+                "operationId": "create_vender_vender_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VendorSchema"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/venders/getvenders": {
+            "get": {
+                "summary": "Get Clients",
+                "operationId": "get_clients_venders_getvenders_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "venders/{vender_id}": {
+            "get": {
+                "summary": "Get Client",
+                "operationId": "get_clientvenders__vender_id__get",
+                "parameters": [
+                    {
+                        "name": "vender_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vender Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clients/{vendor_id}": {
+            "patch": {
+                "summary": "Update Client",
+                "operationId": "update_client_clients__vendor_id__patch",
+                "parameters": [
+                    {
+                        "name": "vendor_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vendor Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VendorSchema"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Client",
+                "operationId": "delete_client_clients__vendor_id__delete",
+                "parameters": [
+                    {
+                        "name": "vendor_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Vendor Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ahmedabad/zomato/structure1": {
+            "post": {
+                "summary": "Claculate Salary",
+                "operationId": "claculate_salary_ahmedabad_zomato_structure1_post",
+                "parameters": [
+                    {
+                        "name": "zomato_first_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Zomato First Order Start"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 29,
+                            "title": "Zomato First Order End"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato First Order Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 35,
+                            "title": "Zomato Second Order Amount"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Vahicle Charges Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Vahicle Charges Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 12,
+                            "title": "Vahicle Charges Order Partime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 70,
+                            "title": "Vahicle Charges Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 700,
+                            "title": "Bonus Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1000,
+                            "title": "Bonus Amount Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 400,
+                            "title": "Bonus Order Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 500,
+                            "title": "Bonus Amount Partime"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_claculate_salary_ahmedabad_zomato_structure1_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/zomato/structure2": {
+            "post": {
+                "summary": "Claculate Salary",
+                "operationId": "claculate_salary_surat_zomato_structure2_post",
+                "parameters": [
+                    {
+                        "name": "zomato_first_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Zomato First Order Start"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 29,
+                            "title": "Zomato First Order End"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato First Order Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 35,
+                            "title": "Zomato Second Order Amount"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Vahicle Charges Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Vahicle Charges Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 12,
+                            "title": "Vahicle Charges Order Partime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 70,
+                            "title": "Vahicle Charges Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 700,
+                            "title": "Bonus Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1000,
+                            "title": "Bonus Amount Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 400,
+                            "title": "Bonus Order Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 500,
+                            "title": "Bonus Amount Partime"
+                        }
+                    },
+                    {
+                        "name": "rejection",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Rejection"
+                        }
+                    },
+                    {
+                        "name": "rejection_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Rejection Amount"
+                        }
+                    },
+                    {
+                        "name": "bad_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Bad Order"
+                        }
+                    },
+                    {
+                        "name": "bad_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Bad Order Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_claculate_salary_surat_zomato_structure2_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/swiggy/structure2": {
+            "post": {
+                "summary": "Claculate Salary",
+                "operationId": "claculate_salary_surat_swiggy_structure2_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Swiggy First Order Start"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 29,
+                            "title": "Swiggy First Order End"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Swiggy First Order Amount"
+                        }
+                    },
+                    {
+                        "name": "swiggy_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Swiggy Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "swiggy_second_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 35,
+                            "title": "Swiggy Second Order Amount"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Vahicle Charges Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Vahicle Charges Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 12,
+                            "title": "Vahicle Charges Order Partime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 70,
+                            "title": "Vahicle Charges Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 700,
+                            "title": "Bonus Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1000,
+                            "title": "Bonus Amount Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 400,
+                            "title": "Bonus Order Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 500,
+                            "title": "Bonus Amount Partime"
+                        }
+                    },
+                    {
+                        "name": "rejection",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Rejection"
+                        }
+                    },
+                    {
+                        "name": "rejection_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Rejection Amount"
+                        }
+                    },
+                    {
+                        "name": "bad_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Bad Order"
+                        }
+                    },
+                    {
+                        "name": "bad_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Bad Order Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_claculate_salary_surat_swiggy_structure2_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ahmedabad/flipkart/structure1": {
+            "post": {
+                "summary": "Get Salary",
+                "operationId": "get_salary_ahmedabad_flipkart_structure1_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 12,
+                            "title": "Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_get_salary_ahmedabad_flipkart_structure1_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ahmedabad/ecom/structure1": {
+            "post": {
+                "summary": "Get Salary",
+                "operationId": "get_salary_ahmedabad_ecom_structure1_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "from_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "From Order"
+                        }
+                    },
+                    {
+                        "name": "to_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 40,
+                            "title": "To Order"
+                        }
+                    },
+                    {
+                        "name": "first_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 13,
+                            "title": "First Amount"
+                        }
+                    },
+                    {
+                        "name": "second_from_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 41,
+                            "title": "Second From Order"
+                        }
+                    },
+                    {
+                        "name": "second_to_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 60,
+                            "title": "Second To Order"
+                        }
+                    },
+                    {
+                        "name": "second_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 14,
+                            "title": "Second Amount"
+                        }
+                    },
+                    {
+                        "name": "order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 61,
+                            "title": "Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "ORDER_AMOUNT",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "title": "Order Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_get_salary_ahmedabad_ecom_structure1_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ahmedabad/blinkit/structure1": {
+            "post": {
+                "summary": "Get Salary",
+                "operationId": "get_salary_ahmedabad_blinkit_structure1_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "from_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "From Order"
+                        }
+                    },
+                    {
+                        "name": "to_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 19,
+                            "title": "To Order"
+                        }
+                    },
+                    {
+                        "name": "first_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 24,
+                            "title": "First Order Amount"
+                        }
+                    },
+                    {
+                        "name": "order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "second_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 28,
+                            "title": "Second Order Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_get_salary_ahmedabad_blinkit_structure1_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ahmedabad/bigbasket/structure1": {
+            "post": {
+                "summary": "Get Salary",
+                "operationId": "get_salary_ahmedabad_bigbasket_structure1_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "biker_from_delivery",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Biker From Delivery"
+                        }
+                    },
+                    {
+                        "name": "biker_to_delivery",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "title": "Biker To Delivery"
+                        }
+                    },
+                    {
+                        "name": "biker_first_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Biker First Amount"
+                        }
+                    },
+                    {
+                        "name": "biker_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 16,
+                            "title": "Biker Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "biker_second_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Biker Second Amount"
+                        }
+                    },
+                    {
+                        "name": "micro_from_delivery",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Micro From Delivery"
+                        }
+                    },
+                    {
+                        "name": "micro_to_delivery",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 22,
+                            "title": "Micro To Delivery"
+                        }
+                    },
+                    {
+                        "name": "micro_first_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Micro First Amount"
+                        }
+                    },
+                    {
+                        "name": "micro_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 23,
+                            "title": "Micro Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "micro_second_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 22,
+                            "title": "Micro Second Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_get_salary_ahmedabad_bigbasket_structure1_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ahmedabad/bbnow/structure1": {
+            "post": {
+                "summary": "Get Salary",
+                "operationId": "get_salary_ahmedabad_bbnow_structure1_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "from_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "From Order"
+                        }
+                    },
+                    {
+                        "name": "to_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "title": "To Order"
+                        }
+                    },
+                    {
+                        "name": "first_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "First Amount"
+                        }
+                    },
+                    {
+                        "name": "order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 16,
+                            "title": "Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "second_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 35,
+                            "title": "Second Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_get_salary_ahmedabad_bbnow_structure1_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BankDetails": {
+                "properties": {
+                    "account_number": {
+                        "type": "integer",
+                        "title": "Account Number"
+                    },
+                    "IFSC_code": {
+                        "type": "string",
+                        "title": "Ifsc Code"
+                    },
+                    "bank_name": {
+                        "type": "string",
+                        "title": "Bank Name"
+                    },
+                    "party_name": {
+                        "type": "string",
+                        "title": "Party Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "account_number",
+                    "IFSC_code",
+                    "bank_name",
+                    "party_name"
+                ],
+                "title": "BankDetails"
+            },
+            "Body_calculate_bb_now_surat_surat_bbnow_structure1__file_id___file_name__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    },
+                    "orders_less_then": {
+                        "type": "integer",
+                        "title": "Orders Less Then",
+                        "default": 13
+                    },
+                    "order_amount1": {
+                        "type": "integer",
+                        "title": "Order Amount1",
+                        "default": 400
+                    },
+                    "from_order": {
+                        "type": "integer",
+                        "title": "From Order",
+                        "default": 1
+                    },
+                    "to_order": {
+                        "type": "integer",
+                        "title": "To Order",
+                        "default": 14
+                    },
+                    "order_amount2": {
+                        "type": "integer",
+                        "title": "Order Amount2",
+                        "default": 30
+                    },
+                    "order_grether_than": {
+                        "type": "integer",
+                        "title": "Order Grether Than",
+                        "default": 15
+                    },
+                    "order_amount3": {
+                        "type": "integer",
+                        "title": "Order Amount3",
+                        "default": 35
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_calculate_bb_now_surat_surat_bbnow_structure1__file_id___file_name__post"
+            },
+            "Body_calculate_bluedart_surat_bluedart_structure__file_id___file_name__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    },
+                    "from_order_document": {
+                        "type": "integer",
+                        "title": "From Order Document",
+                        "default": 1
+                    },
+                    "to_order_document": {
+                        "type": "integer",
+                        "title": "To Order Document",
+                        "default": 44
+                    },
+                    "first_amount_document": {
+                        "type": "integer",
+                        "title": "First Amount Document",
+                        "default": 5
+                    },
+                    "second_condition_from_document": {
+                        "type": "integer",
+                        "title": "Second Condition From Document",
+                        "default": 45
+                    },
+                    "second_condition_to_document": {
+                        "type": "integer",
+                        "title": "Second Condition To Document",
+                        "default": 64
+                    },
+                    "second_condition_amount_document": {
+                        "type": "integer",
+                        "title": "Second Condition Amount Document",
+                        "default": 6
+                    },
+                    "third_condition_from_document": {
+                        "type": "integer",
+                        "title": "Third Condition From Document",
+                        "default": 65
+                    },
+                    "third_condition_to_document": {
+                        "type": "integer",
+                        "title": "Third Condition To Document",
+                        "default": 79
+                    },
+                    "third_condtion_amount_document": {
+                        "type": "integer",
+                        "title": "Third Condtion Amount Document",
+                        "default": 7
+                    },
+                    "order_greater_than_document": {
+                        "type": "integer",
+                        "title": "Order Greater Than Document",
+                        "default": 80
+                    },
+                    "order_amount_document": {
+                        "type": "number",
+                        "title": "Order Amount Document",
+                        "default": 7.5
+                    },
+                    "from_order_parcel": {
+                        "type": "integer",
+                        "title": "From Order Parcel",
+                        "default": 1
+                    },
+                    "to_order_parcel": {
+                        "type": "integer",
+                        "title": "To Order Parcel",
+                        "default": 20
+                    },
+                    "first_amount_parcel": {
+                        "type": "integer",
+                        "title": "First Amount Parcel",
+                        "default": 10
+                    },
+                    "second_condition_from_parcel": {
+                        "type": "integer",
+                        "title": "Second Condition From Parcel",
+                        "default": 21
+                    },
+                    "second_condition_to_parcel": {
+                        "type": "integer",
+                        "title": "Second Condition To Parcel",
+                        "default": 35
+                    },
+                    "second_condition_amount_parcel": {
+                        "type": "integer",
+                        "title": "Second Condition Amount Parcel",
+                        "default": 12
+                    },
+                    "third_condition_from_parcel": {
+                        "type": "integer",
+                        "title": "Third Condition From Parcel",
+                        "default": 36
+                    },
+                    "third_condition_to_parcel": {
+                        "type": "integer",
+                        "title": "Third Condition To Parcel",
+                        "default": 45
+                    },
+                    "third_condtion_amount_parcel": {
+                        "type": "integer",
+                        "title": "Third Condtion Amount Parcel",
+                        "default": 13
+                    },
+                    "order_greater_than_parcel": {
+                        "type": "integer",
+                        "title": "Order Greater Than Parcel",
+                        "default": 46
+                    },
+                    "order_amount_parcel": {
+                        "type": "number",
+                        "title": "Order Amount Parcel",
+                        "default": 13.5
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_calculate_bluedart_surat_bluedart_structure__file_id___file_name__post"
+            },
+            "Body_calculate_ecom_surat_surat_ecom_structure1__file_id___file_name__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    },
+                    "from_order": {
+                        "type": "integer",
+                        "title": "From Order",
+                        "default": 1
+                    },
+                    "to_order": {
+                        "type": "integer",
+                        "title": "To Order",
+                        "default": 40
+                    },
+                    "first_amount": {
+                        "type": "integer",
+                        "title": "First Amount",
+                        "default": 14
+                    },
+                    "second_condition_from": {
+                        "type": "integer",
+                        "title": "Second Condition From",
+                        "default": 41
+                    },
+                    "second_condition_to": {
+                        "type": "integer",
+                        "title": "Second Condition To",
+                        "default": 55
+                    },
+                    "second_condition_amount": {
+                        "type": "integer",
+                        "title": "Second Condition Amount",
+                        "default": 15
+                    },
+                    "third_condition": {
+                        "type": "integer",
+                        "title": "Third Condition",
+                        "default": 56
+                    },
+                    "third_condition_amount": {
+                        "type": "integer",
+                        "title": "Third Condition Amount",
+                        "default": 16
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_calculate_ecom_surat_surat_ecom_structure1__file_id___file_name__post"
+            },
+            "Body_calculate_flipcart_surat_surat_flipkart_structure1__file_id___file_name__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    },
+                    "from_order": {
+                        "type": "integer",
+                        "title": "From Order",
+                        "default": 1
+                    },
+                    "to_order": {
+                        "type": "integer",
+                        "title": "To Order",
+                        "default": 40
+                    },
+                    "first_amount": {
+                        "type": "integer",
+                        "title": "First Amount",
+                        "default": 12
+                    },
+                    "second_condition_from": {
+                        "type": "integer",
+                        "title": "Second Condition From",
+                        "default": 41
+                    },
+                    "second_condition_to": {
+                        "type": "integer",
+                        "title": "Second Condition To",
+                        "default": 55
+                    },
+                    "second_condition_amount": {
+                        "type": "integer",
+                        "title": "Second Condition Amount",
+                        "default": 13
+                    },
+                    "third_condition": {
+                        "type": "integer",
+                        "title": "Third Condition",
+                        "default": 55
+                    },
+                    "third_condition_amount": {
+                        "type": "integer",
+                        "title": "Third Condition Amount",
+                        "default": 14
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_calculate_flipcart_surat_surat_flipkart_structure1__file_id___file_name__post"
+            },
+            "Body_calculate_swiggy_surat_surat_swiggy_structure1__file_id___file_name__post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    },
+                    "first_order_from": {
+                        "type": "integer",
+                        "title": "First Order From",
+                        "default": 1
+                    },
+                    "first_order_to": {
+                        "type": "integer",
+                        "title": "First Order To",
+                        "default": 19
+                    },
+                    "first_week_amount": {
+                        "type": "integer",
+                        "title": "First Week Amount",
+                        "default": 20
+                    },
+                    "first_weekend_amount": {
+                        "type": "integer",
+                        "title": "First Weekend Amount",
+                        "default": 22
+                    },
+                    "second_order_from": {
+                        "type": "integer",
+                        "title": "Second Order From",
+                        "default": 20
+                    },
+                    "second_order_to": {
+                        "type": "integer",
+                        "title": "Second Order To",
+                        "default": 25
+                    },
+                    "second_week_amount": {
+                        "type": "integer",
+                        "title": "Second Week Amount",
+                        "default": 25
+                    },
+                    "second_weekend_amount": {
+                        "type": "integer",
+                        "title": "Second Weekend Amount",
+                        "default": 27
+                    },
+                    "order_grether_than": {
+                        "type": "integer",
+                        "title": "Order Grether Than",
+                        "default": 25
+                    },
+                    "week_amount": {
+                        "type": "integer",
+                        "title": "Week Amount",
+                        "default": 30
+                    },
+                    "weekend_amount": {
+                        "type": "integer",
+                        "title": "Weekend Amount",
+                        "default": 32
+                    },
+                    "maximum_rejection": {
+                        "type": "integer",
+                        "title": "Maximum Rejection",
+                        "default": 2
+                    },
+                    "rejection_amount": {
+                        "type": "integer",
+                        "title": "Rejection Amount",
+                        "default": 10
+                    },
+                    "maximum_bad_orders": {
+                        "type": "integer",
+                        "title": "Maximum Bad Orders",
+                        "default": 2
+                    },
+                    "bad_order_amount": {
+                        "type": "integer",
+                        "title": "Bad Order Amount",
+                        "default": 10
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_calculate_swiggy_surat_surat_swiggy_structure1__file_id___file_name__post"
+            },
+            "Body_calculate_zomato_surat_surat_zomato_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    },
+                    "first_order_from": {
+                        "type": "integer",
+                        "title": "First Order From",
+                        "default": 1
+                    },
+                    "first_order_to": {
+                        "type": "integer",
+                        "title": "First Order To",
+                        "default": 19
+                    },
+                    "first_week_amount": {
+                        "type": "integer",
+                        "title": "First Week Amount",
+                        "default": 20
+                    },
+                    "first_weekend_amount": {
+                        "type": "integer",
+                        "title": "First Weekend Amount",
+                        "default": 22
+                    },
+                    "second_order_from": {
+                        "type": "integer",
+                        "title": "Second Order From",
+                        "default": 20
+                    },
+                    "second_order_to": {
+                        "type": "integer",
+                        "title": "Second Order To",
+                        "default": 25
+                    },
+                    "second_week_amount": {
+                        "type": "integer",
+                        "title": "Second Week Amount",
+                        "default": 25
+                    },
+                    "second_weekend_amount": {
+                        "type": "integer",
+                        "title": "Second Weekend Amount",
+                        "default": 27
+                    },
+                    "order_grether_than": {
+                        "type": "integer",
+                        "title": "Order Grether Than",
+                        "default": 25
+                    },
+                    "week_amount": {
+                        "type": "integer",
+                        "title": "Week Amount",
+                        "default": 30
+                    },
+                    "weekend_amount": {
+                        "type": "integer",
+                        "title": "Weekend Amount",
+                        "default": 32
+                    },
+                    "maximum_rejection": {
+                        "type": "integer",
+                        "title": "Maximum Rejection",
+                        "default": 2
+                    },
+                    "rejection_amount": {
+                        "type": "integer",
+                        "title": "Rejection Amount",
+                        "default": 10
+                    },
+                    "maximum_bad_orders": {
+                        "type": "integer",
+                        "title": "Maximum Bad Orders",
+                        "default": 2
+                    },
+                    "bad_order_amount": {
+                        "type": "integer",
+                        "title": "Bad Order Amount",
+                        "default": 10
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_calculate_zomato_surat_surat_zomato_structure1_post"
+            },
+            "Body_claculate_salary_ahmedabad_zomato_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_claculate_salary_ahmedabad_zomato_structure1_post"
+            },
+            "Body_claculate_salary_surat_swiggy_structure2_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_claculate_salary_surat_swiggy_structure2_post"
+            },
+            "Body_claculate_salary_surat_zomato_structure2_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_claculate_salary_surat_zomato_structure2_post"
+            },
+            "Body_create_upload_file_uploadfile_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_create_upload_file_uploadfile_post"
+            },
+            "Body_create_upload_files_uploadfile__get": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_create_upload_files_uploadfile__get"
+            },
+            "Body_get_salary_ahmedabad_bbnow_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_get_salary_ahmedabad_bbnow_structure1_post"
+            },
+            "Body_get_salary_ahmedabad_bigbasket_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_get_salary_ahmedabad_bigbasket_structure1_post"
+            },
+            "Body_get_salary_ahmedabad_blinkit_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_get_salary_ahmedabad_blinkit_structure1_post"
+            },
+            "Body_get_salary_ahmedabad_ecom_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_get_salary_ahmedabad_ecom_structure1_post"
+            },
+            "Body_get_salary_ahmedabad_flipkart_structure1_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_get_salary_ahmedabad_flipkart_structure1_post"
+            },
+            "ClientSchema": {
+                "properties": {
+                    "client_name": {
+                        "type": "string",
+                        "title": "Client Name"
+                    },
+                    "client_hub_name": {
+                        "type": "string",
+                        "title": "Client Hub Name"
+                    },
+                    "address": {
+                        "type": "string",
+                        "title": "Address"
+                    },
+                    "city": {
+                        "type": "string",
+                        "title": "City"
+                    },
+                    "GST_number": {
+                        "type": "string",
+                        "title": "Gst Number"
+                    },
+                    "email": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Email"
+                    },
+                    "mobile_number": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Mobile Number"
+                    },
+                    "HSN_code": {
+                        "type": "string",
+                        "title": "Hsn Code"
+                    },
+                    "PAN_number": {
+                        "type": "string",
+                        "title": "Pan Number"
+                    },
+                    "bank_details": {
+                        "$ref": "#/components/schemas/BankDetails"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "client_name",
+                    "client_hub_name",
+                    "address",
+                    "city",
+                    "GST_number",
+                    "email",
+                    "mobile_number",
+                    "HSN_code",
+                    "PAN_number",
+                    "bank_details"
+                ],
+                "title": "ClientSchema"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "UserLoginData": {
+                "properties": {
+                    "email_id": {
+                        "type": "string",
+                        "title": "Email Id"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email_id",
+                    "password"
+                ],
+                "title": "UserLoginData"
+            },
+            "UserSignupData": {
+                "properties": {
+                    "first_name": {
+                        "type": "string",
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "title": "Last Name"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email_id": {
+                        "type": "string",
+                        "title": "Email Id"
+                    },
+                    "mobile_no": {
+                        "type": "string",
+                        "title": "Mobile No"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "retype_password": {
+                        "type": "string",
+                        "title": "Retype Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "username",
+                    "email_id",
+                    "mobile_no",
+                    "password",
+                    "retype_password"
+                ],
+                "title": "UserSignupData"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "VendorSchema": {
+                "properties": {
+                    "vender_name": {
+                        "type": "string",
+                        "title": "Vender Name"
+                    },
+                    "working_city": {
+                        "type": "string",
+                        "title": "Working City"
+                    },
+                    "register_address": {
+                        "type": "string",
+                        "title": "Register Address"
+                    },
+                    "GST_number": {
+                        "type": "string",
+                        "title": "Gst Number"
+                    },
+                    "HSN_code": {
+                        "type": "string",
+                        "title": "Hsn Code"
+                    },
+                    "PAN_number": {
+                        "type": "string",
+                        "title": "Pan Number"
+                    },
+                    "chapter_head": {
+                        "type": "string",
+                        "title": "Chapter Head"
+                    },
+                    "email": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Email"
+                    },
+                    "mobile_number": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Mobile Number"
+                    },
+                    "bank_details": {
+                        "$ref": "#/components/schemas/BankDetails"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "vender_name",
+                    "working_city",
+                    "register_address",
+                    "GST_number",
+                    "HSN_code",
+                    "PAN_number",
+                    "chapter_head",
+                    "email",
+                    "mobile_number",
+                    "bank_details"
+                ],
+                "title": "VendorSchema"
+            }
+        }
+    }
+}

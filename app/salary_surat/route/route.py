@@ -20,6 +20,7 @@ from ..view.view import (
     calculate_document_amount,
     calculate_parcel_amount,
     calculate_panalties,
+    calculate_order_for_less_amount
 )
 import io
 from fastapi.responses import FileResponse
@@ -264,29 +265,43 @@ async def calculate_bb_now_surat(
 
     df = pd.read_excel(file.file)
 
-    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
+    df = df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")]
 
-    table = pd.pivot_table(
-        data=df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")],
-        index=[
-            "DRIVER_ID",
-            "DRIVER_NAME",
-            "CITY_NAME",
-            "CLIENT_NAME",
-            # "REJECTION",
-            # "BAD_ORDER",
-        ],
-        aggfunc={
-            "TOTAL_ORDERS": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
-            "CUSTOMER_TIP": "sum",
-            "RAIN_ORDER": "sum",
-            "IGCC_AMOUNT": "sum",
-            "ATTENDANCE": "sum",
-            "REJECTION" : "sum",
-            "BAD_ORDER": "sum"
-        },
-    ).reset_index()
+    driver_totals = (
+        df.groupby("DRIVER_ID")
+        .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .reset_index()
+    )
+
+    driver_totals["AVERAGE"] = (
+        driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"]
+    )
+
+    new_df = pd.merge(
+        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
+    )
+
+    # table = pd.pivot_table(
+    #     data=df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")],
+    #     index=[
+    #         "DRIVER_ID",
+    #         "DRIVER_NAME",
+    #         "CITY_NAME",
+    #         "CLIENT_NAME",
+    #         # "REJECTION",
+    #         # "BAD_ORDER",
+    #     ],
+    #     aggfunc={
+    #         "TOTAL_ORDERS": "sum",
+    #         "PARCEL_DONE_ORDERS": "sum",
+    #         "CUSTOMER_TIP": "sum",
+    #         "RAIN_ORDER": "sum",
+    #         "IGCC_AMOUNT": "sum",
+    #         "ATTENDANCE": "sum",
+    #         "REJECTION" : "sum",
+    #         "BAD_ORDER": "sum"
+    #     },
+    # ).reset_index()
 
     # attendance_count = (
     #     df[df["CLIENT_NAME"] == "bb now"]["DRIVER_ID"].value_counts().reset_index()
@@ -297,9 +312,9 @@ async def calculate_bb_now_surat(
 
     # result = pd.merge(table, attendance_count, on="DRIVER_ID", how="left")
 
-    table["AVERAGE"] = round(table["PARCEL_DONE_ORDERS"] / table["ATTENDANCE"])
+    # table["AVERAGE"] = round(table["PARCEL_DONE_ORDERS"] / table["ATTENDANCE"])
 
-    table["ORDER_AMOUNT"] = table.apply(
+    new_df["ORDER_AMOUNT"] = new_df.apply(
         calculate_amount_for_bbnow_surat,
         args=(
             orders_less_then,
@@ -313,6 +328,35 @@ async def calculate_bb_now_surat(
         axis=1,
     )
 
+    table = pd.pivot_table(
+        data=new_df,
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
+        aggfunc={
+            "REJECTION": "sum",
+            "BAD_ORDER": "sum",
+            "ORDER_AMOUNT": "sum",
+            "PARCEL_DONE_ORDERS": "sum",
+            "CUSTOMER_TIP": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
+            "ATTENDANCE": "sum",
+            "AVERAGE": "mean",
+        },
+    ).reset_index()
+
+    table["ORDER_AMOUNT"] = table.apply(
+        lambda row: (
+            calculate_order_for_less_amount(
+                row,
+                orders_less_then,
+                order_amount1
+            )
+            if row["AVERAGE"] < orders_less_then 
+            else row["ORDER_AMOUNT"]
+        ),
+        axis=1,
+    )
+
     table["FINAL_AMOUNT"] = table["ORDER_AMOUNT"]
 
     table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
@@ -321,23 +365,23 @@ async def calculate_bb_now_surat(
         table["VENDER_FEE (@6%)"]
     )
 
-    final_result = table[
-        [
-            "DRIVER_ID",
-            "CITY_NAME",
-            "CLIENT_NAME",
-            "REJECTION",
-            "BAD_ORDER",
-            "ORDER_AMOUNT",
-            "TOTAL_ORDERS",
-            "PARCEL_DONE_ORDERS",
-            "CUSTOMER_TIP",
-            "RAIN_ORDER",
-            "IGCC_AMOUNT",
-            "ATTENDANCE",
-            "FINAL_AMOUNT",
-        ]
-    ]
+    # final_result = table[
+    #     [
+    #         "DRIVER_ID",
+    #         "CITY_NAME",
+    #         "CLIENT_NAME",
+    #         "REJECTION",
+    #         "BAD_ORDER",
+    #         "ORDER_AMOUNT",
+    #         "TOTAL_ORDERS",
+    #         "PARCEL_DONE_ORDERS",
+    #         "CUSTOMER_TIP",
+    #         "RAIN_ORDER",
+    #         "IGCC_AMOUNT",
+    #         "ATTENDANCE",
+    #         "FINAL_AMOUNT",
+    #     ]
+    # ]
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -392,7 +436,6 @@ def calculate_ecom_surat(
     third_condition_amount: int = Form(16),
 ):
     df = pd.read_excel(file.file)
-    breakpoint()
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "ecom")]
     df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_ecom_surat,
@@ -424,7 +467,6 @@ def calculate_ecom_surat(
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "TOTAL_ORDERS": "sum",
-
         },
     )
 
@@ -432,11 +474,13 @@ def calculate_ecom_surat(
 
     table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
 
-    table_reset["VENDER_FEE (@6%)"] = (table_reset["FINAL_AMOUNT"] * 0.06) + (table_reset["FINAL_AMOUNT"])
-
-    table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (table_reset["VENDER_FEE (@6%)"] * 0.18) + (
-        table_reset["VENDER_FEE (@6%)"]
+    table_reset["VENDER_FEE (@6%)"] = (table_reset["FINAL_AMOUNT"] * 0.06) + (
+        table_reset["FINAL_AMOUNT"]
     )
+
+    table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (
+        table_reset["VENDER_FEE (@6%)"] * 0.18
+    ) + (table_reset["VENDER_FEE (@6%)"])
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -470,6 +514,7 @@ def calculate_ecom_surat(
     # )
 
     # return response
+
 
 @salary_router.post("/flipkart/structure1/{file_id}/{file_name}")
 def calculate_flipcart_surat(
@@ -524,11 +569,13 @@ def calculate_flipcart_surat(
     table_reset = table.reset_index()
     table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
 
-    table_reset["VENDER_FEE (@6%)"] = (table_reset["FINAL_AMOUNT"] * 0.06) + (table_reset["FINAL_AMOUNT"])
-
-    table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (table_reset["VENDER_FEE (@6%)"] * 0.18) + (
-        table_reset["VENDER_FEE (@6%)"]
+    table_reset["VENDER_FEE (@6%)"] = (table_reset["FINAL_AMOUNT"] * 0.06) + (
+        table_reset["FINAL_AMOUNT"]
     )
+
+    table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (
+        table_reset["VENDER_FEE (@6%)"] * 0.18
+    ) + (table_reset["VENDER_FEE (@6%)"])
 
     file_key = f"uploads/{file_id}/{file_name}"
 
@@ -593,7 +640,7 @@ def calculate_bluedart(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[df["CLIENT_NAME"].isin(["bluedart biker", "bluedart ven"])]
+    df = df[df["CLIENT_NAME"].isin(["bluedart biker", "bluedart van"])]
     df["DOCUMENT_AMOUNT"] = df.apply(
         calculate_document_amount,
         args=(

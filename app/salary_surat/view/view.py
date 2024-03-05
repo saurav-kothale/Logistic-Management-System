@@ -170,19 +170,43 @@ def calculate_amount_for_bbnow_surat(
 ):
     orders = row["PARCEL_DONE_ORDERS"]
     average = row["AVERAGE"]
-    attendance = row["ATTENDANCE"]
     amount = 0
 
-    if average <= orders_less_then:
-        amount = attendance*order_amount1
+    if average > 13:
+        if orders <= from_order & orders >= to_order:
+            amount =  orders * order_amount2
+        
+        elif orders >= order_grether_than:
+            amount = ((orders - to_order) * order_amount3) + 420
 
-    elif orders_less_then < average <= to_order:
-        amount = orders*order_amount2
-    
-    elif average >= order_grether_than:
-        amount = (order_amount2*to_order) + (orders-to_order)*order_amount3
+    else:
+        amount = 0
 
     return amount
+
+    # elif orders_less_then  average:
+    #     amount = orders*order_amount2
+    
+    # elif average >= order_grether_than:
+    #     amount = (order_amount2*to_order) + (orders-to_order)*order_amount3
+
+    return amount
+
+def calculate_order_for_less_amount(
+        row,
+        orders_less_then,
+        order_amount1,
+        amount = 0
+):
+    average = row["AVERAGE"]
+    attendance = row["ATTENDANCE"]
+
+    if average <= 13:
+        amount = attendance * 400
+    
+    return amount
+
+    
 
 
 def calculate_amount_for_ecom_surat(
