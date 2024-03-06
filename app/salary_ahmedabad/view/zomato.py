@@ -1,3 +1,4 @@
+from numpy import average
 import pandas as pd
 
 def calculate_salary_ahmedabad(row, data):
@@ -8,21 +9,21 @@ def calculate_salary_ahmedabad(row, data):
     if data.zomato_first_order_start <= order_done <= data.zomato_first_order_end:
         amount = order_done * data.zomato_first_order_amount
 
-    elif data.zomato_order_greter_than < order_done:
+    elif order_done >= data.zomato_order_greter_than:
         amount = order_done * data.zomato_second_order_amount
 
     return amount
 
 
 def calculate_bike_charges(row, data):
-    order_done = row["PARCEL_DONE_ORDERS"]
+    average = row['AVERAGE']
     job_type = row["WORK_TYPE"]
     amount = 0
 
-    if job_type == "full time" and order_done < data.vahicle_charges_order_fulltime:
+    if job_type == "full time" and average <= data.vahicle_charges_order_fulltime:
         amount = data.vahicle_charges_fulltime
 
-    elif job_type == "part time" and order_done < data.vahicle_charges_order_partime:
+    elif job_type == "part time" and average <= data.vahicle_charges_order_partime:
         amount = data.vahicle_charges_partime
 
     return amount

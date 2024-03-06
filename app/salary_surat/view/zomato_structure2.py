@@ -25,9 +25,7 @@ def calculate_bike_charges(row, data):
     elif job_type == "part time" and average <= data.vahicle_charges_order_partime:
         amount = data.vahicle_charges_partime
 
-    return amount
-
-    
+    return amount   
 
 
 
@@ -87,3 +85,23 @@ def calculate_bad_orders(row, data):
         amount = bad_order * data.bad_order_amount
 
     return amount
+
+def create_dynamic_pivot_table(dataframe):
+
+    dynamic_columns = [
+            "REJECTION", "BAD_ORDER", "ORDER_AMOUNT", "BIKE_CHARGES",
+            "PARCEL_DONE_ORDERS", "CUSTOMER_TIP", "RAIN_ORDER",
+            "IGCC_AMOUNT", "ATTENDANCE", "TOTAL_ORDERS",
+            "REJECTION_AMOUNT", "BAD_ORDER_AMOUNT"
+        ]
+    
+    dynamic_columns = [col for col in dynamic_columns if col in dataframe.columns]
+    
+    table = pd.pivot_table(
+            data= dataframe,
+            index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME","WORK_TYPE"],
+            aggfunc={col: "sum" for col in dynamic_columns}
+       )
+
+    return table
+

@@ -32,12 +32,26 @@ def claculate_salary(
 
     df = pd.read_excel(file.file)
 
-    df["DATE"] = pd.to_datetime(df["DATE"])
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "zomato")]
 
     df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
+    driver_totals = (
+        df.groupby("DRIVER_ID")
+        .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .reset_index()
+    )
+
+    driver_totals["AVERAGE"] = round(
+        driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"]
+    ,0)
+
+    df = pd.merge(
+        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
+    )
+    
     df["ORDER_AMOUNT"] = df.apply(
         lambda row: calculate_salary_ahmedabad(row, data), axis=1
     )
@@ -48,13 +62,12 @@ def claculate_salary(
 
     table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
 
-    table["PANALTIES"] = table["IGCC_AMOUNT"]
+    table["PANALTIES"] = table["IGCC_AMOUNT"] + table["BIKE_CHARGES"]
 
     table["FINAL_AMOUNT"] = (
         table["ORDER_AMOUNT"]
         + table["BONUS"]
         - table["PANALTIES"]
-        - table["BIKE_CHARGES"]
     )
 
     table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
@@ -91,6 +104,7 @@ def claculate_salary(
         "message": "Successfully Calculated Salary for Zomato Ahmedabad",
         "file_id": file_id,
         "file_name": file.filename,
+        "file_key" : file_key
     }
 
     # content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

@@ -14,6 +14,18 @@ def calculate_bbnow_salary(row, data):
     
     return amount
 
+def calculate_bbnow_salary1(row, data):
+    orders = row["PARCEL_DONE_ORDERS"]
+    amount = 0
+
+    if data.from_order <= orders <= data.to_order:
+        amount = orders * data.first_amount
+
+    elif orders >= data.order_greter_than:
+        amount = orders * data.second_amount
+
+    return amount
+
 
 
 def create_table(dataframe):
@@ -24,8 +36,6 @@ def create_table(dataframe):
             aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "BIKE": "sum",
-            "MICRO" : "sum",
             "ORDER_AMOUNT": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",

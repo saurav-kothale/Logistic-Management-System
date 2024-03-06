@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, UploadFile, File
 from fastapi.responses import FileResponse
 from app.salary_ahmedabad.schema.bbnow import AhmedabadBbnowSchema
 import pandas as pd
-from app.salary_ahmedabad.view.bbnow import calculate_bbnow_salary, create_table
+from app.salary_ahmedabad.view.bbnow import calculate_bbnow_salary, calculate_bbnow_salary1, create_table
 import tempfile
 import io
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
@@ -21,7 +21,7 @@ def get_salary(data : AhmedabadBbnowSchema = Depends(), file : UploadFile = File
 
     df =  df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "bb now")]
 
-    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_bbnow_salary(row, data), axis=1)
+    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_bbnow_salary1(row, data), axis=1)
 
     df["TOTAL_ORDERS"] = df["PARCEL_DONE_ORDERS"]
 

@@ -1261,7 +1261,7 @@
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "default": 12,
+                            "default": 11,
                             "title": "Vahicle Charges Order Partime"
                         }
                     },
@@ -1281,7 +1281,7 @@
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "default": 700,
+                            "default": 630,
                             "title": "Bonus Order Fulltime"
                         }
                     },
@@ -1301,7 +1301,7 @@
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "default": 400,
+                            "default": 350,
                             "title": "Bonus Order Partime"
                         }
                     },
@@ -1362,6 +1362,267 @@
                         "multipart/form-data": {
                             "schema": {
                                 "$ref": "#/components/schemas/Body_claculate_salary_surat_zomato_structure2_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/zomato/new/structure2": {
+            "post": {
+                "tags": [
+                    "Surat Structure 2"
+                ],
+                "summary": "Claculate Salary New",
+                "operationId": "claculate_salary_new_surat_zomato_new_structure2_post",
+                "parameters": [
+                    {
+                        "name": "slab",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Slab"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Zomato First Order Start"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 29,
+                            "title": "Zomato First Order End"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato First Order Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 35,
+                            "title": "Zomato Second Order Amount"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Vahicle Charges"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Vahicle Charges Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Vahicle Charges Fulltime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 11,
+                            "title": "Vahicle Charges Order Partime"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 70,
+                            "title": "Vahicle Charges Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Bonus"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 630,
+                            "title": "Bonus Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1000,
+                            "title": "Bonus Amount Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 350,
+                            "title": "Bonus Order Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 500,
+                            "title": "Bonus Amount Partime"
+                        }
+                    },
+                    {
+                        "name": "rejection",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Rejection"
+                        }
+                    },
+                    {
+                        "name": "rejection_orders",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Rejection Orders"
+                        }
+                    },
+                    {
+                        "name": "rejection_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Rejection Amount"
+                        }
+                    },
+                    {
+                        "name": "bad_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Bad Order"
+                        }
+                    },
+                    {
+                        "name": "bad_orders",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Bad Orders"
+                        }
+                    },
+                    {
+                        "name": "bad_order_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Bad Order Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_claculate_salary_new_surat_zomato_new_structure2_post"
                             }
                         }
                     }
@@ -2705,6 +2966,20 @@
                     "file"
                 ],
                 "title": "Body_claculate_salary_ahmedabad_zomato_structure1_post"
+            },
+            "Body_claculate_salary_new_surat_zomato_new_structure2_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_claculate_salary_new_surat_zomato_new_structure2_post"
             },
             "Body_claculate_salary_surat_swiggy_structure2_post": {
                 "properties": {

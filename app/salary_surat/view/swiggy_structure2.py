@@ -14,6 +14,53 @@ def calculate_salary_surat(row, data):
 
     return amount
 
+def is_weekend(date):
+    return date.weekday() >= 5
+
+def week_or_weekend(row):
+    date = row["DATE"]
+ 
+    if is_weekend(date):
+        return True
+    
+    else:
+        return False
+        
+    return ""
+
+def calculate_amount_for_surat_rental_model(row, data
+                          ):
+    
+    order_done = row['PARCEL_DONE_ORDERS']
+    date = row["DATE"]
+    amount = 0
+    
+    
+    if data.swiggy_first_order_start <= order_done <= data.swiggy_first_order_end:
+        if is_weekend(date):
+            amount = order_done*data.swiggy_first_weekend_amount
+            
+        else:
+            amount = order_done * data.first_week_amount
+        
+
+    elif data.second_from_order <= order_done <= data.second_to_order:
+        if is_weekend(date):
+            amount = order_done * data.second_weekend_amount
+        else:
+            amount = order_done * data.second_week_amount
+        
+
+    elif order_done >= data.order_grether_than:
+        if is_weekend(date):
+            amount = order_done*data.weekend_amount
+        else:
+            amount = order_done*data.week_amount
+
+
+    return amount
+
+
 
 
 def calculate_bike_charges(row, data):
