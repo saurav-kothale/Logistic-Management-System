@@ -1,4 +1,4 @@
-from Isalary import ISalary
+from app.client_salary.Isalary import ISalary
 
 class ZomatoOrderCalculation:
 

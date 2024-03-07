@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def is_weekend(date):
-    return date.weekday() >= 5
+    return date.isoweekday() > 5
 
 
 def validate_filename(file_name):

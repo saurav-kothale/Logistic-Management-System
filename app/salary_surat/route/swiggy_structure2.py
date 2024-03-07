@@ -8,7 +8,8 @@ from app.salary_surat.view.swiggy_structure2 import (
     create_table,
     calculate_bike_charges,
     calculate_bad_orders,
-    calculate_rejection
+    calculate_rejection,
+    calculate_amount_for_surat_rental_model
 )
 import pandas as pd
 import tempfile, json
@@ -162,7 +163,7 @@ def claculate_swiggy_rent_model(data: SuratSwiggySchemaNew = Depends(), file: Up
     if data.include_slab:
 
         df["ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_salary_surat(row, data), axis=1
+            lambda row: calculate_amount_for_surat_rental_model(row, data), axis=1
         )
 
     else:

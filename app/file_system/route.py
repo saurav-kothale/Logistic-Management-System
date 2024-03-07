@@ -1,6 +1,7 @@
 from datetime import datetime
 from fileinput import filename
 from fastapi import APIRouter, status, Path
+from fastapi.responses import FileResponse
 from fastapi import UploadFile
 from app.file_system.s3_events import upload_file
 from fastapi.exceptions import HTTPException

@@ -1467,13 +1467,23 @@
                         }
                     },
                     {
-                        "name": "vahicle_charges_order_fulltime",
+                        "name": "fulltime_average",
                         "in": "query",
                         "required": false,
                         "schema": {
                             "type": "integer",
                             "default": 20,
-                            "title": "Vahicle Charges Order Fulltime"
+                            "title": "Fulltime Average"
+                        }
+                    },
+                    {
+                        "name": "fulltime_greter_than_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Fulltime Greter Than Order"
                         }
                     },
                     {
@@ -1487,13 +1497,23 @@
                         }
                     },
                     {
-                        "name": "vahicle_charges_order_partime",
+                        "name": "partime_average",
                         "in": "query",
                         "required": false,
                         "schema": {
                             "type": "integer",
                             "default": 11,
-                            "title": "Vahicle Charges Order Partime"
+                            "title": "Partime Average"
+                        }
+                    },
+                    {
+                        "name": "partime_greter_than_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 11,
+                            "title": "Partime Greter Than Order"
                         }
                     },
                     {
@@ -1623,6 +1643,347 @@
                         "multipart/form-data": {
                             "schema": {
                                 "$ref": "#/components/schemas/Body_claculate_salary_new_surat_zomato_new_structure2_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/zomato/structure3": {
+            "post": {
+                "tags": [
+                    "Surat Structure 2"
+                ],
+                "summary": "Claculate Salary Structure3",
+                "operationId": "claculate_salary_structure3_surat_zomato_structure3_post",
+                "parameters": [
+                    {
+                        "name": "include_slab",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Slab"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Zomato First Order Start"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 29,
+                            "title": "Zomato First Order End"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_week_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato First Week Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_first_weekend_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 32,
+                            "title": "Zomato First Weekend Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Zomato Second Order Start"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 25,
+                            "title": "Zomato Second Order End"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_week_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 25,
+                            "title": "Zomato Second Week Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_second_weekend_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 27,
+                            "title": "Zomato Second Weekend Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 26,
+                            "title": "Zomato Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "zomato_third_week_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Zomato Third Week Amount"
+                        }
+                    },
+                    {
+                        "name": "zomato_third_weekend_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 32,
+                            "title": "Zomato Third Weekend Amount"
+                        }
+                    },
+                    {
+                        "name": "include_vahicle_charges",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Vahicle Charges"
+                        }
+                    },
+                    {
+                        "name": "fulltime_average",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Fulltime Average"
+                        }
+                    },
+                    {
+                        "name": "fulltime_greter_than_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Fulltime Greter Than Order"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Vahicle Charges Fulltime"
+                        }
+                    },
+                    {
+                        "name": "partime_average",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 11,
+                            "title": "Partime Average"
+                        }
+                    },
+                    {
+                        "name": "partime_greter_than_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 12,
+                            "title": "Partime Greter Than Order"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 70,
+                            "title": "Vahicle Charges Partime"
+                        }
+                    },
+                    {
+                        "name": "include_bonus",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Bonus"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 700,
+                            "title": "Bonus Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1000,
+                            "title": "Bonus Amount Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 400,
+                            "title": "Bonus Order Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 500,
+                            "title": "Bonus Amount Partime"
+                        }
+                    },
+                    {
+                        "name": "include_rejection",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Rejection"
+                        }
+                    },
+                    {
+                        "name": "rejection_orders",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Rejection Orders"
+                        }
+                    },
+                    {
+                        "name": "rejection_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Rejection Amount"
+                        }
+                    },
+                    {
+                        "name": "include_bad_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Bad Order"
+                        }
+                    },
+                    {
+                        "name": "bad_orders",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Bad Orders"
+                        }
+                    },
+                    {
+                        "name": "bad_orders_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Bad Orders Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_claculate_salary_structure3_surat_zomato_structure3_post"
                             }
                         }
                     }
@@ -1852,6 +2213,365 @@
                         "multipart/form-data": {
                             "schema": {
                                 "$ref": "#/components/schemas/Body_claculate_salary_surat_swiggy_structure2_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/surat/swiggy/rentmodel": {
+            "post": {
+                "tags": [
+                    "Surat Structure 2"
+                ],
+                "summary": "Claculate Swiggy Rent Model",
+                "operationId": "claculate_swiggy_rent_model_surat_swiggy_rentmodel_post",
+                "parameters": [
+                    {
+                        "name": "file_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Id"
+                        }
+                    },
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    },
+                    {
+                        "name": "include_slab",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Slab"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Swiggy First Order Start"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 19,
+                            "title": "Swiggy First Order End"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_week_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Swiggy First Week Amount"
+                        }
+                    },
+                    {
+                        "name": "swiggy_first_weekend_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 22,
+                            "title": "Swiggy First Weekend Amount"
+                        }
+                    },
+                    {
+                        "name": "swiggy_second_order_start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Swiggy Second Order Start"
+                        }
+                    },
+                    {
+                        "name": "swiggy_second_order_end",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 25,
+                            "title": "Swiggy Second Order End"
+                        }
+                    },
+                    {
+                        "name": "swiggy_second_week_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 25,
+                            "title": "Swiggy Second Week Amount"
+                        }
+                    },
+                    {
+                        "name": "swiggy_second_weekend_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 27,
+                            "title": "Swiggy Second Weekend Amount"
+                        }
+                    },
+                    {
+                        "name": "swiggy_order_greter_than",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 26,
+                            "title": "Swiggy Order Greter Than"
+                        }
+                    },
+                    {
+                        "name": "swiggy_third_week_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 30,
+                            "title": "Swiggy Third Week Amount"
+                        }
+                    },
+                    {
+                        "name": "swiggy_third_weekend_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 32,
+                            "title": "Swiggy Third Weekend Amount"
+                        }
+                    },
+                    {
+                        "name": "include_vahicle_charges",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Vahicle Charges"
+                        }
+                    },
+                    {
+                        "name": "fulltime_average",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Fulltime Average"
+                        }
+                    },
+                    {
+                        "name": "fulltime_greter_than_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Fulltime Greter Than Order"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100,
+                            "title": "Vahicle Charges Fulltime"
+                        }
+                    },
+                    {
+                        "name": "partime_average",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 11,
+                            "title": "Partime Average"
+                        }
+                    },
+                    {
+                        "name": "partime_greter_than_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 12,
+                            "title": "Partime Greter Than Order"
+                        }
+                    },
+                    {
+                        "name": "vahicle_charges_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 70,
+                            "title": "Vahicle Charges Partime"
+                        }
+                    },
+                    {
+                        "name": "include_bonus",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Bonus"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 700,
+                            "title": "Bonus Order Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_fulltime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1000,
+                            "title": "Bonus Amount Fulltime"
+                        }
+                    },
+                    {
+                        "name": "bonus_order_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 400,
+                            "title": "Bonus Order Partime"
+                        }
+                    },
+                    {
+                        "name": "bonus_amount_partime",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 500,
+                            "title": "Bonus Amount Partime"
+                        }
+                    },
+                    {
+                        "name": "include_rejection",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Rejection"
+                        }
+                    },
+                    {
+                        "name": "rejection_orders",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Rejection Orders"
+                        }
+                    },
+                    {
+                        "name": "rejection_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Rejection Amount"
+                        }
+                    },
+                    {
+                        "name": "include_bad_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true,
+                            "title": "Include Bad Order"
+                        }
+                    },
+                    {
+                        "name": "bad_orders",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 2,
+                            "title": "Bad Orders"
+                        }
+                    },
+                    {
+                        "name": "bad_orders_amount",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20,
+                            "title": "Bad Orders Amount"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_claculate_swiggy_rent_model_surat_swiggy_rentmodel_post"
                             }
                         }
                     }
@@ -2981,6 +3701,20 @@
                 ],
                 "title": "Body_claculate_salary_new_surat_zomato_new_structure2_post"
             },
+            "Body_claculate_salary_structure3_surat_zomato_structure3_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_claculate_salary_structure3_surat_zomato_structure3_post"
+            },
             "Body_claculate_salary_surat_swiggy_structure2_post": {
                 "properties": {
                     "file": {
@@ -3008,6 +3742,20 @@
                     "file"
                 ],
                 "title": "Body_claculate_salary_surat_zomato_structure2_post"
+            },
+            "Body_claculate_swiggy_rent_model_surat_swiggy_rentmodel_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_claculate_swiggy_rent_model_surat_swiggy_rentmodel_post"
             },
             "Body_create_upload_file_uploadfile_post": {
                 "properties": {
