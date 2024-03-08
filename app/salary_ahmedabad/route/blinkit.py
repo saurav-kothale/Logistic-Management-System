@@ -1,5 +1,5 @@
 from app.salary_ahmedabad.schema.blinkit import AhmedabadBlinkitSchema
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, Form
 from fastapi.responses import FileResponse
 import pandas as pd
 from app.salary_ahmedabad.view.blinkit import calculate_blinkit_salary, create_table
@@ -13,15 +13,31 @@ ahmedabad_blinkit_router = APIRouter()
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
-@ahmedabad_blinkit_router.post("/blinkit/structure1")
-def get_salary(data : AhmedabadBlinkitSchema = Depends(), file: UploadFile = File(...)):
+@ahmedabad_blinkit_router.post("/blinkit/structure1/{file_id}/{file_name}")
+def get_salary(
+    file_id : str,
+    file_name: str,
+    file: UploadFile = File(...),    
+    from_order : int = Form(1),
+    to_order : int = Form(19),
+    first_order_amount : int = Form(24),
+    order_greter_than : int = Form(20),
+    second_order_amount : int = Form(28)
+):
     df = pd.read_excel(file.file)
 
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "blinkit")]
 
-    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_blinkit_salary(row, data), axis=1)
+    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_blinkit_salary(
+        row,
+        from_order,
+        to_order,
+        first_order_amount,
+        order_greter_than,
+        second_order_amount
+    ), axis=1)
 
     df["TOTAL_ORDERS"] = df["PARCEL_DONE_ORDERS"]
 
@@ -35,7 +51,7 @@ def get_salary(data : AhmedabadBlinkitSchema = Depends(), file: UploadFile = Fil
         table["VENDER_FEE (@6%)"]
     )
 
-    file_key = f"uploads/{data.file_id}/{data.file_name}"
+    file_key = f"uploads/{file_id}/{file_name}"
 
     response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
@@ -54,7 +70,7 @@ def get_salary(data : AhmedabadBlinkitSchema = Depends(), file: UploadFile = Fil
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": data.file_id, "file_name": data.file_name}
+    return {"file_id": file_id, "file_name": file_name}
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

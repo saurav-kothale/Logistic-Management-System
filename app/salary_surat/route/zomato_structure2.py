@@ -1,3 +1,4 @@
+from ast import For
 from logging import exception
 from fastapi import APIRouter, Body, UploadFile, File, Form, Depends
 from fastapi.responses import FileResponse
@@ -33,95 +34,97 @@ row_bucket = config("ROW_BUCKET")
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
-@surat_zomato_structure2_router.post("/zomato/structure2")
-def claculate_salary(
-    data: SuratZomatoStructure2 = Depends(), file: UploadFile = File(...)
-):
+# @surat_zomato_structure2_router.post("/zomato/structure2")
+# def claculate_salary(
+#     data: SuratZomatoStructure2 = Depends(), file: UploadFile = File(...)
+# ):
 
-    df = pd.read_excel(file.file)
+#     df = pd.read_excel(file.file)
 
-    df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
+#     df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
-    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
+#     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
 
-    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
+#     df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
-    driver_totals = (
-        df.groupby("DRIVER_ID")
-        .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
-        .reset_index()
-    )
+#     driver_totals = (
+#         df.groupby("DRIVER_ID")
+#         .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
+#         .reset_index()
+#     )
 
-    driver_totals["AVERAGE"] = round(
-        driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"], 0
-    )
+#     driver_totals["AVERAGE"] = round(
+#         driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"], 0
+#     )
 
-    df = pd.merge(
-        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
-    )
+#     df = pd.merge(
+#         df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
+#     )
 
-    df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_surat(row, data), axis=1)
+#     df["ORDER_AMOUNT"] = df.apply(lambda row: calculate_salary_surat(
+        
+#     ), axis=1)
 
-    df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
+#     df["BIKE_CHARGES"] = df.apply(lambda row: calculate_bike_charges(row, data), axis=1)
 
-    df["REJECTION_AMOUNT"] = df.apply(
-        lambda row: calculate_rejection(row, data), axis=1
-    )
+#     df["REJECTION_AMOUNT"] = df.apply(
+#         lambda row: calculate_rejection(row, data), axis=1
+#     )
 
-    df["BAD_ORDER_AMOUNT"] = df.apply(
-        lambda row: calculate_bad_orders(row, data), axis=1
-    )
+#     df["BAD_ORDER_AMOUNT"] = df.apply(
+#         lambda row: calculate_bad_orders(row, data), axis=1
+#     )
 
-    table = create_table(df).reset_index()
+#     table = create_table(df).reset_index()
 
-    table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+#     table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
 
-    table["PANALTIES"] = (
-        table["IGCC_AMOUNT"] + table["REJECTION_AMOUNT"] + table["BAD_ORDER_AMOUNT"]
-    )
+#     table["PANALTIES"] = (
+#         table["IGCC_AMOUNT"] + table["REJECTION_AMOUNT"] + table["BAD_ORDER_AMOUNT"]
+#     )
 
-    table["FINAL_AMOUNT"] = (
-        table["ORDER_AMOUNT"]
-        + table["BONUS"]
-        - table["PANALTIES"]
-        - table["BIKE_CHARGES"]
-    )
+#     table["FINAL_AMOUNT"] = (
+#         table["ORDER_AMOUNT"]
+#         + table["BONUS"]
+#         - table["PANALTIES"]
+#         - table["BIKE_CHARGES"]
+#     )
 
-    table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
+#     table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
 
-    table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
-        table["VENDER_FEE (@6%)"]
-    )
+#     table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
+#         table["VENDER_FEE (@6%)"]
+#     )
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
-        with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
-            table.to_excel(writer, sheet_name="Sheet1", index=False)
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+#         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+#             table.to_excel(writer, sheet_name="Sheet1", index=False)
 
-        file_id = uuid.uuid4()
-        file_key = f"uploads/{file_id}/{file.filename}"
+#         file_id = uuid.uuid4()
+#         file_key = f"uploads/{file_id}/{file.filename}"
 
-        new_file = SalaryFile(
-            filekey=file_key,
-            file_name=file.filename,
-            file_type=".xlsx",
-            created_at=datetime.now(),
-        )
+#         new_file = SalaryFile(
+#             filekey=file_key,
+#             file_name=file.filename,
+#             file_type=".xlsx",
+#             created_at=datetime.now(),
+#         )
 
-        db.add(new_file)
+#         db.add(new_file)
 
-        db.commit()
+#         db.commit()
 
-        try:
-            s3_client.upload_fileobj(temp_file, processed_bucket, file_key)
+#         try:
+#             s3_client.upload_fileobj(temp_file, processed_bucket, file_key)
 
-        except exception as e:
-            return {"error": e}
+#         except exception as e:
+#             return {"error": e}
 
-    return {
-        "message": "Successfully Calculated Salary for Zomato Surat",
-        "file_id": file_id,
-        "file_name": file.filename,
-    }
+#     return {
+#         "message": "Successfully Calculated Salary for Zomato Surat",
+#         "file_id": file_id,
+#         "file_name": file.filename,
+#     }
 
 
 #     return FileResponse(
@@ -184,7 +187,31 @@ def claculate_salary(
 
 @surat_zomato_structure2_router.post("/zomato/new/structure2")
 def claculate_salary_new(
-    data: SuratZomatoStructureNew2 = Depends(), file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    include_slab: bool = Form(False),
+    zomato_first_order_start : int = Form(1),
+    zomato_first_order_end : int = Form(29),
+    zomato_first_order_amount : int = Form(30),
+    zomato_order_greter_than : int = Form(26),
+    zomato_second_order_amount : int = Form(30),
+    include_vahicle_charges : bool = Form(False),
+    fulltime_average : int = Form(20),
+    fulltime_greter_than_order : int = Form(20),
+    vahicle_charges_fulltime : int = Form(100),
+    partime_average : int = Form(11),
+    partime_greter_than_order : int = Form(12),
+    vahicle_charges_partime : int = Form(70),
+    include_bonus : bool = Form(False),
+    bonus_order_fulltime : int = Form(700),
+    bonus_amount_fulltime : int = Form(100),
+    bonus_order_partime : int = Form(400),
+    bonus_amount_partime : int = Form(500),
+    include_rejection: bool = Form(False),
+    rejection_orders : int = Form(2),
+    rejection_amount : int = Form(20),
+    include_bad_order : bool = Form(False),
+    bad_orders : int = Form(2),
+    bad_orders_amount : int = Form(20)
 ):
 
     df = pd.read_excel(file.file)
@@ -209,35 +236,58 @@ def claculate_salary_new(
         df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
     )
 
-    if data.slab:
+    if include_slab:
 
         df["ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_salary_surat(row, data), axis=1
+            lambda row: calculate_salary_surat(
+            row,
+            zomato_first_order_start,
+            zomato_first_order_end,
+            zomato_first_order_amount,
+            zomato_order_greter_than,
+            zomato_second_order_amount
+            ), axis=1
         )
 
     else:
         df["ORDER_AMOUNT"] = 0
 
-    if data.vahicle_charges:
+    if include_vahicle_charges:
 
         df["BIKE_CHARGES"] = df.apply(
-            lambda row: calculate_bike_charges_for_rental_model(row, data), axis=1
+            lambda row: calculate_bike_charges_for_rental_model(
+            row,
+            fulltime_average,
+            fulltime_greter_than_order,
+            vahicle_charges_fulltime,
+            partime_average,
+            partime_greter_than_order,
+            vahicle_charges_partime
+            ), axis=1
         )
     else:
         df["BIKE_CHARGES"] = 0
 
-    if data.rejection:
+    if include_rejection:
 
         df["REJECTION_AMOUNT"] = df.apply(
-            lambda row: calculate_rejection(row, data), axis=1
+            lambda row: calculate_rejection(
+            row,
+            rejection_orders,
+            rejection_amount 
+            ), axis=1
         )
     else: 
         df["REJECTION_AMOUNT"] = 0
 
-    if data.bad_order:
+    if include_bad_order:
 
         df["BAD_ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_bad_orders(row, data), axis=1
+            lambda row: calculate_bad_orders(
+            row,
+            bad_orders,
+            bad_orders_amount  
+            ), axis=1
         )
     
     else:
@@ -245,8 +295,14 @@ def claculate_salary_new(
 
     table = create_table(df).reset_index()
 
-    if data.bonus:
-        table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+    if include_bonus:
+        table["BONUS"] = table.apply(lambda row: add_bonus(
+            row,
+            bonus_order_fulltime,
+            bonus_amount_fulltime,
+            bonus_order_partime,
+            bonus_amount_partime
+        ), axis=1)
 
     else: 
         table["BONUS"] = 0
@@ -299,7 +355,38 @@ def claculate_salary_new(
 
 @surat_zomato_structure2_router.post("/zomato/structure3")
 def claculate_salary_structure3(
-    data: SuratZomatoStructureNew3 = Depends(), file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    include_slab: bool = Form(False),
+    zomato_first_order_start : int = Form(1),
+    zomato_first_order_end : int = Form(29),
+    zomato_first_week_amount : int = Form(30),
+    zomato_first_weekend_amount : int = Form(32),
+    zomato_second_order_start : int = Form(20),
+    zomato_second_order_end : int = Form(25),
+    zomato_second_week_amount : int = Form(25),
+    zomato_second_weekend_amount : int = Form(27),
+    zomato_order_greter_than : int = Form(26),
+    zomato_third_week_amount : int = Form(30),
+    zomato_third_weekend_amount : int = Form(32),
+    include_vahicle_charges : bool = Form(False),
+    fulltime_average : int = Form(20),
+    fulltime_greter_than_order : int = Form(20),
+    vahicle_charges_fulltime : int = Form(100),
+    partime_average : int = Form(11),
+    partime_greter_than_order : int = Form(12),
+    vahicle_charges_partime : int = Form(70),
+    include_bonus : bool = Form(False),
+    bonus_order_fulltime : int = Form(700),
+    bonus_amount_fulltime : int = Form(100),
+    bonus_order_partime : int = Form(400),
+    bonus_amount_partime : int = Form(500),
+    include_rejection: bool = Form(False),
+    rejection_orders : int = Form(2),
+    rejection_amount : int = Form(20),
+    include_bad_order : bool = Form(False),
+    bad_orders : int = Form(2),
+    bad_orders_amount : int = Form(20)    
+
 ):
 
     df = pd.read_excel(file.file)
@@ -324,35 +411,65 @@ def claculate_salary_structure3(
         df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
     )
 
-    if data.include_slab:
+    if include_slab:
 
         df["ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_amount_for_surat_rental_model(row, data), axis=1
+            lambda row: calculate_amount_for_surat_rental_model(
+                row,
+                zomato_first_order_start,
+                zomato_first_order_end,
+                zomato_first_week_amount,
+                zomato_first_weekend_amount,
+                zomato_second_order_start,
+                zomato_second_order_end,
+                zomato_second_week_amount,
+                zomato_second_weekend_amount,
+                zomato_order_greter_than,
+                zomato_third_week_amount,
+                zomato_third_weekend_amount
+            ), axis=1
         )
 
     else:
         df["ORDER_AMOUNT"] = 0
 
-    if data.include_vahicle_charges:
+    if include_vahicle_charges:
 
         df["BIKE_CHARGES"] = df.apply(
-            lambda row: calculate_bike_charges_for_rental_model(row, data), axis=1
+            lambda row: calculate_bike_charges_for_rental_model(
+                row,
+                fulltime_average,
+                fulltime_greter_than_order,
+                vahicle_charges_fulltime,
+                partime_average,
+                partime_greter_than_order,
+                vahicle_charges_partime
+            ), axis=1
         )
     else:
         df["BIKE_CHARGES"] = 0
 
-    if data.include_rejection:
+    if include_rejection:
 
         df["REJECTION_AMOUNT"] = df.apply(
-            lambda row: calculate_rejection(row, data), axis=1
+            lambda row: calculate_rejection(
+                row,
+                rejection_orders,
+                rejection_amount
+
+            ), axis=1
         )
     else: 
         df["REJECTION_AMOUNT"] = 0
 
-    if data.include_bad_order:
+    if include_bad_order:
 
         df["BAD_ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_bad_orders(row, data), axis=1
+            lambda row: calculate_bad_orders(
+                row,
+                bad_orders,
+                bad_orders_amount
+            ), axis=1
         )
     
     else:
@@ -360,8 +477,15 @@ def claculate_salary_structure3(
 
     table = create_table(df).reset_index()
 
-    if data.include_bonus:
-        table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+    if include_bonus:
+        table["BONUS"] = table.apply(lambda row: add_bonus(
+            row,
+            bonus_order_fulltime,
+            bonus_amount_fulltime,
+            bonus_order_partime,
+            bonus_amount_partime
+
+        ), axis=1)
 
     else: 
         table["BONUS"] = 0

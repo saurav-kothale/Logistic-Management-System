@@ -1,11 +1,11 @@
 import pandas as pd
 
 
-def calculate_flipkart_salary(row, data):
+def calculate_flipkart_salary(row, amount):
     order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
-    amount = order_done * data.amount
+    amount = order_done * amount
 
     return amount
 

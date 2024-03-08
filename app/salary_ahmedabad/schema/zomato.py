@@ -54,3 +54,6 @@ class AhmedabadZomatoSchema2(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+

@@ -5,6 +5,7 @@ from sqlalchemy import false
 from app.salary_ahmedabad.schema.zomato import AhmedabadZomatoSchema, AhmedabadZomatoSchema2
 from app.salary_ahmedabad.view.zomato import (
     add_bonus,
+    add_bonus_old,
     calculate_salary_ahmedabad,
     calculate_bike_charges,
     create_table,
@@ -64,7 +65,7 @@ def claculate_salary(
 
     table = create_table(df).reset_index()
 
-    table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+    table["BONUS"] = table.apply(lambda row: add_bonus_old(row, data), axis=1)
 
     table["PANALTIES"] = table["IGCC_AMOUNT"] + table["BIKE_CHARGES"]
 
@@ -122,7 +123,37 @@ def claculate_salary(
 
 @ahmedabad_router.post("/zomato/v2/structure1")
 def claculate_salary_structure3(
-    data: AhmedabadZomatoSchema2 = Depends(), file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    include_slab : bool = Form(False),
+    zomato_first_order_start: int = Form(1) ,
+    zomato_first_order_end: int = Form(29),
+    zomato_first_week_amount: int = Form(30),
+    zomato_first_weekend_amount: int = Form(32),
+    zomato_second_order_start:int = Form(20),
+    zomato_second_order_end:int = Form(25),
+    zomato_second_week_amount: int = Form(25),
+    zomato_second_weekend_amount: int = Form(27),
+    zomato_order_greter_than: int = Form(26),
+    zomato_third_week_amount: int = Form(30),
+    zomato_third_weekend_amount: int = Form(32),
+    include_vahicle_charges: bool = Form(False),
+    fulltime_average: int = Form(20),
+    fulltime_greter_than_order : int = Form(20),
+    vahicle_charges_fulltime : int = Form(100),
+    partime_average: int = Form(11),
+    partime_greter_than_order: int = Form(12),
+    vahicle_charges_partime: int = Form(70),
+    include_bonus : bool = Form(False),
+    bonus_order_fulltime: int = Form(700),
+    bonus_amount_fulltime: int = Form(1000),
+    bonus_order_partime: int = Form(400),
+    bonus_amount_partime: int = Form(500),
+    include_rejection : bool = Form(False),
+    rejection_orders: int = Form(2),
+    rejection_amount : int = Form(20),
+    include_bad_order : bool = Form(False),
+    bad_orders : int = Form(2),
+    bad_orders_amount : int = Form(20),
 ):
 
     df = pd.read_excel(file.file)
@@ -147,35 +178,64 @@ def claculate_salary_structure3(
         df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
     )
 
-    if data.include_slab:
+    if include_slab:
 
         df["ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_amount_for_ahmedabad_rental_model(row, data), axis=1
+            lambda row: calculate_amount_for_ahmedabad_rental_model(
+                row,
+                zomato_first_order_start,
+                zomato_first_order_end,
+                zomato_first_week_amount,
+                zomato_first_weekend_amount,
+                zomato_second_order_start,
+                zomato_second_order_end,
+                zomato_second_week_amount,
+                zomato_second_weekend_amount,
+                zomato_order_greter_than,
+                zomato_third_week_amount,
+                zomato_third_weekend_amount
+            ), axis=1
         )
 
     else:
         df["ORDER_AMOUNT"] = 0
 
-    if data.include_vahicle_charges:
+    if include_vahicle_charges:
 
         df["BIKE_CHARGES"] = df.apply(
-            lambda row: calculate_bike_charges_for_rental_model(row, data), axis=1
+            lambda row: calculate_bike_charges_for_rental_model(
+                row,
+                fulltime_average,
+                fulltime_greter_than_order,
+                vahicle_charges_fulltime,
+                partime_average,
+                partime_greter_than_order,
+                vahicle_charges_partime 
+            ), axis=1
         )
     else:
         df["BIKE_CHARGES"] = 0
 
-    if data.include_rejection:
+    if include_rejection:
 
         df["REJECTION_AMOUNT"] = df.apply(
-            lambda row: calculate_rejection_rantal(row, data), axis=1
+            lambda row: calculate_rejection_rantal(
+                row,
+                rejection_orders,
+                rejection_amount
+            ), axis=1
         )
     else: 
         df["REJECTION_AMOUNT"] = 0
 
-    if data.include_bad_order:
+    if include_bad_order:
 
         df["BAD_ORDER_AMOUNT"] = df.apply(
-            lambda row: calculate_bad_orders_rantal(row, data), axis=1
+            lambda row: calculate_bad_orders_rantal(
+                row,
+                bad_orders,
+                bad_orders_amount 
+            ), axis=1
         )
     
     else:
@@ -183,8 +243,14 @@ def claculate_salary_structure3(
 
     table = create_table(df).reset_index()
 
-    if data.include_bonus:
-        table["BONUS"] = table.apply(lambda row: add_bonus(row, data), axis=1)
+    if include_bonus:
+        table["BONUS"] = table.apply(lambda row: add_bonus(
+            row,
+            bonus_order_fulltime,
+            bonus_amount_fulltime,
+            bonus_order_partime,
+            bonus_amount_partime
+        ), axis=1)
 
     else: 
         table["BONUS"] = 0

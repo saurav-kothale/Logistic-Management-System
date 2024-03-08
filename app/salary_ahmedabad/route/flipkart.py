@@ -1,6 +1,6 @@
 from sqlalchemy import true
 from app.salary_ahmedabad.schema.flipkart import AhemedabadFlipkartSchema
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, Form
 from fastapi.responses import FileResponse
 import pandas as pd
 from app.salary_ahmedabad.view.flipkart import calculate_flipkart_salary, create_table
@@ -14,15 +14,20 @@ ahmedabad_flipkart_router = APIRouter()
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
-@ahmedabad_flipkart_router.post("/flipkart/structure1")
-def get_salary(data : AhemedabadFlipkartSchema = Depends(), file: UploadFile = File(...)):
+@ahmedabad_flipkart_router.post("/flipkart/structure1/{file_id}/{file_name}")
+def get_salary(
+    file_id : str,
+    file_name : str,
+    file: UploadFile = File(...),
+    amount : int = Form(12)
+):
     df = pd.read_excel(file.file)
 
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "flipkart")]
 
-    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_flipkart_salary(row, data), axis=1)
+    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_flipkart_salary(row, amount), axis=1)
 
     df["TOTAL_ORDERS"] = df["PARCEL_DONE_ORDERS"]
 
@@ -36,7 +41,7 @@ def get_salary(data : AhemedabadFlipkartSchema = Depends(), file: UploadFile = F
         table["VENDER_FEE (@6%)"]
     )
 
-    file_key = f"uploads/{data.file_id}/{data.file_name}"
+    file_key = f"uploads/{file_id}/{file_name}"
 
     response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
@@ -55,7 +60,7 @@ def get_salary(data : AhemedabadFlipkartSchema = Depends(), file: UploadFile = F
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": data.file_id, "file_name": data.file_name}
+    return {"file_id": file_id, "file_name": file_name}
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

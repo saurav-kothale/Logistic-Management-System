@@ -1,26 +1,42 @@
 import pandas as pd
 
-def calculate_big_basket_biker_salary(row, data):
+def calculate_big_basket_biker_salary(
+        row,
+        biker_from_delivery,
+        biker_to_delivery,
+        biker_first_amount,
+        biker_order_greter_than,
+        biker_second_amount
+):
     order_done = row["BIKE"]
     amount = 0
 
-    if data.biker_from_delivery <= order_done <= data.biker_to_delivery:
-        amount = order_done * data.biker_first_amount
+    if biker_from_delivery <= order_done <= biker_to_delivery:
+        amount = order_done * biker_first_amount
 
-    elif order_done >= data.biker_order_greter_than:
-        amount = order_done * data.biker_second_amount
+    elif order_done >= biker_order_greter_than:
+        amount = order_done * biker_second_amount
 
     return amount
 
-def calculate_big_basket_micro_salary(row, data):
+def calculate_big_basket_micro_salary(
+        row,
+        micro_from_delivery,
+        micro_to_delivery,
+        micro_first_amount,
+        micro_order_greter_than,
+        micro_second_amount
+
+
+):
     order_done = row["MICRO"]
     amount = 0
 
-    if data.micro_from_delivery <= order_done <= data.micro_to_delivery:
-        amount = order_done * data.micro_first_amount
+    if micro_from_delivery <= order_done <= micro_to_delivery:
+        amount = order_done * micro_first_amount
 
-    elif order_done >= data.micro_order_greter_than:
-        amount = order_done * data.micro_second_amount
+    elif order_done >= micro_order_greter_than:
+        amount = order_done * micro_second_amount
 
     return amount
 

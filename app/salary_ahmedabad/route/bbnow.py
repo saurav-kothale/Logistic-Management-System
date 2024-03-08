@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, Form
 from fastapi.responses import FileResponse
 from app.salary_ahmedabad.schema.bbnow import AhmedabadBbnowSchema
 import pandas as pd
@@ -12,8 +12,17 @@ ahmedabadbbnow_router = APIRouter()
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
-@ahmedabadbbnow_router.post("/bbnow/structure1")
-def get_salary(data : AhmedabadBbnowSchema = Depends(), file : UploadFile = File(...)):
+@ahmedabadbbnow_router.post("/bbnow/structure1/{file_id}/{file_name}")
+def get_salary(
+    file_id : str,
+    file_name: str,
+    file : UploadFile = File(...),    
+    from_order: int = Form(1),
+    to_order : int = Form(15),
+    first_amount : int = Form(30),
+    order_greter_than: int = Form(16),
+    second_amount: int = Form(35)
+    ):
     
     df = pd.read_excel(file.file)
 
@@ -21,7 +30,14 @@ def get_salary(data : AhmedabadBbnowSchema = Depends(), file : UploadFile = File
 
     df =  df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "bb now")]
 
-    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_bbnow_salary1(row, data), axis=1)
+    df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_bbnow_salary1(
+        row,
+        from_order,
+        to_order,
+        first_amount,
+        order_greter_than,
+        second_amount
+    ), axis=1)
 
     df["TOTAL_ORDERS"] = df["PARCEL_DONE_ORDERS"]
 
@@ -35,7 +51,7 @@ def get_salary(data : AhmedabadBbnowSchema = Depends(), file : UploadFile = File
         table["VENDER_FEE (@6%)"]
     )
 
-    file_key = f"uploads/{data.file_id}/{data.file_name}"
+    file_key = f"uploads/{file_id}/{file_name}"
 
     response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 

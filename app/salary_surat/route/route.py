@@ -254,8 +254,8 @@ async def calculate_bb_now_surat(
     file_id: str,
     file_name: str,
     file: UploadFile = File(...),
-    orders_less_then: int = Form(13),
-    order_amount1: int = Form(400),
+    average_order: int = Form(13),
+    average_amount: int = Form(400),
     from_order: int = Form(1),
     to_order: int = Form(14),
     order_amount2: int = Form(30),
@@ -317,8 +317,6 @@ async def calculate_bb_now_surat(
     new_df["ORDER_AMOUNT"] = new_df.apply(
         calculate_amount_for_bbnow_surat,
         args=(
-            orders_less_then,
-            order_amount1,
             from_order,
             to_order,
             order_amount2,
@@ -348,10 +346,10 @@ async def calculate_bb_now_surat(
         lambda row: (
             calculate_order_for_less_amount(
                 row,
-                orders_less_then,
-                order_amount1
+                average_order,
+                average_amount
             )
-            if row["AVERAGE"] < orders_less_then 
+            if row["AVERAGE"] < average_order 
             else row["ORDER_AMOUNT"]
         ),
         axis=1,
@@ -401,9 +399,10 @@ async def calculate_bb_now_surat(
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
     return {
-        "message": "calculated successfully",
+        "message": "BB NOW calculated successfully",
         "file_id": file_id,
         "file_name": file_name,
+        "file_key" : file_key
     }
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
@@ -499,7 +498,12 @@ def calculate_ecom_surat(
 
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name}
+    return {
+        "message" : "Successfully calculate salary for Ecom",
+        "file_id": file_id,
+        "file_name": file_name,
+        "file_key" : file_key
+    }
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
@@ -594,7 +598,12 @@ def calculate_flipcart_surat(
 
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name}
+    return {
+        "message" : "Sucessfully Calculated Salary for Flipkart",
+        "file_id": file_id, 
+        "file_name": file_name, 
+        "file_key" : file_key
+    }
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
     #         df3.to_excel(writer, sheet_name="Sheet1", index=False)
@@ -748,12 +757,18 @@ def calculate_bluedart(
 
         # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return FileResponse(
-        temp_file.name,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f"attachment; filename=calculated_{file_name}"},
-        filename=f"calculated_{file_name}.xlsx",
-    )
+    # return FileResponse(
+    #     temp_file.name,
+    #     media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    #     headers={"Content-Disposition": f"attachment; filename=calculated_{file_name}"},
+    #     filename=f"calculated_{file_name}.xlsx",
+    # )
+    return {
+        "message" : "Sucessfully Calculated Salary for BlueDart",
+        "file_id": file_id, 
+        "file_name": file_name, 
+        "file_key" : file_key
+    }
 
 
 @salary_router.get("/samplefile")

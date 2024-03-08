@@ -14,15 +14,22 @@ def calculate_bbnow_salary(row, data):
     
     return amount
 
-def calculate_bbnow_salary1(row, data):
+def calculate_bbnow_salary1(
+        row,
+        from_order,
+        to_order,
+        first_amount,
+        order_greter_than,
+        second_amount
+):
     orders = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
-    if data.from_order <= orders <= data.to_order:
-        amount = orders * data.first_amount
+    if from_order <= orders <= to_order:
+        amount = orders * first_amount
 
-    elif orders >= data.order_greter_than:
-        amount = orders * data.second_amount
+    elif orders >= order_greter_than:
+        amount = orders * second_amount
 
     return amount
 

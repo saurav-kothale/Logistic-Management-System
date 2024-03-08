@@ -8,4 +8,3 @@ class AhmedabadBbnowSchema(BaseModel):
     first_amount : int = 30
     order_greter_than: int = 16
     second_amount: int = 35
-    

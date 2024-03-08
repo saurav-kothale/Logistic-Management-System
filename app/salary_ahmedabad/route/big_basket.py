@@ -1,5 +1,5 @@
 from functools import total_ordering
-from fastapi import APIRouter, Depends, UploadFile,File
+from fastapi import APIRouter, Depends, UploadFile,File, Form
 from fastapi.responses import FileResponse
 from app.salary_ahmedabad.schema.big_basket import AhmedabadBigBascketSchema
 from app.salary_ahmedabad.view.big_basket import calculate_big_basket_biker_salary, calculate_big_basket_micro_salary,create_table
@@ -15,16 +15,45 @@ processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
 @ahmedabadbigbascket.post("/bigbasket/structure1")
-def get_salary(data : AhmedabadBigBascketSchema = Depends(), file: UploadFile = File(...)):
+def get_salary(
+    file_id: str,
+    file_name: str,
+    data : AhmedabadBigBascketSchema = Depends(), 
+    file: UploadFile = File(...),
+    biker_from_delivery: int = Form(1),
+    biker_to_delivery: int = Form(15),
+    biker_first_amount: int = Form(30),
+    biker_order_greter_than: int = Form(16),
+    biker_second_amount: int = Form(30),
+    micro_from_delivery: int = Form(1),
+    micro_to_delivery: int = Form(22),
+    micro_first_amount: int = Form(20),
+    micro_order_greter_than : int = Form(23),
+    micro_second_amount: int = Form(22)
+):
     df = pd.read_excel(file.file)
 
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "bb 5k")]
 
-    df["BIKER_AMOUNT"] = df.apply(lambda row : calculate_big_basket_biker_salary(row, data), axis=1)
+    df["BIKER_AMOUNT"] = df.apply(lambda row : calculate_big_basket_biker_salary(
+        row,
+        biker_from_delivery,
+        biker_to_delivery,
+        biker_first_amount,
+        biker_order_greter_than,
+        biker_second_amount
+    ), axis=1)
 
-    df["MICRO_AMOUNT"] = df.apply(lambda row : calculate_big_basket_micro_salary(row, data), axis=1)
+    df["MICRO_AMOUNT"] = df.apply(lambda row : calculate_big_basket_micro_salary(
+         row,
+        micro_from_delivery,
+        micro_to_delivery,
+        micro_first_amount,
+        micro_order_greter_than,
+        micro_second_amount
+    ), axis=1)
 
     df["ORDER_AMOUNT"] = df["BIKER_AMOUNT"] + df["MICRO_AMOUNT"]
 

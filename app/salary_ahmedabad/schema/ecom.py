@@ -10,4 +10,6 @@ class AhemedabadEcomSchema(BaseModel):
     second_to_order : int = 60
     second_amount : int = 14
     order_greter_than : int = 61
-    ORDER_AMOUNT : int = 15
+    order_amount : int = 15
+
+

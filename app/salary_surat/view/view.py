@@ -159,8 +159,6 @@ def calculate_amount_for_surat_swiggy(row,
 
 def calculate_amount_for_bbnow_surat(
         row,
-        orders_less_then,
-        order_amount1,
         from_order,
         to_order,
         order_amount2,
@@ -194,15 +192,15 @@ def calculate_amount_for_bbnow_surat(
 
 def calculate_order_for_less_amount(
         row,
-        orders_less_then,
-        order_amount1,
+        average_order,
+        average_amount,
         amount = 0
 ):
     average = row["AVERAGE"]
     attendance = row["ATTENDANCE"]
 
-    if average <= 13:
-        amount = attendance * 400
+    if average <= average_order:
+        amount = attendance * average_amount
     
     return amount
 

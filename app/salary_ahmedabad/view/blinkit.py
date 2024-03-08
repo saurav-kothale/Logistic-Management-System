@@ -1,14 +1,21 @@
 import pandas as pd
 
-def calculate_blinkit_salary(row, data):
+def calculate_blinkit_salary(
+        row,
+        from_order,
+        to_order,
+        first_order_amount,
+        order_greter_than,
+        second_order_amount
+):
     order_done = row["PARCEL_DONE_ORDERS"]
     amount = 0
 
-    if data.from_order <= order_done <= data.to_order:
-        amount = order_done * data.first_order_amount
+    if from_order <= order_done <= to_order:
+        amount = order_done * first_order_amount
 
-    elif order_done >= data.order_greter_than:
-        amount = order_done * data.second_order_amount
+    elif order_done >= order_greter_than:
+        amount = order_done * second_order_amount
 
     return amount
 
