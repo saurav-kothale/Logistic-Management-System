@@ -1,5 +1,5 @@
 from app.salary_ahmedabad.schema.ecom import AhemedabadEcomSchema
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, status
 from fastapi.responses import FileResponse
 import pandas as pd
 from app.salary_ahmedabad.view.ecom import calculate_ecom_salary, create_table
@@ -33,6 +33,9 @@ def get_salary(
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "ecom")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Ecom client not found")
 
     df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_ecom_salary(
         row,

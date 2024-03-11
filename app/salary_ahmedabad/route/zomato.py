@@ -1,5 +1,5 @@
 from logging import exception
-from fastapi import APIRouter, Body, UploadFile, File, Form, Depends
+from fastapi import APIRouter, Body, UploadFile, File, Form, Depends, HTTPException, status
 from fastapi.responses import FileResponse
 from sqlalchemy import false
 from app.salary_ahmedabad.schema.zomato import AhmedabadZomatoSchema, AhmedabadZomatoSchema2
@@ -126,7 +126,7 @@ def claculate_salary_structure3(
     file: UploadFile = File(...),
     include_slab : bool = Form(False),
     zomato_first_order_start: int = Form(1) ,
-    zomato_first_order_end: int = Form(29),
+    zomato_first_order_end: int = Form(19),
     zomato_first_week_amount: int = Form(30),
     zomato_first_weekend_amount: int = Form(32),
     zomato_second_order_start:int = Form(20),
@@ -161,6 +161,9 @@ def claculate_salary_structure3(
     df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "zomato")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
 
     df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
@@ -241,6 +244,7 @@ def claculate_salary_structure3(
     else:
         df["BAD_ORDER_AMOUNT"] = 0
 
+
     table = create_table(df).reset_index()
 
     if include_bonus:
@@ -295,7 +299,7 @@ def claculate_salary_structure3(
             return {"error": e}
 
     return {
-        "message": "Successfully Calculated Salary for Zomato Surat",
+        "message": "Successfully Calculated Salary for Zomato Ahmedabad",
         "file_id": file_id,
         "file_name": file.filename,
         "file_key" : file_key

@@ -1,6 +1,6 @@
 from sqlalchemy import true
 from app.salary_ahmedabad.schema.flipkart import AhemedabadFlipkartSchema
-from fastapi import APIRouter, UploadFile, File, Depends, Form
+from fastapi import APIRouter, UploadFile, File, Depends, Form, HTTPException, status
 from fastapi.responses import FileResponse
 import pandas as pd
 from app.salary_ahmedabad.view.flipkart import calculate_flipkart_salary, create_table
@@ -26,6 +26,9 @@ def get_salary(
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "flipkart")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Flipkart client not found")
 
     df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_flipkart_salary(row, amount), axis=1)
 

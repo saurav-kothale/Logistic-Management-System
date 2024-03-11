@@ -38,7 +38,7 @@ def calculate_bike_charges(row, data):
 def create_table(dataframe):
     
     table = pd.pivot_table(
-            data= dataframe,
+            data = dataframe,
             index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME","WORK_TYPE"],
             aggfunc={
             "REJECTION": "sum",
@@ -158,7 +158,7 @@ def calculate_amount_for_ahmedabad_rental_model(
 
 
 def calculate_bike_charges_for_rental_model(
-     row,
+    row,
     fulltime_average,
     fulltime_greter_than_order,
     vahicle_charges_fulltime,

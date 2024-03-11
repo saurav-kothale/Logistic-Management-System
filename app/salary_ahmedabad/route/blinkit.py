@@ -1,6 +1,7 @@
 from app.salary_ahmedabad.schema.blinkit import AhmedabadBlinkitSchema
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from fastapi import APIRouter, Depends, UploadFile, File, Form, status
 from fastapi.responses import FileResponse
+from fastapi import HTTPException
 import pandas as pd
 from app.salary_ahmedabad.view.blinkit import calculate_blinkit_salary, create_table
 import io
@@ -29,6 +30,9 @@ def get_salary(
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "blinkit")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "blinkit client not found")
 
     df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_blinkit_salary(
         row,
@@ -70,7 +74,12 @@ def get_salary(
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name}
+    return {
+        "message" : "Blinkit Salary Calculated Sucessfully",
+        "file_id": file_id, 
+        "file_name": file_name, 
+        "file_key": file_key
+    }
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

@@ -1,6 +1,7 @@
 from functools import total_ordering
-from fastapi import APIRouter, Depends, UploadFile,File, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile,File, Form, status
 from fastapi.responses import FileResponse
+from pydantic import HttpUrl
 from app.salary_ahmedabad.schema.big_basket import AhmedabadBigBascketSchema
 from app.salary_ahmedabad.view.big_basket import calculate_big_basket_biker_salary, calculate_big_basket_micro_salary,create_table
 import pandas as pd
@@ -18,7 +19,6 @@ processed_bucket = config("PROCESSED_FILE_BUCKET")
 def get_salary(
     file_id: str,
     file_name: str,
-    data : AhmedabadBigBascketSchema = Depends(), 
     file: UploadFile = File(...),
     biker_from_delivery: int = Form(1),
     biker_to_delivery: int = Form(15),
@@ -36,6 +36,9 @@ def get_salary(
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "bb 5k")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "bb 5k client not found")
 
     df["BIKER_AMOUNT"] = df.apply(lambda row : calculate_big_basket_biker_salary(
         row,
@@ -69,7 +72,7 @@ def get_salary(
         table["VENDER_FEE (@6%)"]
     )
 
-    file_key = f"uploads/{data.file_id}/{data.file_name}"
+    file_key = f"uploads/{file_id}/{file_name}"
 
     response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
@@ -88,7 +91,7 @@ def get_salary(
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": data.file_id, "file_name": data.file_name}
+    return {"file_id": file_id, "file_name": file_name, "file_key" : file_key}
 
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:

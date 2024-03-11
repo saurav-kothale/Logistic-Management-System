@@ -3,6 +3,7 @@ from fileinput import filename
 from fastapi import APIRouter, status, Path
 from fastapi.responses import FileResponse
 from fastapi import UploadFile
+from pydantic import HttpUrl
 from app.file_system.s3_events import upload_file
 from fastapi.exceptions import HTTPException
 import uuid
@@ -10,7 +11,7 @@ from fastapi.responses import StreamingResponse
 import io
 from app.file_system.s3_events import s3_client
 from app.salary_surat.model.model import SalaryFile
-from app.salary_surat.view.view import validate_filename
+from app.salary_surat.view.view import validate_surat_filename, validate_ahmedabad_filename
 from app.file_system.model import FileInfo
 from database.database import SessionLocal
 from decouple import config
@@ -29,11 +30,26 @@ async def create_upload_files(file: UploadFile):
     return {"filename": file.filename}
 
 
-@file_router.post("/uploadfile")
-async def create_upload_file(file: UploadFile):
+@file_router.post("/uploadfile/{city}")
+async def create_upload_file(
+    file: UploadFile,
+    city : str
+):
+    if city == "surat": 
+        if validate_surat_filename(file.filename) is False:
 
-    # if validate_filename(file.filename):
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail= "please enter valid surat file name"
+            )
 
+    if city == "ahmedabad":
+        if validate_ahmedabad_filename(file.filename) is False:
+
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail= "please enter valid ahmedabad file name"
+            )
     try:
         # Generate a unique file key using UUID and the original filename
         file_id = uuid.uuid4()
@@ -59,6 +75,9 @@ async def create_upload_file(file: UploadFile):
         )
 
     return {"filename": file.filename, "file_id": file_id}
+    
+
+        
 
 
 # else:

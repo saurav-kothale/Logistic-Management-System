@@ -8,7 +8,7 @@ from app.User.user.model.user import User
 from app.client.model import Client
 from app.vendor.model import Vendor
 from app.file_system.model import FileInfo
-from app.salary.model import SalaryFile
+from app.salary_surat.model.model import SalaryFile
 from database.database import Base
 import os
 from decouple import config

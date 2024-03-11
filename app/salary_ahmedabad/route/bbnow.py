@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
 from fastapi.responses import FileResponse
 from app.salary_ahmedabad.schema.bbnow import AhmedabadBbnowSchema
 import pandas as pd
@@ -29,6 +29,10 @@ def get_salary(
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df =  df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "bb now")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "bb now client not found")
+
 
     df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_bbnow_salary1(
         row,
@@ -75,14 +79,10 @@ def get_salary(
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
             df3.to_excel(writer, sheet_name="Sheet1", index=False)
+        
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    response = FileResponse(temp_file.name, media_type=content_type)
-    response.headers["Content-Disposition"] = (
-        'attachment; filename="month_year_city.xlsx"'
-    )
-
-    return response
+    return {"file_id": file_id, "file_name": file_name, "file_key" : file_key}
 
     
 

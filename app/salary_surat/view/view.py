@@ -9,8 +9,16 @@ def is_weekend(date):
     return date.isoweekday() > 5
 
 
-def validate_filename(file_name):
-    pattern = r'^\d{2}+_\d{4}_[a-z]+\.xlsx$'
+def validate_surat_filename(file_name):
+    pattern = r'^\d{2}+_\d{4}_surat+\.xlsx$'
+
+    if re.match(pattern, file_name):
+        return True
+    else:
+        return False
+    
+def validate_ahmedabad_filename(file_name):
+    pattern = r'^\d{2}+_\d{4}_ahmedabad+\.xlsx$'
 
     if re.match(pattern, file_name):
         return True
