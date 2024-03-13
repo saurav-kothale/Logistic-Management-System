@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status , Depends
-from database.database import SessionLocal
+from database.database import SessionLocal, get_db
 from app.User.user.model.user import User
 from app.User.user.schema.user import (
     ResetPasswordData,
@@ -14,14 +14,13 @@ from fastapi.encoders import jsonable_encoder
 from uuid import uuid4
 from app.utils.util import signJWT, decodeJWT, get_current_user
 from app.utils.auth_bearer import JWTBearer
-
+from sqlalchemy.orm import Session
 
 signup_router = APIRouter()
-db = SessionLocal()
 
 
 @signup_router.post("/signup" , status_code=status.HTTP_201_CREATED)
-def create_user(user_data: UserSignupData):
+def create_user(user_data: UserSignupData, db : Session = Depends(get_db)):
 
     db_entry = db.query(User).filter(User.username == user_data.username).first()
 
@@ -70,7 +69,7 @@ login_router = APIRouter()
 
 
 @login_router.post("/login", status_code=status.HTTP_201_CREATED)
-def log_in(user_data : UserLoginData):
+def log_in(user_data : UserLoginData, db : Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email_id == user_data.email_id).first()
     if db_user and check_password_hash(db_user.password , user_data.password): # type: ignore
 
@@ -101,9 +100,9 @@ forgot_password_route = APIRouter()
 
 
 @forgot_password_route.post("/forget_password", status_code = status.HTTP_201_CREATED)
-def recover_password(user_data: ResetPasswordData):
+def recover_password(user_data: ResetPasswordData, db : Session = Depends(get_db)):
 
-    db_entry = db.query(User).filter(User.username == user_data.username).first()
+    db_entry = db.query(User).filter(User.email_id == user_data.email_id).first()
 
     if db_entry is None:
         raise HTTPException(
@@ -120,7 +119,7 @@ delete_route = APIRouter()
 
 
 @delete_route.delete("/delete" , status_code=status.HTTP_200_OK)
-def delete_user(user_data : UserLoginData):
+def delete_user(user_data : UserLoginData, db : Session = Depends(get_db)):
     user_to_delete = db.query(User).filter(User.email_id == user_data.email_id).first()
      
     if user_to_delete and check_password_hash(user_to_delete.password, user_data.password): # type: ignore

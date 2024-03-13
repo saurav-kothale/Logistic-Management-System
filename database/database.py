@@ -20,3 +20,10 @@ Base = declarative_base()
 engine = create_engine(connection_string, pool_pre_ping=True)
 
 SessionLocal = sessionmaker(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

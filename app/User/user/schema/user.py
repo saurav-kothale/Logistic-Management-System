@@ -28,7 +28,7 @@ class UserSignupData(BaseModel):
 
 
 class ResetPasswordData(BaseModel):
-    username: str
+    email_id: str
 
     class config:
         from_attributes = True
