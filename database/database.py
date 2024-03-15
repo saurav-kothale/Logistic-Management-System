@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
 from decouple import config
+from sqlalchemy.exc import PendingRollbackError
 
 USER_NAME = config("DB_USER_NAME")
 DB_PASSWORD = config("DB_PASSWORD")
@@ -25,5 +26,8 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
+    except PendingRollbackError:
+        db.rollback()
+        raise
     finally:
         db.close()

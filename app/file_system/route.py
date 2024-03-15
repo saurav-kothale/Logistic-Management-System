@@ -1,6 +1,6 @@
 from datetime import datetime
 from fileinput import filename
-from fastapi import APIRouter, status, Path
+from fastapi import APIRouter, Depends, status, Path
 from fastapi.responses import FileResponse
 from fastapi import UploadFile
 from pydantic import HttpUrl
@@ -13,13 +13,14 @@ from app.file_system.s3_events import s3_client
 from app.salary_surat.model.model import SalaryFile
 from app.salary_surat.view.view import validate_surat_filename, validate_ahmedabad_filename
 from app.file_system.model import FileInfo
-from database.database import SessionLocal
+from database.database import SessionLocal, get_db
 from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 
 file_router = APIRouter()
-db = SessionLocal()
+# db = SessionLocal()
 row_bucket = config("ROW_BUCKET")
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
@@ -33,7 +34,8 @@ async def create_upload_files(file: UploadFile):
 @file_router.post("/uploadfile/{city}")
 async def create_upload_file(
     file: UploadFile,
-    city : str
+    city : str,
+    db : Session = Depends(get_db)
 ):
     if city == "surat": 
         if validate_surat_filename(file.filename) is False:
@@ -108,6 +110,40 @@ async def download_raw_file(file_key: str = Path(..., description="File Key")):
 
         # Return a custom HTTPException response with 500 status and detail message
         raise HTTPException(status_code=500, detail="Internal Server Error")
+    
+
+@file_router.delete("/delete_raw_file/{file_key:path}")
+async def delete_raw_file(
+    file_key: str = Path(..., description="File Key"),
+    db : Session = Depends(get_db)
+    
+):
+
+    file_to_delete = db.query(FileInfo).filter(FileInfo.filekey == file_key).first()
+
+    if file_to_delete is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail = "file not found to delete"
+        )
+    
+    try:
+
+        response = s3_client.delete_object(Bucket=row_bucket, Key=file_key)
+    
+    except Exception as e:
+
+        raise HTTPException(status_code=500, detail= "Expected error : {e}")
+    
+    db.delete(file_to_delete)
+
+    db.commit()
+
+    return {
+        "status" : status.HTTP_200_OK,
+        "message" : "file deleted successfully",
+        "filekey" : file_key
+    }
 
 
 @file_router.get("/download_salary_file/{file_key:path}")
@@ -131,10 +167,44 @@ async def download_salary_file(file_key: str):
 
         # Return a custom HTTPException response with 500 status and detail message
         raise HTTPException(status_code=500, detail="Internal Server Error")
+    
+
+@file_router.delete("/delete_processed_file/{file_key:path}")
+async def delete_processed_file(
+    file_key: str = Path(..., description="File Key"),
+    db : Session = Depends(get_db)
+    
+):
+
+    file_to_delete = db.query(SalaryFile).filter(SalaryFile.filekey == file_key).first()
+
+    if file_to_delete is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail = "file not found to delete"
+        )
+    
+    try:
+
+        response = s3_client.delete_object(Bucket=processed_bucket, Key=file_key)
+    
+    except Exception as e:
+
+        raise HTTPException(status_code=500, detail= "Expected error : {e}")
+    
+    db.delete(file_to_delete)
+
+    db.commit()
+
+    return {
+        "status" : status.HTTP_200_OK,
+        "message" : "file deleted successfully",
+        "filekey" : file_key
+    }
 
 
 @file_router.get("/salayfiles")
-def get_salary_files():
+def get_salary_files(db : Session = Depends(get_db)):
 
     db_files = db.query(SalaryFile).all()
 
@@ -151,7 +221,7 @@ def get_salary_files():
 
 
 @file_router.get("/rawfiles")
-def get_raw_files():
+def get_raw_files(db : Session = Depends(get_db)):
 
     db_files = db.query(FileInfo).all()
 

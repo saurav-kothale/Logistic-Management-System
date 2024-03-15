@@ -1,17 +1,8 @@
 from datetime import datetime
-from distutils.command import upload
-import json
-from os import name, read
 from sys import exception
-from urllib import response
-from fastapi import APIRouter, UploadFile, Form, File, status, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, UploadFile, Form, File
 import pandas as pd
-from pydantic import Json
-from sqlalchemy import TableClause, false, table
 from ..view.view import (
-    is_weekend,
-    week_or_weekend,
     calculate_amount_for_zomato_surat,
     calculate_amount_for_surat_swiggy,
     calculate_amount_for_bbnow_surat,
@@ -25,8 +16,7 @@ from ..view.view import (
 import io
 from fastapi.responses import FileResponse
 import tempfile
-from typing import List
-from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
+from app.file_system.s3_events import s3_client
 import uuid
 from database.database import SessionLocal
 from app.salary_surat.model.model import SalaryFile
