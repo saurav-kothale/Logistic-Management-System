@@ -8,7 +8,7 @@ def calculate_big_basket_biker_salary(
         biker_order_greter_than,
         biker_second_amount
 ):
-    order_done = row["BIKE"]
+    order_done = row["DONE_BIKER_ORDERS"]
     amount = 0
 
     if biker_from_delivery <= order_done <= biker_to_delivery:
@@ -29,7 +29,7 @@ def calculate_big_basket_micro_salary(
 
 
 ):
-    order_done = row["MICRO"]
+    order_done = row["DONE_MICRO_ORDERS"]
     amount = 0
 
     if micro_from_delivery <= order_done <= micro_to_delivery:
@@ -49,8 +49,8 @@ def create_table(dataframe):
             aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "BIKE": "sum",
-            "MICRO" : "sum",
+            "DONE_BIKER_ORDERS": "sum",
+            "DONE_MICRO_ORDERS" : "sum",
             "ORDER_AMOUNT": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",

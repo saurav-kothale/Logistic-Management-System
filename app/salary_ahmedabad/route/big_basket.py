@@ -15,7 +15,7 @@ ahmedabadbigbascket = APIRouter()
 processed_bucket = config("PROCESSED_FILE_BUCKET")
 
 
-@ahmedabadbigbascket.post("/bigbasket/structure1")
+@ahmedabadbigbascket.post("/bigbasket/structure1/{file_id}/{file_name}")
 def get_salary(
     file_id: str,
     file_name: str,
@@ -60,7 +60,7 @@ def get_salary(
 
     df["ORDER_AMOUNT"] = df["BIKER_AMOUNT"] + df["MICRO_AMOUNT"]
 
-    df["TOTAL_ORDERS"] = df["BIKE"] + df["MICRO"]
+    df["TOTAL_ORDERS"] = df["DONE_BIKER_ORDERS"] + df["DONE_MICRO_ORDERS"]
 
     table = create_table(df).reset_index()
 

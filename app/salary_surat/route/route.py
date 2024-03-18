@@ -761,10 +761,19 @@ def calculate_bluedart(
     }
 
 
-@salary_router.get("/samplefile")
-def getfile():
-    file_key = f"uploads/b2e9547c-eaae-4417-8dd5-effd3aabae88/mm_yyyy_city.xlsx"
-    response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
+@salary_router.get("/samplefile/{city}")
+def getfile(
+    city : str
+):
+    if city == "ahmedabad":
+        file_key = f"uploads/fbf6bad5-5d92-493b-a465-e37e326ef5b6/00_0000_ahmedabad.xlsx"
+        response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
+    
+    elif city == "surat":
+        file_key = f"uploads/4d52dcfb-3bae-49cd-8629-98db89559937/00_0000_surat.xlsx"
+        response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
+
+   
     file_data = response["Body"].read()
     df = pd.read_excel(io.BytesIO(file_data))
 
@@ -775,6 +784,6 @@ def getfile():
     return FileResponse(
         temp_file.name,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f"attachment; filename=month_year_city.xlsx"},
-        filename="month_year_city.xlsx",
+        headers={"Content-Disposition": f"attachment; filename=00_0000_{city}.xlsx"},
+        filename=f"00_0000_{city}.xlsx",
     )

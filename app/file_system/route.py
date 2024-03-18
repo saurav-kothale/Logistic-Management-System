@@ -33,10 +33,19 @@ async def create_upload_files(file: UploadFile):
 
 @file_router.post("/uploadfile/{city}")
 async def create_upload_file(
-    file: UploadFile,
-    city : str,
-    db : Session = Depends(get_db)
-):
+     
+    city : str,       
+    db : Session = Depends(get_db),
+    file: UploadFile = None
+    
+):  
+    if file is None: 
+
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail= "file not found"
+            )
+        
     if city == "surat": 
         if validate_surat_filename(file.filename) is False:
 

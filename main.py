@@ -16,6 +16,7 @@ from app.salary_ahmedabad.route.blinkit import ahmedabad_blinkit_router
 from app.salary_ahmedabad.route.big_basket import ahmedabadbigbascket
 from app.salary_ahmedabad.route.bbnow import ahmedabadbbnow_router
 from app.Inventory.route.route import inventory_router
+from app.Inventory.product.route.route import product_router
 
 app = FastAPI()
 
@@ -35,7 +36,8 @@ app.include_router(ahmedabad_ecom_router, prefix='/ahmedabad', tags= ["Ahmedabad
 app.include_router(ahmedabad_blinkit_router, prefix='/ahmedabad', tags= ["Ahmedabad Salary Structure 1"])
 app.include_router(ahmedabadbigbascket, prefix="/ahmedabad", tags= ["Ahmedabad Salary Structure 1"])
 app.include_router(ahmedabadbbnow_router, prefix="/ahmedabad", tags= ["Ahmedabad Salary Structure 1"])
-app.include_router(inventory_router)
+app.include_router(inventory_router, tags=["Inventory"])
+app.include_router(product_router, tags=["Inventory Products"])
 
 
 

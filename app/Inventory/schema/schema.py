@@ -22,3 +22,14 @@ class InvetoryUpdate(BaseModel):
 
     class config:
         from_attributes = True
+
+class InvetoryResponse(BaseModel):
+    invoice_number : int
+    invoice_amount : int
+    invoice_date : date
+    inventory_paydate : date
+    vendor : str
+    invoice_image_id : str
+
+    class config:
+        from_attributes = True
