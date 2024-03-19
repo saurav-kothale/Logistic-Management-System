@@ -350,6 +350,7 @@ def claculate_salary_new(
         "message": "Successfully Calculated Salary for Zomato Surat",
         "file_id": file_id,
         "file_name": file.filename,
+         "file_key" : file_key
     }
 
 

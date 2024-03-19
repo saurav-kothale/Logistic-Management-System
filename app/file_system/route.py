@@ -157,6 +157,7 @@ async def delete_raw_file(
 
 @file_router.get("/download_salary_file/{file_key:path}")
 async def download_salary_file(file_key: str):
+    filename = file_key.split("/")[2]
 
     try:
         # Use Boto3 to download the file from S3
@@ -167,7 +168,7 @@ async def download_salary_file(file_key: str):
         return StreamingResponse(
             io.BytesIO(file_data),
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename={file_key}.xlsx"},
+            headers={"Content-Disposition": f"attachment; filename=calculated_{filename}"},
         )
 
     except Exception as e:

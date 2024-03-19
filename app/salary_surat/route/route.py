@@ -133,6 +133,7 @@ async def calculate_zomato_surat(
         "message": "Successfully Calculated Salary for Zomato Surat",
         "file_id": file_id,
         "file_name": file.filename,
+        "file_key" : file_key
     }
 
 
@@ -236,7 +237,7 @@ async def calculate_swiggy_surat(
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name}
+    return {"file_id": file_id, "file_name": file_name, "file_key" : file_key}
 
 
 @salary_router.post("/bbnow/structure1/{file_id}/{file_name}")
