@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t evify/logistic_backend:latest .
+        run: docker build -t evify/logistic_backend:latest ../..
         working-directory: .. / ..
 
       - name: Push Docker image
