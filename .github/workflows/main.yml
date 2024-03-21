@@ -21,7 +21,7 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t evify/logistic_backend:latest ../../
-        working-directory: .github/workflow
+        working-directory: /.github/workflow
 
       - name: Push Docker image
         run: docker push evify/logistic_backend:latest
