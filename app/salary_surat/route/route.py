@@ -1,6 +1,6 @@
 from datetime import datetime
 from sys import exception
-from fastapi import APIRouter, UploadFile, Form, File
+from fastapi import APIRouter, UploadFile, Form, File, HTTPException, status
 import pandas as pd
 from ..view.view import (
     calculate_amount_for_zomato_surat,
@@ -53,6 +53,10 @@ async def calculate_zomato_surat(
     df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
+    
     df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_zomato_surat,
         args=(
@@ -163,6 +167,10 @@ async def calculate_swiggy_surat(
     df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Swiggy client not found")
+    
     df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_surat_swiggy,
         args=(
@@ -257,6 +265,9 @@ async def calculate_bb_now_surat(
     df = pd.read_excel(file.file)
 
     df = df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "BB Now client not found")
 
     driver_totals = (
         df.groupby("DRIVER_ID")
@@ -427,6 +438,10 @@ def calculate_ecom_surat(
 ):
     df = pd.read_excel(file.file)
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "ecom")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Ecom client not found")
+    
     df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_ecom_surat,
         args=(
@@ -528,6 +543,10 @@ def calculate_flipcart_surat(
     df = pd.read_excel(file.file)
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "flipkart")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Flipkart client not found")
+    
     df["ORDER_AMOUNT"] = df.apply(
         calculate_amount_for_flipkart_surat,
         args=(
@@ -641,6 +660,10 @@ def calculate_bluedart(
     df = pd.read_excel(file.file)
 
     df = df[df["CLIENT_NAME"].isin(["bluedart biker", "bluedart van"])]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "BlueDart client not found")
+    
     df["DOCUMENT_AMOUNT"] = df.apply(
         calculate_document_amount,
         args=(

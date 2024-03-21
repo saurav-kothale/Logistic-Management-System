@@ -17,6 +17,7 @@ from database.database import SessionLocal, get_db
 from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+import pandas as pd
 
 
 file_router = APIRouter()
@@ -45,6 +46,8 @@ async def create_upload_file(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail= "file not found"
             )
+    
+    
         
     if city == "surat": 
         if validate_surat_filename(file.filename) is False:
@@ -61,6 +64,15 @@ async def create_upload_file(
                 status_code=status.HTTP_406_NOT_ACCEPTABLE,
                 detail= "please enter valid ahmedabad file name"
             )
+    
+    df = pd.read_excel(file.file)
+    if df.empty:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="file content not found"
+        )
+    
+        
     try:
         # Generate a unique file key using UUID and the original filename
         file_id = uuid.uuid4()

@@ -28,7 +28,7 @@ def create_prodcut(
     new_product = ProductDB(
         product_id=str(uuid.uuid4()),
         product_name=product.product_name,
-        category=product.category,
+        category=product.bike_category,
         sub_category=product.sub_category,
         quantity=product.quantity,
         size=product.size,

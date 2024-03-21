@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  frontend:
+    image: evify/frontend_logistic:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  backend:
+    image: evify/logistic_backend:latest
+    ports:
+      - "8000:8000"

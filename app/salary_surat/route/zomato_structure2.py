@@ -1,6 +1,6 @@
 from ast import For
 from logging import exception
-from fastapi import APIRouter, Body, UploadFile, File, Form, Depends
+from fastapi import APIRouter, Body, UploadFile, File, Form, Depends, HTTPException, status
 from fastapi.responses import FileResponse
 from sqlalchemy import false
 from app.salary_surat.schema.zomato_structure2 import (
@@ -395,6 +395,9 @@ def claculate_salary_structure3(
     df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
 
     df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 

@@ -15,6 +15,7 @@ class BikeCategory(Enum):
     ape_e_xtra_fx_pu = "APE E XTRA FX PU"
     exyride = "EZYRIDE"
     stella = "STELLA"
+    other = "OTHER"
 
 class SubCategory(Enum):
     Headlight = "Headlight"

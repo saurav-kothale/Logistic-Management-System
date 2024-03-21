@@ -1,5 +1,5 @@
 import pandas as pd
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
 from app.salary_ahmedabad.schema.swiggy import AhmedabadSwiggySchema
 from app.salary_ahmedabad.view.swiggy_structure2 import (
     calculate_salary_ahmedabad,
@@ -27,6 +27,9 @@ def claculate_salary(
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "swiggy")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Swiggy client not found")
 
     df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
 
