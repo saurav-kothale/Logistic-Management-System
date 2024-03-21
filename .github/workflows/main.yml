@@ -20,8 +20,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t evify/logistic_backend:latest ../..
-        working-directory: ../..
+        run: docker build -t evify/logistic_backend:latest ../../
+        working-directory: .github/workflow
 
       - name: Push Docker image
         run: docker push evify/logistic_backend:latest
