@@ -3,8 +3,8 @@ name: DC pipline
 on:
   workflow_run:
     workflows: ["Build and Push Docker Image"]
-     type:
-        -completed
+    types:
+      - completed
 
 jobs:
   build:
