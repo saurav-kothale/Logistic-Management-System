@@ -27,7 +27,7 @@ else:
     SECRET_KEY = secrets['SECRET_KEY']
     ALGORITHAM = secrets['ALGORITHAM']
     DB_USER_NAME = secrets["DB_USER_NAME"]
-    DB_PASSWORD = secrets("DB_PASSWORD")
+    DB_PASSWORD = secrets["DB_PASSWORD"]
     DB_PORT = secrets["DB_PORT"]
     DB_NAME = secrets["DB_NAME"]
     DB_HOST = secrets["DB_HOST"]
