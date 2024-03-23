@@ -27,7 +27,7 @@ from app import setting
 
 ahmedabad_router = APIRouter()
 db = SessionLocal()
-row_bucket = config("ROW_BUCKET")
+row_bucket = setting.ROW_BUCKET
 processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
