@@ -4,12 +4,13 @@ from sqlalchemy.orm import sessionmaker
 import os
 from decouple import config
 from sqlalchemy.exc import PendingRollbackError
+from app import setting
 
-USER_NAME = config("DB_USER_NAME")
-DB_PASSWORD = config("DB_PASSWORD")
-DB_PORT = config("DB_PORT")
-DB_NAME = config("DB_NAME")
-DB_HOST = config("DB_HOST")
+USER_NAME = setting.DB_USER_NAME
+DB_PASSWORD = setting.DB_PASSWORD
+DB_PORT = setting.DB_PORT
+DB_NAME = setting.DB_NAME
+DB_HOST = setting.DB_HOST
 
 connection_string = (
     f"postgresql://{USER_NAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
