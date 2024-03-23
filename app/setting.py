@@ -19,7 +19,7 @@ if deployment_env == 'local':
 else:
     # Retrieve credentials from AWS Secrets Manager
     import boto3
-    client = boto3.client('secretsmanager')
+    client = boto3.client( service_name='secretsmanager',region_name="us-east-1")
     response = client.get_secret_value(SecretId="prod")
     secret_data = response['SecretString']
     secrets = json.loads(secret_data)
