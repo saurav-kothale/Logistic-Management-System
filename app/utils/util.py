@@ -2,10 +2,11 @@ from typing import Dict
 from datetime import datetime, timedelta
 import jwt
 from decouple import config
+from app import setting
 
 
-JWT_SECRET = config("SECRET_KEY")
-JWT_ALGORITHM = config("ALGORITHAM")
+JWT_SECRET = setting.SECRET_KEY
+JWT_ALGORITHM = setting.ALGORITHAM
 
 
 def token_response(token: str):

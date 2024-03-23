@@ -21,12 +21,13 @@ import uuid
 from database.database import SessionLocal
 from app.salary_surat.model.model import SalaryFile
 from decouple import config
+from app import setting
 
 
 salary_router = APIRouter()
 db = SessionLocal()
-row_bucket = config("ROW_BUCKET")
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+row_bucket = setting.ROW_BUCKET
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 @salary_router.post("/zomato/structure1")

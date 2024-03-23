@@ -22,12 +22,13 @@ from decouple import config
 from database.database import SessionLocal
 from datetime import datetime
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
+from app import setting
 
 
 ahmedabad_router = APIRouter()
 db = SessionLocal()
 row_bucket = config("ROW_BUCKET")
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 @ahmedabad_router.post("/zomato/structure1")

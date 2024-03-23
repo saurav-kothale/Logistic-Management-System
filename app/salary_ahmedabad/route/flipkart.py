@@ -8,10 +8,11 @@ import io
 import tempfile
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
+from app import setting
 
 
 ahmedabad_flipkart_router = APIRouter()
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 @ahmedabad_flipkart_router.post("/flipkart/structure1/{file_id}/{file_name}")

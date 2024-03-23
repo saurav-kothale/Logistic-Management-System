@@ -7,9 +7,10 @@ import tempfile
 import io
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
+from app import setting
 
 ahmedabadbbnow_router = APIRouter()
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 @ahmedabadbbnow_router.post("/bbnow/structure1/{file_id}/{file_name}")

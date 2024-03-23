@@ -11,10 +11,11 @@ from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
 import io
 import tempfile
+from app import setting
 
 
 ahmedabad_swiggy_structure_router = APIRouter()
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 @ahmedabad_swiggy_structure_router.post("/swiggy/structure1")

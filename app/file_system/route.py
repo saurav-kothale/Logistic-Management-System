@@ -18,12 +18,13 @@ from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 import pandas as pd
+from app import setting
 
 
 file_router = APIRouter()
 # db = SessionLocal()
-row_bucket = config("ROW_BUCKET")
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+row_bucket = setting.ROW_BUCKET
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 @file_router.get("/uploadfile/")

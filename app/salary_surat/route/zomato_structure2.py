@@ -26,12 +26,12 @@ from datetime import datetime
 from database.database import SessionLocal
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
-
+from app import setting
 
 surat_zomato_structure2_router = APIRouter()
 db = SessionLocal()
-row_bucket = config("ROW_BUCKET")
-processed_bucket = config("PROCESSED_FILE_BUCKET")
+row_bucket = setting.ROW_BUCKET
+processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
 # @surat_zomato_structure2_router.post("/zomato/structure2")
