@@ -1,7 +1,7 @@
 from decouple import config
 import json
 
-deployment_env = config('DEPLOYMENT_ENV')
+deployment_env = config('DEPLOYMENT_ENV', default='production')
 
 if deployment_env == 'local':
     # Load credentials from local .env file
