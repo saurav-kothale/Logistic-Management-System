@@ -19,6 +19,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 import pandas as pd
 from app import setting
+from io import BytesIO
 
 
 file_router = APIRouter()
@@ -49,7 +50,15 @@ async def create_upload_file(
             )
     
     
-        
+    db_file = db.query(FileInfo).filter(FileInfo.file_name == file.filename).first()
+
+    if db_file is not None:
+        raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail= "file is already exist"
+            )
+
+
     if city == "surat": 
         if validate_surat_filename(file.filename) is False:
 
@@ -66,14 +75,6 @@ async def create_upload_file(
                 detail= "please enter valid ahmedabad file name"
             )
     
-    df = pd.read_excel(file.file)
-    if df.empty:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="file content not found"
-        )
-    
-        
     try:
         # Generate a unique file key using UUID and the original filename
         file_id = uuid.uuid4()
@@ -114,16 +115,20 @@ async def create_upload_file(
 @file_router.get("/download_raw_file/{file_key:path}")
 async def download_raw_file(file_key: str = Path(..., description="File Key")):
 
+    file_name = file_key.split("/")[2]
+
     try:
         # Use Boto3 to download the file from S3
+
         response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
+
         file_data = response["Body"].read()
 
         # Return the file as a StreamingResponse with Excel content type
         return StreamingResponse(
             io.BytesIO(file_data),
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename={file_key}.xlsx"},
+            headers={"Content-Disposition": f"attachment; filename={file_name}"},
         )
 
     except Exception as e:
