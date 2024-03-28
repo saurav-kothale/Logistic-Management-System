@@ -87,7 +87,7 @@ def get_salary(
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
-            table.to_excel(writer, sheet_name="Sheet1", index=False)
+            df3.to_excel(writer, sheet_name="Sheet1", index=False)
 
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
