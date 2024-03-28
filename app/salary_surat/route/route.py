@@ -770,7 +770,7 @@ def calculate_bluedart(
         with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
             df3.to_excel(writer, sheet_name="Sheet1", index=False)
 
-        # s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
     # return FileResponse(
     #     temp_file.name,
