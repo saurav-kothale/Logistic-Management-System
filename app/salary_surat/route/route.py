@@ -791,11 +791,11 @@ def getfile(
     city : str
 ):
     if city == "ahmedabad":
-        file_key = f"uploads/fbf6bad5-5d92-493b-a465-e37e326ef5b6/00_0000_ahmedabad.xlsx"
+        file_key = f"uploads/5162a582-d5d2-434c-bf41-7ab50e56a9e9/00_0000_ahmedabad.xlsx"
         response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
     
     elif city == "surat":
-        file_key = f"uploads/4d52dcfb-3bae-49cd-8629-98db89559937/00_0000_surat.xlsx"
+        file_key = f"uploads/f36f4590-1e04-4d8b-babf-1182125a3549/00_0000_surat.xlsx"
         response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
 
    
