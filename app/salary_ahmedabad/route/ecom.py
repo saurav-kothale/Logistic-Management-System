@@ -81,7 +81,12 @@ def get_salary(
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name}
+    return {
+        "message" : "Ecom Salary Calculated Successfully",
+        "file_id": file_id,
+        "file_name": file_name, 
+        "file_key" : file_key
+    }
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
     #     with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:

@@ -92,7 +92,12 @@ def get_salary(
             # file_key = f"uploads/{file_id}/modified.xlsx"
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name, "file_key" : file_key}
+    return {
+        "message" : "Big Basket Salary Calculated Successfully",
+        "file_id": file_id,
+        "file_name": file_name, 
+        "file_key" : file_key
+    }
 
 
     # with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:

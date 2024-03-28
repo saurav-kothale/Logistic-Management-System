@@ -83,7 +83,12 @@ def get_salary(
         
         s3_client.upload_file(temp_file.name, processed_bucket, file_key)
 
-    return {"file_id": file_id, "file_name": file_name, "file_key" : file_key}
+    return {
+        "message" : "BBNOW salary calculated successfully",
+        "file_id": file_id, 
+        "file_name": file_name, 
+        "file_key" : file_key
+    }
 
     
 
