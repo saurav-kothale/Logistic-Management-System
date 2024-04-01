@@ -33,7 +33,7 @@ def get_salary(
 
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "ecom")]
+    df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "e com")]
 
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Ecom client not found")
