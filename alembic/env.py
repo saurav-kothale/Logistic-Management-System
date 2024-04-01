@@ -10,7 +10,7 @@ from app.vendor.model import Vendor
 from app.file_system.model import FileInfo
 from app.salary_surat.model.model import SalaryFile
 from app.Inventory.model.model import InventoryDB
-from app.Inventory.product.model.model import ProductDB
+from app.product.model.model import ProductDB
 from database.database import Base
 import os
 from decouple import config

@@ -4,16 +4,60 @@ from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
-    status,
+    UploadFile,
+    status
 )
 from sqlalchemy import false, true
 from database.database import get_db
 from sqlalchemy.orm import Session
 from app.Inventory.schema.schema import Invetory, InvetoryResponse, InvetoryUpdate
 from app.Inventory.model.model import InventoryDB
+import uuid
+from app.file_system.config import s3_client
+from app import setting
 
 inventory_router = APIRouter()
+inventory = setting.INVENTORY
 
+@inventory_router.post("/inventories/upload/image")
+async def upload_inventory_image(file : UploadFile = None):
+    if file is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="image not found"
+        )
+    
+    file_extention = (file.filename).split(".")[1]
+
+    if file_extention not in ["jpg", "jpeg"]:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail= "Please Upload valid file JPG or JPEG"
+        )
+    
+    file_id = uuid.uuid4()
+    file_key = f"{file_id}/{file.filename}"
+
+    try:
+
+        s3_client.upload_fileobj(file.file, inventory, file_key)
+
+
+    except Exception as e:
+        
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload image : {e}"
+        )
+    
+    
+    return {
+        "status" : status.HTTP_202_ACCEPTED,
+        "message" : "File uploaded successfully",
+        "image_url" : f"https://{inventory}.s3.amazonaws.com/{file_key}",
+        "file_name" : file.filename
+    }
+        
 
 @inventory_router.post("/inventories")
 def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
@@ -28,6 +72,7 @@ def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
         )
 
     record = InventoryDB(
+        invoice_id = uuid.uuid4(),
         invoice_number=inventory.invoice_number,
         invoice_amount=inventory.invoice_amount,
         invoice_date=inventory.invoice_date,
@@ -58,7 +103,7 @@ def get_inventory(invoice_number: int, db: Session = Depends(get_db)):
     if db_inventory is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Inventory not found please check inventory Number",
+            detail="Inventory not found please check inventory number",
         )
     
     if db_inventory.is_deleted :
@@ -139,11 +184,11 @@ def update_inventory(
     }
 
 
-@inventory_router.delete("/inventories/{invoice_number}")
-def delete_inventory(invoice_number: str, db: Session = Depends(get_db)):
+@inventory_router.delete("/inventories/{invoice_id}")
+def delete_inventory(invoice_id: str, db: Session = Depends(get_db)):
 
     inventory_delete = db.query(InventoryDB).filter(
-        InventoryDB.invoice_number == invoice_number
+        InventoryDB.invoice_id == invoice_id
     ).first()
 
     if inventory_delete is None:

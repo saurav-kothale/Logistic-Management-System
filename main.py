@@ -16,7 +16,7 @@ from app.salary_ahmedabad.route.blinkit import ahmedabad_blinkit_router
 from app.salary_ahmedabad.route.big_basket import ahmedabadbigbascket
 from app.salary_ahmedabad.route.bbnow import ahmedabadbbnow_router
 from app.Inventory.route.route import inventory_router
-from app.Inventory.product.route.route import product_router
+from app.product.route.route import product_router
 
 app = FastAPI()
 

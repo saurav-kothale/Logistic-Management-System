@@ -9,7 +9,8 @@ from fastapi.exceptions import HTTPException
 import uuid
 from fastapi.responses import StreamingResponse
 import io
-from app.file_system.s3_events import s3_client
+# from app.file_system.s3_events import s3_client
+from app.file_system.config import s3_client
 from app.salary_surat.model.model import SalaryFile
 from app.salary_surat.view.view import validate_surat_filename, validate_ahmedabad_filename
 from app.file_system.model import FileInfo
@@ -42,12 +43,12 @@ async def create_upload_file(
     file: UploadFile = None
     
 ):  
-    if file is None: 
+    if file is None:
 
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail= "file not found"
-            )
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail= "file not found"
+        )
     
     
     db_file = db.query(FileInfo).filter(FileInfo.file_name == file.filename).first()

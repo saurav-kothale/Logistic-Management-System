@@ -17,6 +17,7 @@ if deployment_env == 'local':
     AWS_SECRET_KEY = config("AWS_SECRET_KEY")
     ROW_BUCKET = config("ROW_BUCKET")
     PROCESSED_FILE_BUCKET = config("PROCESSED_FILE_BUCKET")
+    INVENTORY = config("INVENTORY")
 else:
     # Retrieve credentials from AWS Secrets Manager
     import boto3
@@ -35,3 +36,4 @@ else:
     AWS_SECRET_KEY = secrets["AWS_SECRET_KEY"]
     ROW_BUCKET = secrets["ROW_BUCKET"]
     PROCESSED_FILE_BUCKET = secrets["PROCESSED_FILE_BUCKET"]
+    INVENTORY = secrets["INVENTORY"]

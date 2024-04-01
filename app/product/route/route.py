@@ -2,38 +2,41 @@ from itertools import product
 from nis import cat
 from operator import and_
 from unicodedata import category
-from fastapi import APIRouter, Depends, HTTPException
-from app.Inventory.product.schema.schema import ProductSchema
+from xml.sax import default_parser_list
+from fastapi import APIRouter, Depends, HTTPException, status
+from app.product.schema.schema import ProductSchema
 from sqlalchemy.orm import Session
-from app.Inventory.product.model.model import ProductDB
+from app.product.model.model import ProductDB
 from app.Inventory.model.model import InventoryDB
-from database.database import get_db
+from database.database import SessionLocal, get_db
 import uuid
 from sqlalchemy import func, and_
 
 
 product_router = APIRouter()
 
-@product_router.post("/product/{invoice_number}")
+
+@product_router.post("/product/{invoice_id}")
 def create_prodcut(
-    invoice_number : int,
+    invoice_id: int,
     product : ProductSchema,
     db : Session = Depends(get_db)
 ):
-    invoice = db.query(InventoryDB).filter(InventoryDB.invoice_number == invoice_number).first()
+    invoice = db.query(InventoryDB).filter(InventoryDB.invoice_id == invoice_id).first()
     if not invoice:
-        raise HTTPException(status_code=404, detail="Invoice not found")
+        raise HTTPException(status_code=404, detail="Invoice ID not found")
 
     # Create a new product
     new_product = ProductDB(
         product_id=str(uuid.uuid4()),
         product_name=product.product_name,
-        category=product.bike_category,
-        sub_category=product.sub_category,
+        category=product.category,
+        bike_category=product.bike_category,
         quantity=product.quantity,
         size=product.size,
         city=product.city,
-        invoice=invoice.invoice_number
+        color=product.color,
+        invoice_id=invoice_id
     )
 
     # Add the product to the database
@@ -42,6 +45,26 @@ def create_prodcut(
     db.refresh(new_product)
 
     return new_product
+
+
+@product_router.get("/items/{product_id}")
+def get_product(product_id : str, db : Session = Depends(get_db)):
+    db_product = db.query(ProductDB).filter(ProductDB.product_id == product_id).first()
+
+    if db_product is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found"
+        )
+    
+    # if db_product.invoice_id.is_deleted:
+
+
+    return{
+
+        "status" : status.HTTP_200_OK,
+        "product" : db_product
+    }
 
 
 @product_router.get("/remaining-items/{category}")
