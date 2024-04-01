@@ -87,7 +87,7 @@ async def calculate_zomato_surat(
         axis=1,
     )
 
-    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -96,7 +96,7 @@ async def calculate_zomato_surat(
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -205,7 +205,7 @@ async def calculate_swiggy_surat(
         axis=1,
     )
 
-    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -214,7 +214,7 @@ async def calculate_swiggy_surat(
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -272,12 +272,12 @@ async def calculate_bb_now_surat(
 
     driver_totals = (
         df.groupby("DRIVER_ID")
-        .agg({"DONE_PARCEL _ORDERS": "sum", "ATTENDANCE": "sum"})
+        .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
         .reset_index()
     )
 
     driver_totals["AVERAGE"] = (
-        driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"] 
+        driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"] 
     )
 
     new_df = pd.merge(
@@ -296,7 +296,7 @@ async def calculate_bb_now_surat(
     #     ],
     #     aggfunc={
     #         "TOTAL_ORDERS": "sum",
-    #         "DONE_PARCEL _ORDERS": "sum",
+    #         "DONE_PARCEL_ORDERS": "sum",
     #         "CUSTOMER_TIP": "sum",
     #         "RAIN_ORDER": "sum",
     #         "IGCC_AMOUNT": "sum",
@@ -315,7 +315,7 @@ async def calculate_bb_now_surat(
 
     # result = pd.merge(table, attendance_count, on="DRIVER_ID", how="left")
 
-    # table["AVERAGE"] = round(table["DONE_PARCEL _ORDERS"] / table["ATTENDANCE"])
+    # table["AVERAGE"] = round(table["DONE_PARCEL_ORDERS"] / table["ATTENDANCE"])
 
     new_df["ORDER_AMOUNT"] = new_df.apply(
         calculate_amount_for_bbnow_surat,
@@ -336,7 +336,7 @@ async def calculate_bb_now_surat(
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -375,7 +375,7 @@ async def calculate_bb_now_surat(
     #         "BAD_ORDER",
     #         "ORDER_AMOUNT",
     #         "TOTAL_ORDERS",
-    #         "DONE_PARCEL _ORDERS",
+    #         "DONE_PARCEL_ORDERS",
     #         "CUSTOMER_TIP",
     #         "RAIN_ORDER",
     #         "IGCC_AMOUNT",
@@ -458,7 +458,7 @@ def calculate_ecom_surat(
         axis=1,
     )
 
-    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -467,7 +467,7 @@ def calculate_ecom_surat(
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -563,7 +563,7 @@ def calculate_flipcart_surat(
         axis=1,
     )
 
-    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -572,7 +572,7 @@ def calculate_flipcart_surat(
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -703,7 +703,7 @@ def calculate_bluedart(
 
     df["ORDER_AMOUNT"] = df["DOCUMENT_AMOUNT"] + df["PARCEL_AMOUNT"]
 
-    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
     table = pd.pivot_table(
         data=df,
@@ -712,7 +712,7 @@ def calculate_bluedart(
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",

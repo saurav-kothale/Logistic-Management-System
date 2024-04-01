@@ -44,7 +44,7 @@ def get_salary(
         second_order_amount
     ), axis=1)
 
-    df["TOTAL_ORDERS"] = df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_PARCEL_ORDERS"]
 
     table = create_table(df).reset_index()
 

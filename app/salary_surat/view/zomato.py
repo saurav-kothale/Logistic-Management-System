@@ -18,7 +18,7 @@ def calculate_amount_for_zomato_surat(row,
                           bad_orders_amount
                           ):
     
-    order_done = row['DONE_PARCEL _ORDERS']
+    order_done = row['DONE_PARCEL_ORDERS']
     rejection = row['REJECTION']
     bad_orders = row['BAD_ORDER']
     date = row["DATE"]

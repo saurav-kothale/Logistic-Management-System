@@ -32,16 +32,16 @@ processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 #     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
 
-#     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+#     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
 #     driver_totals = (
 #         df.groupby("DRIVER_ID")
-#         .agg({"DONE_PARCEL _ORDERS": "sum", "ATTENDANCE": "sum"})
+#         .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
 #         .reset_index()
 #     )
 
 #     driver_totals["AVERAGE"] = round(
-#         driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"]
+#         driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"]
 #     ,0)
 
 #     df = pd.merge(
@@ -181,16 +181,16 @@ def claculate_swiggy_rent_model(
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Swiggy client not found")
 
-    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
     driver_totals = (
         df.groupby("DRIVER_ID")
-        .agg({"DONE_PARCEL _ORDERS": "sum", "ATTENDANCE": "sum"})
+        .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
         .reset_index()
     )
 
     driver_totals["AVERAGE"] = round(
-        driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"]
+        driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"]
     ,0)
 
     df = pd.merge(

@@ -13,7 +13,7 @@ def calculate_ecom_salary(
         order_amount
 
 ):
-    order_done = row["DONE_PARCEL _ORDERS"]
+    order_done = row["DONE_PARCEL_ORDERS"]
     amount = 0
 
     if from_order <= order_done <= to_order:
@@ -37,7 +37,7 @@ def create_table(dataframe):
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
