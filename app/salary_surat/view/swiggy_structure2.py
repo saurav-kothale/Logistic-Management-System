@@ -4,7 +4,7 @@ import pandas as pd
 
 def calculate_salary_surat(row, data):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if data.swiggy_first_order_start <= order_done <= data.swiggy_first_order_end:
@@ -48,7 +48,7 @@ def calculate_amount_for_surat_rental_model(
 
 ):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     date = row["DATE"]
     amount = 0
 
@@ -86,7 +86,7 @@ def calculate_bike_charges(
 ):
     average = row["AVERAGE"]
     job_type = row["WORK_TYPE"]
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if (
@@ -130,7 +130,7 @@ def create_table(dataframe):
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
             "BIKE_CHARGES": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
+            "DONE_PARCEL _ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -153,7 +153,7 @@ def add_bonus(
 
 ):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if (row["WORK_TYPE"] == "full time") and (order_done >= bonus_order_fulltime):

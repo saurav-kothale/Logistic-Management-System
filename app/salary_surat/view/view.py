@@ -81,7 +81,7 @@ def calculate_amount_for_zomato_surat(row,
                           weekend_amount
                           ):
     
-    order_done = row['PARCEL_DONE_ORDERS']
+    order_done = row['DONE_PARCEL _ORDERS']
     rejection = row['REJECTION']
     bad_orders = row['BAD_ORDER']
     date = row["DATE"]
@@ -133,7 +133,7 @@ def calculate_amount_for_surat_swiggy(row,
                           bad_orders_amount
                           ):
     
-    order_done = row['PARCEL_DONE_ORDERS']
+    order_done = row['DONE_PARCEL _ORDERS']
     rejection = row['REJECTION']
     bad_orders = row['BAD_ORDER']
     date = row["DATE"]
@@ -174,7 +174,7 @@ def calculate_amount_for_bbnow_surat(
         order_amount3
 
 ):
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     average = row["AVERAGE"]
     amount = 0
 
@@ -228,7 +228,7 @@ def calculate_amount_for_ecom_surat(
 
 ):
     
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:
@@ -256,7 +256,7 @@ def calculate_amount_for_flipkart_surat(
 
 ):
     
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:
@@ -287,7 +287,7 @@ def calculate_document_amount(
 
 ):
 
-    orders = row["DOCUMENT_DONE_ORDERS"]
+    orders = row["DONE_DOCUMENT_ORDERS"]
     amount = 0
 
     if first_from_condition <= orders <= first_to_condition:
@@ -321,7 +321,7 @@ def calculate_parcel_amount(
 
 ):
 
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if first_from_condition <= orders <= first_to_condition:
@@ -341,7 +341,7 @@ def calculate_parcel_amount(
 
 def calculate_salary_surat(row, data):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     job_type = row["jobtype"]
     amount = 0
 
@@ -369,7 +369,7 @@ def create_table(dataframe):
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "Total_Earning": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
+            "DONE_PARCEL _ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -383,7 +383,7 @@ def create_table(dataframe):
 
 def add_bonus(row):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     job_type = row["WORK_TYPE"]
     ORDER_AMOUNT = row["ORDER_AMOUNT"]
 

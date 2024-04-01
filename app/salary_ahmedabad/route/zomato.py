@@ -45,16 +45,16 @@ def claculate_salary(
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
 
-    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
 
     driver_totals = (
         df.groupby("DRIVER_ID")
-        .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .agg({"DONE_PARCEL _ORDERS": "sum", "ATTENDANCE": "sum"})
         .reset_index()
     )
 
     driver_totals["AVERAGE"] = round(
-        driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"]
+        driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"]
     ,0)
 
     df = pd.merge(
@@ -169,16 +169,16 @@ def claculate_salary_structure3(
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
 
-    df["TOTAL_ORDERS"] = df["DOCUMENT_DONE_ORDERS"] + df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL _ORDERS"]
 
     driver_totals = (
         df.groupby("DRIVER_ID")
-        .agg({"PARCEL_DONE_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .agg({"DONE_PARCEL _ORDERS": "sum", "ATTENDANCE": "sum"})
         .reset_index()
     )
 
     driver_totals["AVERAGE"] = round(
-        driver_totals["PARCEL_DONE_ORDERS"] / driver_totals["ATTENDANCE"], 0
+        driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"], 0
     )
 
     df = pd.merge(

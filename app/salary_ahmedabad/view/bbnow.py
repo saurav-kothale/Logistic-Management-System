@@ -1,7 +1,7 @@
 import pandas as pd
 
 def calculate_bbnow_salary(row, data):
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if data.from_order <= orders <= data.to_order:
@@ -22,7 +22,7 @@ def calculate_bbnow_salary1(
         order_greter_than,
         second_amount
 ):
-    orders = row["PARCEL_DONE_ORDERS"]
+    orders = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if from_order <= orders <= to_order:

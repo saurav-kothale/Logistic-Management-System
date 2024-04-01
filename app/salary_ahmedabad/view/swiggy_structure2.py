@@ -2,7 +2,7 @@ import pandas as pd
 
 def calculate_salary_ahmedabad(row, data):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if data.swiggy_first_order_start <= order_done <= data.swiggy_first_order_end:
@@ -15,7 +15,7 @@ def calculate_salary_ahmedabad(row, data):
 
 
 def calculate_bike_charges(row, data):
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     job_type = row["WORK_TYPE"]
     amount = 0
 
@@ -41,7 +41,7 @@ def create_table(dataframe):
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
             "BIKE_CHARGES": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
+            "DONE_PARCEL _ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -54,7 +54,7 @@ def create_table(dataframe):
 
 def add_bonus(row, data):
 
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if (row["WORK_TYPE"] == "full time") and (order_done >= data.bonus_order_fulltime):

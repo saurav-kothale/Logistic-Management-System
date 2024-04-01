@@ -8,7 +8,7 @@ def calculate_blinkit_salary(
         order_greter_than,
         second_order_amount
 ):
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     if from_order <= order_done <= to_order:
@@ -29,7 +29,7 @@ def create_table(dataframe):
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
+            "DONE_PARCEL _ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",

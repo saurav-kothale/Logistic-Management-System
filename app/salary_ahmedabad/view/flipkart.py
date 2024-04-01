@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def calculate_flipkart_salary(row, amount):
-    order_done = row["PARCEL_DONE_ORDERS"]
+    order_done = row["DONE_PARCEL _ORDERS"]
     amount = 0
 
     amount = order_done * amount
@@ -19,7 +19,7 @@ def create_table(dataframe):
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
-            "PARCEL_DONE_ORDERS": "sum",
+            "DONE_PARCEL _ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",

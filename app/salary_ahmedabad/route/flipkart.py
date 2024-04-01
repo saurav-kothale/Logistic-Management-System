@@ -33,7 +33,7 @@ def get_salary(
 
     df["ORDER_AMOUNT"] = df.apply(lambda row : calculate_flipkart_salary(row, amount), axis=1)
 
-    df["TOTAL_ORDERS"] = df["PARCEL_DONE_ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_PARCEL _ORDERS"]
 
     table = create_table(df).reset_index()
 
