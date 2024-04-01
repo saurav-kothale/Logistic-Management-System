@@ -277,7 +277,7 @@ async def calculate_bb_now_surat(
     )
 
     driver_totals["AVERAGE"] = (
-        driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"]
+        driver_totals["DONE_PARCEL _ORDERS"] / driver_totals["ATTENDANCE"] 
     )
 
     new_df = pd.merge(

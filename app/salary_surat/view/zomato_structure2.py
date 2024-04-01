@@ -50,7 +50,7 @@ def create_table(dataframe):
             "BAD_ORDER": "sum",
             "ORDER_AMOUNT": "sum",
             "BIKE_CHARGES": "sum",
-            "DONE_PARCEL _ORDERS": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
             "IGCC_AMOUNT": "sum",
@@ -73,7 +73,7 @@ def add_bonus(
 
 ):
 
-    order_done = row["DONE_PARCEL _ORDERS"]
+    order_done = row["DONE_PARCEL_ORDERS"]
     amount = 0
 
     if (row["WORK_TYPE"] == "full time") and (order_done >= bonus_order_fulltime):
@@ -130,7 +130,7 @@ def calculate_amount_for_surat_rental_model(
 
 ):
 
-    order_done = row["DONE_PARCEL _ORDERS"]
+    order_done = row["DONE_PARCEL_ORDERS"]
     date = row["DATE"]
     amount = 0
 
@@ -168,7 +168,7 @@ def calculate_bike_charges_for_rental_model(
 ):
     average = row["AVERAGE"]
     job_type = row["WORK_TYPE"]
-    orders = row["DONE_PARCEL _ORDERS"]
+    orders = row["DONE_PARCEL_ORDERS"]
     amount = 0
 
     if (

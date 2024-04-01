@@ -399,7 +399,7 @@ def claculate_salary_structure3(
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
 
-    df["TOTAL_ORDERS"] = df["DONE_PARCEL _ORDERS"]
+    df["TOTAL_ORDERS"] = df["DONE_PARCEL_ORDERS"]
 
     # driver_totals = (
     #     df.groupby("DRIVER_ID")
