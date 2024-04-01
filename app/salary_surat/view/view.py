@@ -179,7 +179,7 @@ def calculate_amount_for_bbnow_surat(
     amount = 0
 
     if average > 13:
-        if orders <= from_order & orders >= to_order:
+        if orders <= from_order and orders >= to_order:
             amount =  orders * order_amount2
         
         elif orders >= order_grether_than:
@@ -379,6 +379,28 @@ def create_table(dataframe):
        )
 
     return table
+
+
+def calculate_amount_bluedart_van(row, fixed_salary):
+    attendance = row["ATTENDANCE"]
+    amount = 0
+
+    per_day_amount = fixed_salary/26
+
+    amount = per_day_amount * attendance
+
+    return amount
+
+
+def calculate_uptown(row, fixed_salary):
+    attendance = row["ATTENDANCE"]
+    amount = 0
+
+    per_day_amount = fixed_salary/26
+
+    amount = per_day_amount * attendance
+
+    return amount
 
 
 def add_bonus(row):

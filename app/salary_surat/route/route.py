@@ -1,3 +1,4 @@
+from ast import arg
 from datetime import datetime
 from sys import exception
 from fastapi import APIRouter, UploadFile, Form, File, HTTPException, status
@@ -11,7 +12,9 @@ from ..view.view import (
     calculate_document_amount,
     calculate_parcel_amount,
     calculate_panalties,
-    calculate_order_for_less_amount
+    calculate_order_for_less_amount,
+    calculate_amount_bluedart_van,
+    calculate_uptown
 )
 import io
 from fastapi.responses import FileResponse
@@ -438,7 +441,7 @@ def calculate_ecom_surat(
     third_condition_amount: int = Form(16),
 ):
     df = pd.read_excel(file.file)
-    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "ecom")]
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "e com")]
 
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Ecom client not found")
@@ -630,8 +633,8 @@ def calculate_flipcart_surat(
     # return response
 
 
-@salary_router.post("/bluedart/structure/{file_id}/{file_name}")
-def calculate_bluedart(
+@salary_router.post("/bluedart/biker/structure/{file_id}/{file_name}")
+def calculate_bluedart_biker(
     file_id: str,
     file_name: str,
     file: UploadFile = File(...),
@@ -660,10 +663,10 @@ def calculate_bluedart(
 ):
     df = pd.read_excel(file.file)
 
-    df = df[df["CLIENT_NAME"].isin(["bluedart biker", "bluedart van"])]
+    df = df[df["CLIENT_NAME"].isin(["bluedart biker",])]
 
     if df.empty:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "BlueDart client not found")
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "BlueDart Biker client not found")
     
     df["DOCUMENT_AMOUNT"] = df.apply(
         calculate_document_amount,
@@ -784,6 +787,170 @@ def calculate_bluedart(
         "file_name": file_name, 
         "file_key" : file_key
     }
+
+
+@salary_router.post("/bluedart/van/structure/{file_id}/{file_name}")
+def calculate_bluedart_van(
+    file_id: str,
+    file_name: str,
+    file: UploadFile = File(...),
+    fixed_salary : int = Form(15000)
+):
+    df = pd.read_excel(file.file)
+
+    df = df[df["CLIENT_NAME"] == "bluedart van"]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "BlueDart Van client not found")
+    
+
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
+
+    table = pd.pivot_table(
+        data=df,
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
+        aggfunc={
+            "REJECTION": "sum",
+            "BAD_ORDER": "sum",
+            "ORDER_AMOUNT": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
+            "CUSTOMER_TIP": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
+            "ATTENDANCE": "sum",
+            "TOTAL_ORDERS": "sum",
+        },
+    )
+
+    table_reset = table.reset_index()
+
+
+    table_reset["ORDER_AMOUNT"] = table_reset.apply(
+
+        calculate_amount_bluedart_van,
+
+        args=(fixed_salary),
+
+        axis= 1
+    )
+
+    table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    file_data = response["Body"].read()
+
+    bluedart_table = pd.DataFrame(table_reset)
+
+    df2 = pd.read_excel(io.BytesIO(file_data))
+
+    df3 = pd.concat([df2, bluedart_table], ignore_index=True)
+
+    df3["VENDER_FEE (@6%)"] = (df3["FINAL_AMOUNT"] * 0.06) + (df3["FINAL_AMOUNT"])
+
+    df3["FINAL PAYBLE AMOUNT (@18%)"] = (df3["VENDER_FEE (@6%)"] * 0.18) + (
+        df3["VENDER_FEE (@6%)"]
+    )
+    
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+        with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+            df3.to_excel(writer, sheet_name="Sheet1", index=False)
+
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+
+
+    return {
+        "message" : "Sucessfully Calculated Salary for BlueDart",
+        "file_id": file_id, 
+        "file_name": file_name, 
+        "file_key" : file_key
+    }
+
+
+@salary_router.post("/uptown_fresh/structure/{file_id}/{file_name}")
+def calculate_uptownfresh(
+    file_id: str,
+    file_name: str,
+    file: UploadFile = File(...),
+    fixed_salary : int = Form(15000)
+):
+    df = pd.read_excel(file.file)
+
+    df = df[df["CLIENT_NAME"] == "uptown fresh"]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Uptown Fresh client not found")
+    
+
+    df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
+
+    table = pd.pivot_table(
+        data=df,
+        index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
+        aggfunc={
+            "REJECTION": "sum",
+            "BAD_ORDER": "sum",
+            "DONE_PARCEL_ORDERS": "sum",
+            "CUSTOMER_TIP": "sum",
+            "RAIN_ORDER": "sum",
+            "IGCC_AMOUNT": "sum",
+            "ATTENDANCE": "sum",
+            "TOTAL_ORDERS": "sum",
+        },
+    )
+
+    table_reset = table.reset_index()
+
+
+    table_reset["ORDER_AMOUNT"] = table_reset.apply(
+
+        calculate_uptown,
+
+        args=(
+            fixed_salary,
+        ),
+
+        axis= 1
+    )
+
+    table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    file_data = response["Body"].read()
+
+    bluedart_table = pd.DataFrame(table_reset)
+
+    df2 = pd.read_excel(io.BytesIO(file_data))
+
+    df3 = pd.concat([df2, bluedart_table], ignore_index=True)
+
+    df3["VENDER_FEE (@6%)"] = (df3["FINAL_AMOUNT"] * 0.06) + (df3["FINAL_AMOUNT"])
+
+    df3["FINAL PAYBLE AMOUNT (@18%)"] = (df3["VENDER_FEE (@6%)"] * 0.18) + (
+        df3["VENDER_FEE (@6%)"]
+    )
+    
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+        with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+            df3.to_excel(writer, sheet_name="Sheet1", index=False)
+
+        s3_client.upload_file(temp_file.name, processed_bucket, file_key)
+
+
+    return {
+        "message" : "Sucessfully Calculated Salary for Uptown Fresh",
+        "file_id": file_id, 
+        "file_name": file_name, 
+        "file_key" : file_key
+    }    
+        
 
 
 @salary_router.get("/samplefile/{city}")
