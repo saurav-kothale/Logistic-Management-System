@@ -497,10 +497,7 @@ def claculate_salary_structure3(
     table["PANALTIES"] = table["IGCC_AMOUNT"] + table["REJECTION_AMOUNT"] + table["BAD_ORDER_AMOUNT"]
 
     table["FINAL_AMOUNT"] = (
-        table["ORDER_AMOUNT"]
-        + table["BONUS"]
-        - table["PANALTIES"]
-        - table["BIKE_CHARGES"]
+        (table["ORDER_AMOUNT"] + table["BONUS"]) - (table["PANALTIES"] + table["BIKE_CHARGES"])
     )
 
     table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])

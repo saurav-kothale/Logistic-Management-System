@@ -381,22 +381,22 @@ def create_table(dataframe):
     return table
 
 
-def calculate_amount_bluedart_van(row, fixed_salary):
+def calculate_amount_bluedart_van(row, fixed_salary, days):
     attendance = row["ATTENDANCE"]
     amount = 0
 
-    per_day_amount = fixed_salary/26
+    per_day_amount = fixed_salary/days
 
     amount = per_day_amount * attendance
 
     return amount
 
 
-def calculate_uptown(row, fixed_salary):
+def calculate_uptown(row, fixed_salary, days):
     attendance = row["ATTENDANCE"]
     amount = 0
 
-    per_day_amount = fixed_salary/26
+    per_day_amount = fixed_salary/days
 
     amount = per_day_amount * attendance
 

@@ -28,6 +28,28 @@ file_router = APIRouter()
 row_bucket = setting.ROW_BUCKET
 processed_bucket = setting.PROCESSED_FILE_BUCKET
 
+desire_order = [
+        "CITY_NAME",
+        "CLIENT_NAME",
+        "DRIVER_ID",
+        "DRIVER_NAME",
+        "ATTENDANCE",
+        "TOTAL_ORDERS",
+        "ORDER_AMOUNT",
+        "BAD_ORDER",
+        "BAD_ORDER_AMOUNT",
+        "REJECTION",
+        "REJECTION_AMOUNT",
+        "IGCC_AMOUNT",
+        "CUSTOMER_TIP",
+        "BONUS",
+        "BIKE_CHARGES",
+        "PANALTIES",
+        "FINAL_AMOUNT",
+        "VENDER_FEE (@6%)",
+        "FINAL PAYBLE AMOUNT (@18%)",
+    ]
+
 
 @file_router.get("/uploadfile/")
 async def create_upload_files(file: UploadFile):
@@ -186,6 +208,37 @@ async def download_salary_file(file_key: str):
         # Return the file as a StreamingResponse with Excel content type
         return StreamingResponse(
             io.BytesIO(file_data),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename=calculated_{filename}"},
+        )
+
+    except Exception as e:
+        # Log the error for debugging purposes
+        print(f"Unexpected error: {e}")
+
+        # Return a custom HTTPException response with 500 status and detail message
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    
+
+@file_router.get("/download_salary_file_format/{file_key:path}")
+async def download_salary_file_with_format(file_key: str):
+    filename = file_key.split("/")[2]
+
+    try:
+        # Use Boto3 to download the file from S3
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+        file_data = response["Body"].read()
+
+        df = pd.read_excel(io.BytesIO(file_data))
+        df = df[desire_order]
+
+        buffer = io.BytesIO()
+        df.to_excel(buffer, index=False)
+        buffer.seek(0)
+
+        # Return the file as a StreamingResponse with Excel content type
+        return StreamingResponse(
+            buffer,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             headers={"Content-Disposition": f"attachment; filename=calculated_{filename}"},
         )

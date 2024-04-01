@@ -33,6 +33,8 @@ row_bucket = setting.ROW_BUCKET
 processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
+
+
 @salary_router.post("/zomato/structure1")
 async def calculate_zomato_surat(
     file: UploadFile = File(...),
@@ -287,6 +289,8 @@ async def calculate_bb_now_surat(
         df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
     )
 
+
+
     # table = pd.pivot_table(
     #     data=df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")],
     #     index=[
@@ -332,6 +336,8 @@ async def calculate_bb_now_surat(
         axis=1,
     )
 
+    new_df["TOTAL_ORDERS"] = new_df["DONE_PARCEL_ORDERS"]
+
     table = pd.pivot_table(
         data=new_df,
         index=["DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME", "CITY_NAME"],
@@ -345,6 +351,7 @@ async def calculate_bb_now_surat(
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "AVERAGE": "mean",
+            "TOTAL_ORDERS" : "sum"
         },
     ).reset_index()
 
@@ -752,14 +759,16 @@ def calculate_bluedart_biker(
         "DRIVER_NAME",
         "ATTENDANCE",
         "TOTAL_ORDERS",
+        "ORDER_AMOUNT",
         "BAD_ORDER",
+        "BAD_ORDER_AMOUNT",
         "REJECTION",
+        "REJECTION_AMOUNT",
         "IGCC_AMOUNT",
         "CUSTOMER_TIP",
-        "ORDER_AMOUNT",
-        "PANALTIES",
         "BONUS",
         "BIKE_CHARGES",
+        "PANALTIES",
         "FINAL_AMOUNT",
         "VENDER_FEE (@6%)",
         "FINAL PAYBLE AMOUNT (@18%)",
@@ -782,7 +791,7 @@ def calculate_bluedart_biker(
     #     filename=f"calculated_{file_name}.xlsx",
     # )
     return {
-        "message" : "Sucessfully Calculated Salary for BlueDart",
+        "message" : "Sucessfully Calculated Salary for BlueDart-Bike",
         "file_id": file_id, 
         "file_name": file_name, 
         "file_key" : file_key
@@ -794,7 +803,8 @@ def calculate_bluedart_van(
     file_id: str,
     file_name: str,
     file: UploadFile = File(...),
-    fixed_salary : int = Form(15000)
+    fixed_salary : int = Form(15000),
+    days : int = Form(26)
 ):
     df = pd.read_excel(file.file)
 
@@ -812,7 +822,6 @@ def calculate_bluedart_van(
         aggfunc={
             "REJECTION": "sum",
             "BAD_ORDER": "sum",
-            "ORDER_AMOUNT": "sum",
             "DONE_PARCEL_ORDERS": "sum",
             "CUSTOMER_TIP": "sum",
             "RAIN_ORDER": "sum",
@@ -829,7 +838,10 @@ def calculate_bluedart_van(
 
         calculate_amount_bluedart_van,
 
-        args=(fixed_salary),
+        args=(
+            fixed_salary,
+            days
+        ),
 
         axis= 1
     )
@@ -863,7 +875,7 @@ def calculate_bluedart_van(
 
 
     return {
-        "message" : "Sucessfully Calculated Salary for BlueDart",
+        "message" : "Sucessfully Calculated Salary for BlueDart Van",
         "file_id": file_id, 
         "file_name": file_name, 
         "file_key" : file_key
@@ -875,7 +887,8 @@ def calculate_uptownfresh(
     file_id: str,
     file_name: str,
     file: UploadFile = File(...),
-    fixed_salary : int = Form(15000)
+    fixed_salary : int = Form(15000),
+    days : int = Form(26)
 ):
     df = pd.read_excel(file.file)
 
@@ -911,6 +924,7 @@ def calculate_uptownfresh(
 
         args=(
             fixed_salary,
+            days
         ),
 
         axis= 1
@@ -958,11 +972,11 @@ def getfile(
     city : str
 ):
     if city == "ahmedabad":
-        file_key = f"uploads/d69bc5b1-0141-4b22-bb26-b20c5c934883/00_0000_ahmedabad.xlsx"
+        file_key = f"uploads/50812460-485a-41f2-8610-6282cae96e67/00_0000_ahmedabad.xlsx"
         response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
     
     elif city == "surat":
-        file_key = f"uploads/edfaea39-e7d6-4229-90fc-67b92d859c64/00_0000_surat.xlsx"
+        file_key = f"uploads/2d477cf3-f383-49cb-8a4b-d58576fc2fb0/00_0000_surat.xlsx"
         response = s3_client.get_object(Bucket=row_bucket, Key=file_key)
 
    
