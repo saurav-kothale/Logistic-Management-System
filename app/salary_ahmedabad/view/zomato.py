@@ -51,7 +51,8 @@ def create_table(dataframe):
             "IGCC_AMOUNT": "sum",
             "ATTENDANCE": "sum",
             "REJECTION_AMOUNT": "sum",
-            "BAD_ORDER_AMOUNT": "sum"
+            "BAD_ORDER_AMOUNT": "sum",
+            "TOTAL_ORDERS" : "sum"
         }
        )
 

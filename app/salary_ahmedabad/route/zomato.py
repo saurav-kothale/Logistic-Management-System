@@ -47,19 +47,6 @@ def claculate_salary(
 
     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
-    driver_totals = (
-        df.groupby("DRIVER_ID")
-        .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
-        .reset_index()
-    )
-
-    driver_totals["AVERAGE"] = round(
-        driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"]
-    ,0)
-
-    df = pd.merge(
-        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
-    )
     
     df["ORDER_AMOUNT"] = df.apply(
         lambda row: calculate_salary_ahmedabad(row, data), axis=1
@@ -171,19 +158,6 @@ def claculate_salary_structure3(
 
     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
-    driver_totals = (
-        df.groupby("DRIVER_ID")
-        .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
-        .reset_index()
-    )
-
-    driver_totals["AVERAGE"] = round(
-        driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"], 0
-    )
-
-    df = pd.merge(
-        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
-    )
 
     if include_slab:
 
