@@ -138,8 +138,8 @@ processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 @surat_swiggy_structure2_router.post("/swiggy/rentmodel/{file_id}/{file_name}")
 def claculate_swiggy_rent_model(
-    file_id: str = None,
-    file_name : str = None,
+    file_id: str = None, # type: ignore
+    file_name : str = None, # type: ignore
     file: UploadFile = File(...),    
     include_slab : bool = Form(False),
     swiggy_first_order_start: int = Form(1),

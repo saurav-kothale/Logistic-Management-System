@@ -17,8 +17,8 @@ processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 @ahmedabad_flipkart_router.post("/flipkart/structure1/{file_id}/{file_name}")
 def get_salary(
-    file_id : str = None,
-    file_name : str = None,
+    file_id : str = None, # type: ignore
+    file_name : str = None, # type: ignore
     file: UploadFile = File(...),
     amount : int = Form(12)
 ):
