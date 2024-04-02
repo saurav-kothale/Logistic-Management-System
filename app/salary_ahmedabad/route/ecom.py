@@ -33,6 +33,19 @@ def get_salary(
 
     df["DATE"] = pd.to_datetime(df["DATE"])
 
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "e com")]
 
     if df.empty:
@@ -61,10 +74,6 @@ def get_salary(
     table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
         table["VENDER_FEE (@6%)"]
     )
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response["Body"].read()
 

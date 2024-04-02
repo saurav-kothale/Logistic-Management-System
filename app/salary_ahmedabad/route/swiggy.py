@@ -25,8 +25,6 @@ def claculate_salary(
 
     df = pd.read_excel(file.file)
 
-    df["DATE"] = pd.to_datetime(df["DATE"])
-
     df = df[(df["CITY_NAME"] == "ahmedabad") & (df["CLIENT_NAME"] == "swiggy")]
 
     if df.empty:

@@ -149,8 +149,8 @@ async def calculate_zomato_surat(
 
 @salary_router.post("/swiggy/structure1/{file_id}/{file_name}")
 async def calculate_swiggy_surat(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     first_order_from: int = Form(1),
     first_order_to: int = Form(19),
@@ -171,6 +171,19 @@ async def calculate_swiggy_surat(
 
     df = pd.read_excel(file.file)
     df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
 
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
 
@@ -233,11 +246,8 @@ async def calculate_swiggy_surat(
 
     table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"] - table_reset["PANALTIES"]
 
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
-
     file_data = response["Body"].read()
+
     swiggy_surat_table = pd.DataFrame(table_reset)
 
     df2 = pd.read_excel(io.BytesIO(file_data))
@@ -256,8 +266,8 @@ async def calculate_swiggy_surat(
 
 @salary_router.post("/bbnow/structure1/{file_id}/{file_name}")
 async def calculate_bb_now_surat(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     average_order: int = Form(13),
     average_amount: int = Form(400),
@@ -269,6 +279,21 @@ async def calculate_bb_now_surat(
 ):
 
     df = pd.read_excel(file.file)
+
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
 
     df = df[(df["CLIENT_NAME"] == "bb now") & (df["CITY_NAME"] == "surat")]
 
@@ -393,10 +418,6 @@ async def calculate_bb_now_surat(
     #         "FINAL_AMOUNT",
     #     ]
     # ]
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
     # except exception as e:
     #     return {"error" : e}
 
@@ -448,6 +469,22 @@ def calculate_ecom_surat(
     third_condition_amount: int = Form(16),
 ):
     df = pd.read_excel(file.file)
+
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+    
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "e com")]
 
     if df.empty:
@@ -497,10 +534,6 @@ def calculate_ecom_surat(
     table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (
         table_reset["VENDER_FEE (@6%)"] * 0.18
     ) + (table_reset["VENDER_FEE (@6%)"])
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response["Body"].read()
     ecom_surat_table = pd.DataFrame(table_reset)
@@ -553,6 +586,21 @@ def calculate_flipcart_surat(
 ):
     df = pd.read_excel(file.file)
 
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+
     df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "flipkart")]
 
     if df.empty:
@@ -601,10 +649,6 @@ def calculate_flipcart_surat(
     table_reset["FINAL PAYBLE AMOUNT (@18%)"] = (
         table_reset["VENDER_FEE (@6%)"] * 0.18
     ) + (table_reset["VENDER_FEE (@6%)"])
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response["Body"].read()
     flipkart_surat_table = pd.DataFrame(table_reset)
@@ -670,6 +714,21 @@ def calculate_bluedart_biker(
 ):
     df = pd.read_excel(file.file)
 
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+
     df = df[df["CLIENT_NAME"].isin(["bluedart biker",])]
 
     if df.empty:
@@ -734,10 +793,6 @@ def calculate_bluedart_biker(
     table_reset = table.reset_index()
 
     table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response["Body"].read()
     bluedart_table = pd.DataFrame(table_reset)
@@ -808,6 +863,21 @@ def calculate_bluedart_van(
 ):
     df = pd.read_excel(file.file)
 
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+
     df = df[df["CLIENT_NAME"] == "bluedart van"]
 
     if df.empty:
@@ -847,10 +917,6 @@ def calculate_bluedart_van(
     )
 
     table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response["Body"].read()
 
@@ -892,6 +958,21 @@ def calculate_uptownfresh(
 ):
     df = pd.read_excel(file.file)
 
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d/%m/%Y")
+
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+
     df = df[df["CLIENT_NAME"] == "uptown fresh"]
 
     if df.empty:
@@ -931,10 +1012,6 @@ def calculate_uptownfresh(
     )
 
     table_reset["FINAL_AMOUNT"] = table_reset["ORDER_AMOUNT"]
-
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
     file_data = response["Body"].read()
 

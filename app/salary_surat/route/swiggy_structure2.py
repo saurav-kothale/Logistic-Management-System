@@ -176,11 +176,6 @@ def claculate_swiggy_rent_model(
 
     df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y")
 
-    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
-
-    if df.empty:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Swiggy client not found")
-    
     file_key = f"uploads/{file_id}/{file_name}"
 
     try:
@@ -189,7 +184,18 @@ def claculate_swiggy_rent_model(
 
     except s3_client.exceptions.NoSuchKey:
     
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Please Calculate Zomato First")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Please Calculate Zomato First"
+        )
+    
+
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "swiggy")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Swiggy client not found")
+    
+    
 
     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
