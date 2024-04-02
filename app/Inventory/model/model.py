@@ -12,7 +12,7 @@ class InventoryDB(Base):
     invoice_amount = Column(Integer)
     invoice_date = Column(Date)
     inventory_paydate = Column(Date)
-    vender = Column(String)
+    vendor = Column(String)
     invoice_image_id = Column(String)
     created_at = Column(DateTime, default= datetime.now)
     updated_at = Column(DateTime, default = datetime.now)

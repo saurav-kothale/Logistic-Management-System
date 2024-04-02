@@ -9,7 +9,7 @@ class Invetory(BaseModel):
     invoice_amount : int 
     invoice_date : date  
     inventory_paydate : date
-    vender : str
+    vendor : str
     invoice_image_id : str
 
 

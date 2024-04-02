@@ -69,7 +69,7 @@ def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
         invoice_amount=inventory.invoice_amount,
         invoice_date=inventory.invoice_date,
         inventory_paydate=inventory.inventory_paydate,
-        vender=inventory.vender,
+        vendor=inventory.vendor,
         invoice_image_id=inventory.invoice_image_id,
     )
 
@@ -86,7 +86,7 @@ def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
             "invoice_amount": record.invoice_amount,
             "invoice_date": record.invoice_date,
             "inventory_paydate": record.inventory_paydate,
-            "vender": record.vender,
+            "vendor": record.vendor,
             "invoice_image_id": record.invoice_image_id,
         }
     }
@@ -138,7 +138,7 @@ def get_inventories(db: Session = Depends(get_db)):
             invoice_amount=inventory.invoice_amount,
             invoice_date=inventory.invoice_date,
             inventory_paydate=inventory.inventory_paydate,
-            vendor=inventory.vender,
+            vendor=inventory.vendor,
             invoice_image_id=inventory.invoice_image_id
         )
         for inventory in db_inventory
@@ -174,7 +174,7 @@ def update_inventory(
     db_inventory.invoice_amount = inventory.invoice_amount
     db_inventory.invoice_date = inventory.invoice_date
     db_inventory.inventory_paydate = inventory.inventory_paydate
-    db_inventory.vender = inventory.vendor
+    db_inventory.vendor = inventory.vendor
     db_inventory.invoice_image_id = inventory.invoice_image_id
     db_inventory.updated_at = datetime.now()
 
