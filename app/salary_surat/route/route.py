@@ -456,8 +456,8 @@ async def calculate_bb_now_surat(
 
 @salary_router.post("/ecom/structure1/{file_id}/{file_name}")
 def calculate_ecom_surat(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     from_order: int = Form(1),
     to_order: int = Form(40),
@@ -572,8 +572,8 @@ def calculate_ecom_surat(
 
 @salary_router.post("/flipkart/structure1/{file_id}/{file_name}")
 def calculate_flipcart_surat(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     from_order: int = Form(1),
     to_order: int = Form(40),
@@ -686,8 +686,8 @@ def calculate_flipcart_surat(
 
 @salary_router.post("/bluedart/biker/structure/{file_id}/{file_name}")
 def calculate_bluedart_biker(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     from_order_document: int = Form(1),
     to_order_document: int = Form(44),
@@ -855,8 +855,8 @@ def calculate_bluedart_biker(
 
 @salary_router.post("/bluedart/van/structure/{file_id}/{file_name}")
 def calculate_bluedart_van(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     fixed_salary : int = Form(15000),
     days : int = Form(26)
@@ -950,8 +950,8 @@ def calculate_bluedart_van(
 
 @salary_router.post("/uptown_fresh/structure/{file_id}/{file_name}")
 def calculate_uptownfresh(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     fixed_salary : int = Form(15000),
     days : int = Form(26)

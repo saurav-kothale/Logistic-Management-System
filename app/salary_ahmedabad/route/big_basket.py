@@ -18,8 +18,8 @@ processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 @ahmedabadbigbascket.post("/bigbasket/structure1/{file_id}/{file_name}")
 def get_salary(
-    file_id: str,
-    file_name: str,
+    file_id: str = None,
+    file_name: str = None,
     file: UploadFile = File(...),
     biker_from_delivery: int = Form(1),
     biker_to_delivery: int = Form(15),

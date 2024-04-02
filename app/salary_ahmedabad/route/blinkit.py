@@ -17,8 +17,8 @@ processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 @ahmedabad_blinkit_router.post("/blinkit/structure1/{file_id}/{file_name}")
 def get_salary(
-    file_id : str,
-    file_name: str,
+    file_id : str = None,
+    file_name: str = None,
     file: UploadFile = File(...),    
     from_order : int = Form(1),
     to_order : int = Form(19),
