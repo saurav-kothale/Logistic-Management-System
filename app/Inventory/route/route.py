@@ -62,17 +62,9 @@ async def upload_inventory_image(file : UploadFile = None):
 @inventory_router.post("/inventories")
 def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
 
-    db_query = db.query(InventoryDB).filter(
-        InventoryDB.invoice_number == inventory.invoice_number
-    ).first()
-
-    if db_query is not None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invoice already exist"
-        )
 
     record = InventoryDB(
-        invoice_id = uuid.uuid4(),
+        invoice_id=str(uuid.uuid4()),
         invoice_number=inventory.invoice_number,
         invoice_amount=inventory.invoice_amount,
         invoice_date=inventory.invoice_date,
@@ -88,15 +80,24 @@ def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
     return {
         "status": status.HTTP_201_CREATED,
         "message": "Inventory created successfully",
+        "invoice": {
+            "invoice_id": str(record.invoice_id),  # Convert uuid to string for JSON response
+            "invoice_number": record.invoice_number,
+            "invoice_amount": record.invoice_amount,
+            "invoice_date": record.invoice_date,
+            "inventory_paydate": record.inventory_paydate,
+            "vender": record.vender,
+            "invoice_image_id": record.invoice_image_id,
+        }
     }
 
 
-@inventory_router.get("/inventories/{invoice_number}")
-def get_inventory(invoice_number: int, db: Session = Depends(get_db)):
+@inventory_router.get("/inventories/{invoice_id}")
+def get_inventory(invoice_id: str, db: Session = Depends(get_db)):
 
     db_inventory = (
         db.query(InventoryDB)
-        .filter(InventoryDB.invoice_number == invoice_number)
+        .filter(InventoryDB.invoice_id == invoice_id)
         .first()
     )
 
@@ -132,6 +133,7 @@ def get_inventories(db: Session = Depends(get_db)):
     
     inventory_responses = [
         InvetoryResponse(
+            invoice_id=inventory.invoice_id,
             invoice_number=inventory.invoice_number,
             invoice_amount=inventory.invoice_amount,
             invoice_date=inventory.invoice_date,
@@ -152,14 +154,14 @@ def get_inventories(db: Session = Depends(get_db)):
 
 
 
-@inventory_router.patch("/inventories/{invoice_number}")
+@inventory_router.patch("/inventories/{invoice_id}")
 def update_inventory(
-    invoice_number: int, inventory: InvetoryUpdate, db: Session = Depends(get_db)
+    invoice_id: str, inventory: InvetoryUpdate, db: Session = Depends(get_db)
 ):
 
     db_inventory = (
         db.query(InventoryDB)
-        .filter(InventoryDB.invoice_number == invoice_number)
+        .filter(InventoryDB.invoice_id == invoice_id)
         .first()
     )
 

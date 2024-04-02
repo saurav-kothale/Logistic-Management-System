@@ -111,3 +111,6 @@ class ProductSchema(BaseModel):
     size : Size
     color : Color
     city : City    
+
+
+

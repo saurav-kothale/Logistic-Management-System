@@ -24,6 +24,7 @@ class InvetoryUpdate(BaseModel):
         from_attributes = True
 
 class InvetoryResponse(BaseModel):
+    invoice_id : str
     invoice_number : int
     invoice_amount : int
     invoice_date : date

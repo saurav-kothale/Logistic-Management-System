@@ -8,7 +8,7 @@ from sqlalchemy.orm import Relationship
 class InventoryDB(Base):
     __tablename__ = "inventory"
     invoice_id = Column(String, primary_key=True, default=str(uuid.uuid4()))
-    invoice_number = Column(Integer, unique=True)
+    invoice_number = Column(Integer)
     invoice_amount = Column(Integer)
     invoice_date = Column(Date)
     inventory_paydate = Column(Date)
