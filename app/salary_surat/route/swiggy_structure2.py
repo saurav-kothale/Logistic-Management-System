@@ -138,8 +138,8 @@ processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 @surat_swiggy_structure2_router.post("/swiggy/rentmodel/{file_id}/{file_name}")
 def claculate_swiggy_rent_model(
-    file_id: str,
-    file_name : str,
+    file_id: str = None,
+    file_name : str = None,
     file: UploadFile = File(...),    
     include_slab : bool = Form(False),
     swiggy_first_order_start: int = Form(1),
@@ -180,6 +180,16 @@ def claculate_swiggy_rent_model(
 
     if df.empty:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Swiggy client not found")
+    
+    file_key = f"uploads/{file_id}/{file_name}"
+
+    try:
+
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Please Calculate Zomato First")
 
     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
@@ -290,9 +300,7 @@ def claculate_swiggy_rent_model(
         table["VENDER_FEE (@6%)"]
     )
 
-    file_key = f"uploads/{file_id}/{file_name}"
-
-    response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
+    
 
     file_data = response["Body"].read()
 
