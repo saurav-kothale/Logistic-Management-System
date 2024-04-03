@@ -4,7 +4,16 @@ def calculate_big_basket_biker_salary(
         row,
         biker_from_delivery,
         biker_to_delivery,
-        biker_first_amount,
+        first_biker_amount,
+        second_biker_from_delivery,
+        second_biker_to_delivery,
+        second_biker_amount,
+        third_biker_from_delivery,
+        third_biker_to_delivery,
+        third_biker_amount,
+        fourth_biker_from_delivery,
+        fourth_biker_to_delivery,
+        fourth_biker_amount,
         biker_order_greter_than,
         biker_second_amount
 ):
@@ -12,7 +21,16 @@ def calculate_big_basket_biker_salary(
     amount = 0
 
     if biker_from_delivery <= order_done <= biker_to_delivery:
-        amount = order_done * biker_first_amount
+        amount = order_done * first_biker_amount
+
+    elif second_biker_from_delivery <= order_done <= second_biker_to_delivery:
+        amount = order_done * second_biker_amount
+
+    elif third_biker_from_delivery <= order_done <= third_biker_to_delivery:
+        amount = order_done * third_biker_amount
+
+    elif fourth_biker_from_delivery <= order_done <= fourth_biker_to_delivery:
+        amount = order_done * fourth_biker_amount
 
     elif order_done >= biker_order_greter_than:
         amount = order_done * biker_second_amount

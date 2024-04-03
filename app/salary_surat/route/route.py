@@ -581,7 +581,7 @@ def calculate_flipcart_surat(
     second_condition_from: int = Form(41),
     second_condition_to: int = Form(55),
     second_condition_amount: int = Form(13),
-    third_condition: int = Form(55),
+    third_condition: int = Form(56),
     third_condition_amount: int = Form(14),
 ):
     df = pd.read_excel(file.file)
@@ -953,7 +953,7 @@ def calculate_uptownfresh(
     file_id: str = None, # type: ignore
     file_name: str = None, # type: ignore
     file: UploadFile = File(...),
-    fixed_salary : int = Form(15000),
+    fixed_salary : int = Form(14000),
     days : int = Form(26)
 ):
     df = pd.read_excel(file.file)
