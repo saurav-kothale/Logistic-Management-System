@@ -159,6 +159,21 @@ def claculate_salary_structure3(
     df["TOTAL_ORDERS"] = df["DONE_DOCUMENT_ORDERS"] + df["DONE_PARCEL_ORDERS"]
 
 
+    driver_totals = (
+        df.groupby("DRIVER_ID")
+        .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .reset_index()
+    )
+
+    driver_totals["AVERAGE"] = round(
+        driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"], 0
+    )
+
+    df = pd.merge(
+        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
+    )
+
+
     if include_slab:
 
         df["ORDER_AMOUNT"] = df.apply(
