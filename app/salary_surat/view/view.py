@@ -179,7 +179,7 @@ def calculate_amount_for_bbnow_surat(
     amount = 0
 
     if average > 13:
-        if orders <= from_order and orders >= to_order:
+        if orders >= from_order and orders <= to_order:
             amount =  orders * order_amount2
         
         elif orders >= order_grether_than:
