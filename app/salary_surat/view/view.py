@@ -179,14 +179,19 @@ def calculate_amount_for_bbnow_surat(
     amount = 0
 
     if average > 13:
-        if orders >= from_order and orders <= to_order:
+        # 12.99 > 13
+        # if orders >= from_order and orders <= to_order:
+        if from_order <= orders <= to_order:
+            #1 to 14 -- 30
             amount =  orders * order_amount2
         
         elif orders >= order_grether_than:
+            #15 + 
             amount = ((orders - to_order) * order_amount3) + 420
 
+
     else:
-        amount = 0
+        amount = 400
 
     return amount
 
@@ -196,7 +201,7 @@ def calculate_amount_for_bbnow_surat(
     # elif average >= order_grether_than:
     #     amount = (order_amount2*to_order) + (orders-to_order)*order_amount3
 
-    return amount
+    # return amount
 
 def calculate_order_for_less_amount(
         row,
