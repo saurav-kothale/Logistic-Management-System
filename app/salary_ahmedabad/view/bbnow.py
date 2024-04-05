@@ -29,7 +29,9 @@ def calculate_bbnow_salary1(
         amount = orders * first_amount
 
     elif orders >= order_greter_than:
-        amount = orders * second_amount
+        amount = ((orders - to_order) * second_amount) + (to_order * first_amount)
+
+    #Implement the code for other conditions
 
     return amount
 

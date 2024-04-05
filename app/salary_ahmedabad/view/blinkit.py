@@ -15,7 +15,8 @@ def calculate_blinkit_salary(
         amount = order_done * first_order_amount
 
     elif order_done >= order_greter_than:
-        amount = order_done * second_order_amount
+        # amount = order_done * second_order_amount
+        amount = ((order_done - to_order) * second_order_amount) + (to_order * first_order_amount)
 
     return amount
 
