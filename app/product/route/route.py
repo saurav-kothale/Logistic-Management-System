@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.product.schema.schema import ProductSchema
 from sqlalchemy.orm import Session
 from app.product.model.model import ProductDB
-from app.Inventory.model.model import InventoryDB
+from app.Inventory.model import InventoryDB
 from database.database import SessionLocal, get_db
 import uuid
 from sqlalchemy import func, and_
@@ -18,7 +18,7 @@ product_router = APIRouter()
 
 
 @product_router.post("/product/{invoice_id}")
-def create_prodcut(
+def create_product(
     invoice_id: str,
     product : ProductSchema,
     db : Session = Depends(get_db)
@@ -137,13 +137,33 @@ def delete_product(
             detail="Product Not Found to Delete"
         )
     
-    db_product.is_deleted = True
+    db_product.is_deleted = True # type:ignore
 
     db.commit()
 
     return{
         "status" : status.HTTP_200_OK,
         "message" : "Product deleted sucessfully"
+    }
+
+@product_router.get("/products/invoice/{invoice_id}")
+def get_inventory_products(
+    invoice_id : str,
+    db : Session = Depends(get_db) 
+):
+    
+    db_products = db.query(ProductDB).filter(ProductDB.invoice_id == invoice_id).all()
+
+    if db_products is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Products Not Found for given invoice id"
+        )
+    
+    return {
+        "status" : status.HTTP_200_OK,
+        "message" : "Product Fetched successfully",
+        "product" : db_products
     }
 
 

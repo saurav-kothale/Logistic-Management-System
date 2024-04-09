@@ -20,10 +20,11 @@ def calculate_ecom_salary(
         amount = order_done * first_amount
 
     elif second_from_order <= order_done <= second_to_order:
-        amount = order_done * second_amount
+        amount = ((order_done - to_order) * second_amount) + (to_order * first_amount)
 
     elif order_greter_than <= order_done:
         amount = order_done * order_amount
+        amount = ((order_done - second_to_order) * order_amount) + (second_to_order * second_amount)
 
     return amount
 

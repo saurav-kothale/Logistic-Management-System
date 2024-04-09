@@ -10,8 +10,8 @@ from fastapi import (
 from sqlalchemy import false, true
 from database.database import get_db
 from sqlalchemy.orm import Session
-from app.Inventory.schema.schema import Invetory, InvetoryResponse, InvetoryUpdate
-from app.Inventory.model.model import InventoryDB
+from app.Inventory.schema import Invetory, InvetoryResponse, InvetoryUpdate
+from app.Inventory.model import InventoryDB
 import uuid
 from app.file_system.config import s3_client
 from app import setting
@@ -121,7 +121,7 @@ def get_inventory(invoice_id: str, db: Session = Depends(get_db)):
     }
 
 
-@inventory_router.get("/inventories", response_model= list[InvetoryResponse])
+@inventory_router.get("/inventories")
 def get_inventories(db: Session = Depends(get_db)):
 
     db_inventory = db.query(InventoryDB).filter(InventoryDB.is_deleted.is_(False)).all()
@@ -131,20 +131,21 @@ def get_inventories(db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Inventories Not Found"
         )
     
-    inventory_responses = [
-        InvetoryResponse(
-            invoice_id=inventory.invoice_id,
-            invoice_number=inventory.invoice_number,
-            invoice_amount=inventory.invoice_amount,
-            invoice_date=inventory.invoice_date,
-            inventory_paydate=inventory.inventory_paydate,
-            vendor=inventory.vendor,
-            invoice_image_id=inventory.invoice_image_id
-        )
-        for inventory in db_inventory
-    ]
+    # inventory_responses = [
+    #     InvetoryResponse(
+    #         invoice_id=inventory.invoice_id,
+    #         invoice_number=inventory.invoice_number,
+    #         invoice_amount=inventory.invoice_amount,
+    #         invoice_date=inventory.invoice_date,
+    #         inventory_paydate=inventory.inventory_paydate,
+    #         vendor=inventory.vendor,
+    #         invoice_image_id=inventory.invoice_image_id
 
-    return inventory_responses
+    #     )
+    #     for inventory in db_inventory
+    # ]
+
+    return db_inventory
 
     # return {
     #     "data": db_inventory,
@@ -182,7 +183,7 @@ def update_inventory(
 
     return {
         "message": "Inventory Updated Sucessfully",
-        "status": status.HTTP_200_OK,
+        "status": status.HTTP_200_OK
     }
 
 
