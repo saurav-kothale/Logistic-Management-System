@@ -62,6 +62,16 @@ async def upload_inventory_image(file : UploadFile = None):
 @inventory_router.post("/inventories")
 def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
 
+    db_invoice = db.query(InventoryDB).filter(
+        InventoryDB.invoice_number == inventory.invoice_number,
+        InventoryDB.vendor == inventory.vendor
+    ).first()
+
+    if db_invoice:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="invoice already exist"
+        )
 
     record = InventoryDB(
         invoice_id=str(uuid.uuid4()),

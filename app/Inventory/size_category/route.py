@@ -32,7 +32,7 @@ def get_sizes(db : Session = Depends(get_db)):
 @size_router.get("/sizes/{size_id}")
 def get_size(size_id : str, db : Session = Depends(get_db)):
     
-    db_size = db.query(SizeDb).filter(SizeDb.size_id == size_id, SizeDb.is_deleted == False)
+    db_size = db.query(SizeDb).filter(SizeDb.size_id == size_id, SizeDb.is_deleted == False).first()
 
     if db_size is None:
         raise HTTPException(
@@ -52,7 +52,7 @@ def create_size(
     schema : SizeCategorySchema,
     db : Session = Depends(get_db)
 ):
-    db_size = db.query(SizeDb).filter(SizeDb.size_name == schema.size_name)
+    db_size = db.query(SizeDb).filter(SizeDb.size_name == schema.size_name).first()
 
     if db_size:
         raise HTTPException(
@@ -85,7 +85,7 @@ def update_size(
     schema : SizeUpdateSchema,
     db : Session = Depends(get_db)
 ):
-    db_size = db.query(SizeDb).filter(SizeDb.size_id == size_id)
+    db_size = db.query(SizeDb).filter(SizeDb.size_id == size_id).first()
 
     if db_size is None:
         raise HTTPException(
@@ -109,7 +109,7 @@ def delete_size(
     size_id : str,
     db : Session = Depends(get_db) 
 ):
-    db_size = db.query(SizeDb).filter(SizeDb.size_id == size_id)
+    db_size = db.query(SizeDb).filter(SizeDb.size_id == size_id).first()
 
     if db_size is None:
         raise HTTPException(

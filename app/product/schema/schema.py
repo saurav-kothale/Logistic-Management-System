@@ -105,12 +105,12 @@ class City(Enum):
 
 class ProductSchema(BaseModel):
     product_name: str
-    category : Category
-    bike_category : BikeCategory
+    category : str
+    bike_category : str
     quantity : int
-    size : Size
-    color : Color
-    city : City    
+    size : str
+    color : str
+    city : str    
 
 
 
