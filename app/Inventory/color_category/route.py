@@ -15,7 +15,7 @@ def get_color(db : Session = Depends(get_db)):
     
     db_color = db.query(ColorDb).filter(ColorDb.is_deleted == False).all()
 
-    if db_color is None:
+    if not db_color:
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             detail="content not found"
@@ -84,7 +84,7 @@ def update_color(
     schema : ColorUpdateSchema,
     db : Session = Depends(get_db)
 ):
-    db_color = db.query(ColorDb).filter(ColorDb.color_id == color_id)
+    db_color = db.query(ColorDb).filter(ColorDb.color_id == color_id).first()
 
     if db_color is None:
         raise HTTPException(
@@ -108,7 +108,7 @@ def delete_color(
     color_id : str,
     db : Session = Depends(get_db) 
 ):
-    db_color = db.query(ColorDb).filter(ColorDb.color_id == color_id)
+    db_color = db.query(ColorDb).filter(ColorDb.color_id == color_id).first()
 
     if db_color is None:
         raise HTTPException(

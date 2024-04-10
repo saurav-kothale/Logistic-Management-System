@@ -15,7 +15,7 @@ def get_bikes(db : Session = Depends(get_db)):
     
     db_bike = db.query(BikeDb).filter(BikeDb.is_deleted == False).all()
 
-    if db_bike is None:
+    if not db_bike:
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             detail="content not found"

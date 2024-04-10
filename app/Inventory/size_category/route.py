@@ -16,7 +16,7 @@ def get_sizes(db : Session = Depends(get_db)):
     
     db_size = db.query(SizeDb).filter(SizeDb.is_deleted == False).all()
 
-    if db_size is None:
+    if not db_size:
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             detail="content not found"

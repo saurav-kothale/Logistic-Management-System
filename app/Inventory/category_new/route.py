@@ -16,7 +16,7 @@ def get_categories(db : Session = Depends(get_db)):
     
     db_category = db.query(NewCategoryDb).filter(NewCategoryDb.is_deleted == False).all()
 
-    if db_category is None:
+    if not db_category:
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             detail="content not found"
@@ -32,7 +32,7 @@ def get_categories(db : Session = Depends(get_db)):
 @new_category_router.get("/categories/{category_id}")
 def get_category(category_id : str, db : Session = Depends(get_db)):
     
-    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_id == category_id, NewCategoryDb.is_deleted == False)
+    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_id == category_id, NewCategoryDb.is_deleted == False).first()
 
     if db_category is None:
         raise HTTPException(
@@ -85,7 +85,7 @@ def update_size(
     schema : CategoryUpdateSchema,
     db : Session = Depends(get_db)
 ):
-    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_id == category_id)
+    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_id == category_id).first()
 
     if db_category is None:
         raise HTTPException(
@@ -109,7 +109,7 @@ def delete_color(
     category_id : str,
     db : Session = Depends(get_db) 
 ):
-    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_id == category_id)
+    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_id == category_id).first()
 
     if db_category is None:
         raise HTTPException(

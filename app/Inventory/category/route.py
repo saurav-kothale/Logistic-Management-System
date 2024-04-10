@@ -15,7 +15,7 @@ def get_categories(db : Session = Depends(get_db)):
 
     db_category = db.query(CategoryDB).all()
 
-    if db_category is None:
+    if not db_category:
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             detail="Categories Not Found"

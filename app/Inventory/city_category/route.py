@@ -15,7 +15,7 @@ def get_cities(db : Session = Depends(get_db)):
     
     db_city = db.query(CityDb).filter(CityDb.is_deleted == False).all()
 
-    if db_city is None:
+    if not db_city:
         raise HTTPException(
             status_code=status.HTTP_204_NO_CONTENT,
             detail="content not found"

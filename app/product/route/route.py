@@ -80,9 +80,9 @@ def get_products(db : Session = Depends(get_db)):
 
     db_products = db.query(ProductDB).filter(ProductDB.is_deleted == False).all()
 
-    if db_products is None:
+    if not db_products:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_204_NO_CONTENT,
             detail="Product not found"
         )
 
@@ -99,7 +99,7 @@ def update_product(
     data : ProductSchema, 
     db : Session = Depends(get_db)
 ):
-    db_product = db.query(ProductDB).filter(ProductDB.product_id == product_id).first
+    db_product = db.query(ProductDB).filter(ProductDB.product_id == product_id).first()
 
     if db_product is None:
         raise HTTPException(
