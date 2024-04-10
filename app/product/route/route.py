@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.product.schema.schema import ProductSchema
 from sqlalchemy.orm import Session
 from app.product.model.model import ProductDB
-from app.Inventory.model import InventoryDB
+from app.Inventory_in.model import InventoryDB
 from database.database import SessionLocal, get_db
 import uuid
 from sqlalchemy import func, and_

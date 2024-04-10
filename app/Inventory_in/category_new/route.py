@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException,status
 from numpy import size
 from sqlalchemy.orm import Session
 from datetime import datetime
-from app.Inventory.category_new.model import NewCategoryDb
-from app.Inventory.category_new.schema import CategorySchema, CategoryUpdateSchema
+from app.Inventory_in.category_new.model import NewCategoryDb
+from app.Inventory_in.category_new.schema import CategorySchema, CategoryUpdateSchema
 from database.database import get_db
 import uuid
 

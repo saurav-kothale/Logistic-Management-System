@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException,status
 from sqlalchemy.orm import Session
 from datetime import datetime
-from app.Inventory.color_category.model import ColorDb
-from app.Inventory.color_category.schema import ColorCategorySchema, ColorUpdateSchema
+from app.Inventory_in.color_category.model import ColorDb
+from app.Inventory_in.color_category.schema import ColorCategorySchema, ColorUpdateSchema
 from database.database import get_db
 import uuid
 

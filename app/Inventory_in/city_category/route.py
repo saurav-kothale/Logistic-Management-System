@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException,status
 from sqlalchemy.orm import Session
 from datetime import datetime
-from app.Inventory.city_category.model import CityDb
-from app.Inventory.city_category.schema import CityCategorySchema, CityUpdateSchema
+from app.Inventory_in.city_category.model import CityDb
+from app.Inventory_in.city_category.schema import CityCategorySchema, CityUpdateSchema
 from database.database import get_db
 import uuid
 

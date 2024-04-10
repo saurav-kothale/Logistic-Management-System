@@ -1,8 +1,8 @@
 from re import S
 from unicodedata import category
 from fastapi import APIRouter, Depends, HTTPException,status
-from app.Inventory.category.schema import Category, CategoryUpdate
-from app.Inventory.category.model import CategoryDB
+from app.Inventory_in.category.schema import Category, CategoryUpdate
+from app.Inventory_in.category.model import CategoryDB
 from sqlalchemy.orm import Session
 import uuid
 

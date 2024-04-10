@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException,status
 from sqlalchemy.orm import Session
 from datetime import datetime
-from app.Inventory.bike_category.model import BikeDb
-from app.Inventory.bike_category.schema import BikeCategorySchema, BikeUpdateSchema
+from app.Inventory_in.bike_category.model import BikeDb
+from app.Inventory_in.bike_category.schema import BikeCategorySchema, BikeUpdateSchema
 from database.database import get_db
 import uuid
 

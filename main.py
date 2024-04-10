@@ -15,13 +15,13 @@ from app.salary_ahmedabad.route.ecom import ahmedabad_ecom_router
 from app.salary_ahmedabad.route.blinkit import ahmedabad_blinkit_router
 from app.salary_ahmedabad.route.big_basket import ahmedabadbigbascket
 from app.salary_ahmedabad.route.bbnow import ahmedabadbbnow_router
-from app.Inventory.route import inventory_router
+from app.Inventory_in.route import inventory_router
 from app.product.route.route import product_router
-from app.Inventory.category_new.route import new_category_router
-from app.Inventory.bike_category.route import bike_router
-from app.Inventory.city_category.route import city_router
-from app.Inventory.color_category.route import color_router
-from app.Inventory.size_category.route import size_router
+from app.Inventory_in.category_new.route import new_category_router
+from app.Inventory_in.bike_category.route import bike_router
+from app.Inventory_in.city_category.route import city_router
+from app.Inventory_in.color_category.route import color_router
+from app.Inventory_in.size_category.route import size_router
 
 app = FastAPI()
 
