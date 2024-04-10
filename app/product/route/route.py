@@ -152,7 +152,7 @@ def get_inventory_products(
     db : Session = Depends(get_db) 
 ):
     
-    db_products = db.query(ProductDB).filter(ProductDB.invoice_id == invoice_id).all()
+    db_products = db.query(ProductDB).filter(ProductDB.invoice_id == invoice_id, ProductDB.is_deleted == False).all()
 
     if not db_products:
         raise HTTPException(
