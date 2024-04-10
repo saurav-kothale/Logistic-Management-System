@@ -10,8 +10,8 @@ from fastapi import (
 from sqlalchemy import false, true
 from database.database import get_db
 from sqlalchemy.orm import Session
-from app.Inventory.schema import Invetory, InvetoryResponse, InvetoryUpdate
-from app.Inventory.model import InventoryDB
+from app.Inventory_in.schema import Invetory, InvetoryResponse, InvetoryUpdate
+from app.Inventory_in.model import InventoryDB
 import uuid
 from app.file_system.config import s3_client
 from app import setting
