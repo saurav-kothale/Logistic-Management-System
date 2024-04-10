@@ -154,9 +154,9 @@ def get_inventory_products(
     
     db_products = db.query(ProductDB).filter(ProductDB.invoice_id == invoice_id).all()
 
-    if db_products is None:
+    if not db_products:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_204_NO_CONTENT,
             detail="Products Not Found for given invoice id"
         )
     

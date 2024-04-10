@@ -28,7 +28,7 @@ def get_sizes(db : Session = Depends(get_db)):
         "size" : db_size
     }
 
-
+ 
 @size_router.get("/sizes/{size_id}")
 def get_size(size_id : str, db : Session = Depends(get_db)):
     
