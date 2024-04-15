@@ -9,13 +9,14 @@ from app.client.model import Client
 from app.vendor.model import Vendor
 from app.file_system.model import FileInfo
 from app.salary_surat.model.model import SalaryFile
-from app.Inventory.model import InventoryDB
+from app.Inventory_in.model import InventoryDB
 from app.product.model.model import ProductDB
-from app.Inventory.category_new.model import NewCategoryDb
-from app.Inventory.bike_category.model import BikeDb
-from app.Inventory.city_category.model import CityDb
-from app.Inventory.color_category.model import ColorDb
-from app.Inventory.size_category.model import SizeDb
+from app.Inventory_in.category_new.model import NewCategoryDb
+from app.Inventory_in.bike_category.model import BikeDb
+from app.Inventory_in.city_category.model import CityDb
+from app.Inventory_in.color_category.model import ColorDb
+from app.Inventory_in.size_category.model import SizeDb
+from app.inventory_out.model import ProductOutDb
 from database.database import Base
 import os
 from decouple import config

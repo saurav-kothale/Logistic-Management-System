@@ -2,16 +2,18 @@ from datetime import datetime
 from itertools import product
 from nis import cat
 from operator import and_
+from typing import Optional
 from unicodedata import category
 from xml.sax import default_parser_list
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.product.schema.schema import ProductSchema
 from sqlalchemy.orm import Session
 from app.product.model.model import ProductDB
+from app.inventory_out.model import ProductOutDb
 from app.Inventory_in.model import InventoryDB
 from database.database import SessionLocal, get_db
 import uuid
-from sqlalchemy import func, and_
+from sqlalchemy import Subquery, distinct, func, and_
 
 
 product_router = APIRouter()
@@ -137,7 +139,7 @@ def delete_product(
             detail="Product Not Found to Delete"
         )
     
-    db_product.is_deleted = True # type:ignore
+    db.delete(db_product)
 
     db.commit()
 
@@ -167,32 +169,223 @@ def get_inventory_products(
     }
 
 
-@product_router.get("/remaining-items/{category}")
-def get_remaining_items(
-    category : str,
-    db: Session = Depends(get_db)
-):
-    
-    remaining_items = []
-    
-    inventories = db.query(ProductDB).filter(ProductDB.category == category).all()
-    
-    for item in inventories:
-
-        total_quantity = db.query(func.sum(ProductDB.quantity)).filter(ProductDB.item_id == item.id).scalar() or 0
+# @product_router.get("/router/category")
+# def retrieve_products_by_category(db: Session = Depends(get_db)):
+#     db_distinct = db.query(
+#         ProductDB.category,
+#         ProductDB.bike_category,
+#         ProductDB.color,
+#         ProductDB.size,
+#         ProductDB.city,
         
-  
-        used_quantity = db.query(func.sum(ProductDB.quantity)).filter(ProductDB.item_id == item.id).scalar() or 0
-        
+#         # func.sum(ProductDB.quantity).label('total_quantity')
+#     ).filter(
+#         ProductDB.is_deleted == False
+#     ).group_by(
+#         ProductDB.category,
+#         ProductDB.bike_category,
+#         ProductDB.color,
+#         ProductDB.size,
+#         ProductDB.city
+#     ).all()
 
-        remaining_quantity = total_quantity - used_quantity
-        
-
-        remaining_items.append({
-            "item_id": item.id,
-            "item_name": item.name,
-            "remaining_quantity": remaining_quantity
-        })
-
-    return remaining_items
     
+#     # Format the result to include the sum of quantities
+#     result = [
+#         {
+#             "category": row.category,
+#             "bike_category": row.bike_category,
+#             "color": row.color,
+#             "size": row.size,
+#             "city": row.city,
+#             # "total_quantity": row.total_quantity
+#         } 
+#         for row in db_distinct
+#     ]
+    
+#     return {
+#         "distinct_values": result
+#     }
+
+
+# @product_router.get("/router/products")
+# def retrieve_products(
+#     category: Optional[str] = None, 
+#     bike_category: Optional[str] = None, 
+#     color: Optional[str] = None, 
+#     size: Optional[str] = None, 
+#     city: Optional[str] = None, 
+#     db: Session = Depends(get_db)
+# ):
+#     # Calculate total quantity in inventory
+#     query_filters = []
+#     if category:
+#         query_filters.append(ProductDB.category == category)
+#     if bike_category:
+#         query_filters.append(ProductDB.bike_category == bike_category)
+#     if color:
+#         query_filters.append(ProductDB.color == color)
+#     if size:
+#         query_filters.append(ProductDB.size == size)
+#     if city:
+#         query_filters.append(ProductDB.city == city)
+    
+#     total_quantity_in = db.query(func.sum(ProductDB.quantity)).filter(
+#         *query_filters
+#     ).scalar()
+
+#     if total_quantity_in is None:
+#         total_quantity_in = 0
+    
+#     # Calculate total quantity out
+#     total_quantity_out = db.query(func.sum(ProductOutDb.quantity)).scalar()
+#     if total_quantity_out is None:
+#         total_quantity_out = 0
+
+#     # Calculate remaining quantity
+#     remaining_quantity = total_quantity_in - total_quantity_out
+    
+#     return {"remaining_quantity": remaining_quantity}
+   
+
+
+# @product_router.get("/router/my_category")
+# def retrieve_products_by_category12(db: Session = Depends(get_db)):
+#     # Subquery to calculate the total used quantity
+#     used_quantity_subquery = db.query(
+#         ProductOutDb.product_name,
+#         func.sum(ProductOutDb.quntity).label("total_used_quantity")
+#     ).group_by(
+#         ProductOutDb.product_name
+#     ).subquery()
+
+#     # Subquery to calculate the total quantity for each product
+#     total_quantity_subquery = db.query(
+#         ProductDB.product_name,
+#         func.sum(ProductDB.quantity).label("total_quantity")
+#     ).group_by(
+#         ProductDB.product_name
+#     ).subquery()
+
+#     # Main query to retrieve distinct products and calculate remaining quantity
+#     db_distinct = db.query(
+#         ProductDB.category,
+#         ProductDB.bike_category,
+#         ProductDB.color,
+#         ProductDB.size,
+#         ProductDB.city,
+#         ProductDB.product_name,
+#         func.coalesce(total_quantity_subquery.c.total_quantity - used_quantity_subquery.c.total_used_quantity, total_quantity_subquery.c.total_quantity).label('remaining_quantity')
+#     ).outerjoin(
+#         used_quantity_subquery,
+#         ProductDB.product_name == used_quantity_subquery.c.product_name,
+#     ).join(
+#         total_quantity_subquery,
+#         ProductDB.product_name == total_quantity_subquery.c.product_name
+#     ).group_by(
+#         ProductDB.category,
+#         ProductDB.bike_category,
+#         ProductDB.color,
+#         ProductDB.size,
+#         ProductDB.city,
+#         ProductDB.product_name,
+#         used_quantity_subquery.c.total_used_quantity,
+#         total_quantity_subquery.c.total_quantity
+#     ).all()
+
+#     # Format the result
+#     result = [
+#         {
+#             "category": row.category,
+#             "bike_category": row.bike_category,
+#             "color": row.color,
+#             "size": row.size,
+#             "city": row.city,
+#             "product_name": row.product_name,
+#             "remaining_quantity": row.remaining_quantity
+#         } 
+#         for row in db_distinct
+#     ]
+    
+#     return {
+#         "distinct_values": result
+    # }
+
+
+
+@product_router.get("/product/category")
+def retrieve_products_by_category123(db: Session = Depends(get_db)):
+    # Subquery to calculate the total used quantity
+    used_quantity_subquery = db.query(
+        ProductOutDb.product_name,
+        ProductOutDb.category,
+        ProductOutDb.bike_category,
+        ProductOutDb.color,
+        ProductOutDb.size,
+        ProductOutDb.city,
+        func.sum(ProductOutDb.quntity).label("total_used_quantity")
+    ).group_by(
+        ProductOutDb.product_name,
+        ProductOutDb.category,
+        ProductOutDb.bike_category,
+        ProductOutDb.color,
+        ProductOutDb.size,
+        ProductOutDb.city
+    ).subquery()
+
+    # Subquery to calculate the total quantity for each product
+    total_quantity_subquery = db.query(
+        ProductDB.category,
+        ProductDB.bike_category,
+        ProductDB.color,
+        ProductDB.size,
+        ProductDB.city,
+        ProductDB.product_name,
+        func.sum(ProductDB.quantity).label("total_quantity")
+    ).group_by(
+        ProductDB.category,
+        ProductDB.bike_category,
+        ProductDB.color,
+        ProductDB.size,
+        ProductDB.city,
+        ProductDB.product_name
+    ).subquery()
+
+    # Main query to retrieve distinct products and calculate remaining quantity
+    db_distinct = db.query(
+        total_quantity_subquery.c.category,
+        total_quantity_subquery.c.bike_category,
+        total_quantity_subquery.c.color,
+        total_quantity_subquery.c.size,
+        total_quantity_subquery.c.city,
+        total_quantity_subquery.c.product_name,
+        func.coalesce(total_quantity_subquery.c.total_quantity - used_quantity_subquery.c.total_used_quantity, total_quantity_subquery.c.total_quantity).label('remaining_quantity')
+    ).outerjoin(
+        used_quantity_subquery,
+        and_(
+            total_quantity_subquery.c.product_name == used_quantity_subquery.c.product_name,
+            total_quantity_subquery.c.category == used_quantity_subquery.c.category,
+            total_quantity_subquery.c.bike_category == used_quantity_subquery.c.bike_category,
+            total_quantity_subquery.c.color == used_quantity_subquery.c.color,
+            total_quantity_subquery.c.size == used_quantity_subquery.c.size,
+            total_quantity_subquery.c.city == used_quantity_subquery.c.city
+        )
+    ).all()
+
+    # Format the result
+    result = [
+        {
+            "category": row.category,
+            "bike_category": row.bike_category,
+            "color": row.color,
+            "size": row.size,
+            "city": row.city,
+            "product_name": row.product_name,
+            "remaining_quantity": row.remaining_quantity
+        } 
+        for row in db_distinct
+    ]
+    
+    return {
+        "distinct_values": result
+    }

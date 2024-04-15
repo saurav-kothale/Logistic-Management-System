@@ -1,5 +1,6 @@
 from ast import List
 from datetime import datetime
+from DateTime import Timezones
 from fastapi import (
     APIRouter,
     Depends,
@@ -15,6 +16,7 @@ from app.Inventory_in.model import InventoryDB
 import uuid
 from app.file_system.config import s3_client
 from app import setting
+from zoneinfo import ZoneInfo
 
 inventory_router = APIRouter()
 inventory = setting.INVENTORY
@@ -187,7 +189,6 @@ def update_inventory(
     db_inventory.inventory_paydate = inventory.inventory_paydate
     db_inventory.vendor = inventory.vendor
     db_inventory.invoice_image_id = inventory.invoice_image_id
-    db_inventory.updated_at = datetime.now()
 
     db.commit()
 
