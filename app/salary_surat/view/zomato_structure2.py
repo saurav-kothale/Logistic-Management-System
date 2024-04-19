@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime, date
 
 def is_weekend(date):
     return date.isoweekday() > 6
@@ -200,4 +201,56 @@ def calculate_bike_charges_for_rental_model(
         amount = vahicle_charges_partime
 
     return amount
+
+
+def calculate_amount_for_surat_time_model(
+        row,
+        zomato_first_order_start,
+        zomato_first_order_end,
+        zomato_first_week_amount,
+        zomato_first_weekend_amount,
+        zomato_second_order_start,
+        zomato_second_order_end,
+        zomato_second_week_amount,
+        zomato_second_weekend_amount,
+        zomato_order_greter_than,
+        zomato_third_week_amount,
+        zomato_third_weekend_amount
+
+):
+
+    order_done = row["DONE_PARCEL_ORDERS"]
+    date = row["DATE"]
+    amount = 0
+
+
+        # if from_date <= date <= to_date:
+
+    if zomato_first_order_start <= order_done <= zomato_first_order_end:
+        if is_weekend(date):
+            amount = order_done * zomato_first_weekend_amount
+
+        else:
+            amount = order_done * zomato_first_week_amount
+
+    elif zomato_second_order_start <= order_done <= zomato_second_order_end:
+        if is_weekend(date):
+            amount = order_done * zomato_second_weekend_amount
+        else:
+            amount = order_done * zomato_second_week_amount
+
+    elif order_done >= zomato_order_greter_than:
+        if is_weekend(date):
+            amount = order_done * zomato_third_weekend_amount
+        else:
+            amount = order_done * zomato_third_week_amount
+
+    return amount
+    
+    
+def validate_date(date):
+    if date:
+        return  datetime.strptime(date, '%d-%m-%Y').date()
+    else:
+        return None
 

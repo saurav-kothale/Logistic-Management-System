@@ -1,12 +1,11 @@
 from ast import For
 from logging import exception
+from wsgiref import validate
 from fastapi import APIRouter, Body, UploadFile, File, Form, Depends, HTTPException, status
 from fastapi.responses import FileResponse
-from sqlalchemy import false
+from sqlalchemy import Time, false
 from app.salary_surat.schema.zomato_structure2 import (
-    SuratZomatoStructure2,
-    SuratZomatoStructureNew2,
-    SuratZomatoStructureNew3,
+    TimeStructureSchema
 )
 from app.salary_surat.view.zomato_structure2 import (
     add_bonus,
@@ -16,7 +15,9 @@ from app.salary_surat.view.zomato_structure2 import (
     calculate_rejection,
     calculate_bad_orders,
     calculate_amount_for_surat_rental_model,
-    calculate_bike_charges_for_rental_model
+    calculate_bike_charges_for_rental_model,
+    calculate_amount_for_surat_time_model,
+    validate_date
 )
 import pandas as pd
 import tempfile, json
@@ -27,6 +28,7 @@ from database.database import SessionLocal
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
 from decouple import config
 from app import setting
+import io
 
 surat_zomato_structure2_router = APIRouter()
 db = SessionLocal()
@@ -535,4 +537,192 @@ def claculate_salary_structure3(
         "file_id": file_id,
         "file_name": file.filename,
         "file_key" : file_key
+    }
+
+
+@surat_zomato_structure2_router.post("/zomato/date/structure")
+def claculate_salary_time_structure(
+    schema : TimeStructureSchema
+):
+    try:
+
+        response = s3_client.get_object(Bucket=row_bucket, Key=schema.file_key)
+
+    except s3_client.exceptions.NoSuchKey:
+    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Raw file not found"
+        )
+    
+    raw_data = response["Body"].read()
+    
+    df = pd.read_excel(io.BytesIO(raw_data))
+
+    df["DATE"] = pd.to_datetime(df["DATE"], format="%d-%m-%Y").dt.date
+
+    df = df[(df["CITY_NAME"] == "surat") & (df["CLIENT_NAME"] == "zomato")]
+
+    if df.empty:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail= "Zomato client not found")
+
+    df["TOTAL_ORDERS"] = df["DONE_PARCEL_ORDERS"]
+
+    driver_totals = (
+        df.groupby("DRIVER_ID")
+        .agg({"DONE_PARCEL_ORDERS": "sum", "ATTENDANCE": "sum"})
+        .reset_index()
+    )
+
+    driver_totals["AVERAGE"] = round(
+        driver_totals["DONE_PARCEL_ORDERS"] / driver_totals["ATTENDANCE"], 0
+    )
+
+    df = pd.merge(
+        df, driver_totals[["DRIVER_ID", "AVERAGE"]], on="DRIVER_ID", how="left"
+    )
+
+    df["ORDER_AMOUNT"] = 0
+
+    if schema.include_slab:
+        if len(schema.slabs) >= 2:
+            for slab in schema.slabs:
+                df["ORDER_AMOUNT"] = df.apply(
+                lambda row : calculate_amount_for_surat_time_model(
+                    row,
+                    slab.zomato_first_order_start,
+                    slab.zomato_first_order_end,
+                    slab.zomato_first_week_amount,
+                    slab.zomato_first_weekend_amount,
+                    slab.zomato_second_order_start,
+                    slab.zomato_second_order_end,
+                    slab.zomato_second_week_amount,
+                    slab.zomato_second_weekend_amount,
+                    slab.zomato_order_greter_than,
+                    slab.zomato_third_week_amount,
+                    slab.zomato_third_weekend_amount
+                )if validate_date(slab.from_date) <= row['DATE'] <= validate_date(slab.to_date) else row["ORDER_AMOUNT"],
+            axis=1
+            )
+        else:
+            df["ORDER_AMOUNT"] = df.apply(
+                lambda row : calculate_amount_for_surat_time_model(
+                    row,
+                    schema.slabs[0].zomato_first_order_start,
+                    schema.slabs[0].zomato_first_order_end,
+                    schema.slabs[0].zomato_first_week_amount,
+                    schema.slabs[0].zomato_first_weekend_amount,
+                    schema.slabs[0].zomato_second_order_start,
+                    schema.slabs[0].zomato_second_order_end,
+                    schema.slabs[0].zomato_second_week_amount,
+                    schema.slabs[0].zomato_second_weekend_amount,
+                    schema.slabs[0].zomato_order_greter_than,
+                    schema.slabs[0].zomato_third_week_amount,
+                    schema.slabs[0].zomato_third_weekend_amount
+                ), axis=1
+            )
+
+    else:
+        df["ORDER_AMOUNT"] = 0
+
+    if schema.include_vahicle_charges:
+
+        df["BIKE_CHARGES"] = df.apply(
+            lambda row: calculate_bike_charges_for_rental_model(
+                row,
+                schema.fulltime_average,
+                schema.fulltime_greter_than_order,
+                schema.vahicle_charges_fulltime,
+                schema.partime_average,
+                schema.partime_greter_than_order,
+                schema.vahicle_charges_partime
+            ), axis=1
+        )
+    else:
+        df["BIKE_CHARGES"] = 0
+
+    if schema.include_rejection:
+
+        df["REJECTION_AMOUNT"] = df.apply(
+            lambda row: calculate_rejection(
+                row,
+                schema.rejection_orders,
+                schema.rejection_amount
+
+            ), axis=1
+        )
+    else: 
+        df["REJECTION_AMOUNT"] = 0
+
+    if schema.include_bad_order:
+
+        df["BAD_ORDER_AMOUNT"] = df.apply(
+            lambda row: calculate_bad_orders(
+                row,
+                schema.bad_orders,
+                schema.bad_orders_amount
+            ), axis=1
+        )
+    
+    else:
+        df["BAD_ORDER_AMOUNT"] = 0
+
+    table = create_table(df).reset_index()
+
+    if schema.include_bonus:
+        table["BONUS"] = table.apply(lambda row: add_bonus(
+            row,
+            schema.bonus_order_fulltime,
+            schema.bonus_amount_fulltime,
+            schema.bonus_order_partime,
+            schema.bonus_amount_partime
+
+        ), axis=1)
+
+    else: 
+        table["BONUS"] = 0
+
+    table["PANALTIES"] = table["IGCC_AMOUNT"] + table["REJECTION_AMOUNT"] + table["BAD_ORDER_AMOUNT"]
+
+    table["FINAL_AMOUNT"] = (
+        (table["ORDER_AMOUNT"] + table["BONUS"]) - (table["PANALTIES"] + table["BIKE_CHARGES"])
+    )
+
+    table["VENDER_FEE (@6%)"] = (table["FINAL_AMOUNT"] * 0.06) + (table["FINAL_AMOUNT"])
+
+    table["FINAL PAYBLE AMOUNT (@18%)"] = (table["VENDER_FEE (@6%)"] * 0.18) + (
+        table["VENDER_FEE (@6%)"]
+    )
+
+    file_name = schema.file_key.split("/")[2]
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+        with pd.ExcelWriter(temp_file.name, engine="xlsxwriter") as writer:
+            table.to_excel(writer, sheet_name="Sheet1", index=False)
+
+        file_id = uuid.uuid4()
+        calculated_file_key = f"uploads/{file_id}/{file_name}"
+
+        new_file = SalaryFile(
+            filekey=calculated_file_key,
+            file_name=file_name,
+            file_type=".xlsx",
+            created_at=datetime.now(),
+        )
+
+        db.add(new_file)
+
+        db.commit()
+
+        try:
+            s3_client.upload_fileobj(temp_file, processed_bucket, calculated_file_key)
+
+        except exception as e:
+            return {"error": e}
+
+    return {
+        "message": "Successfully Calculated Salary for Zomato Surat",
+        "file_id": file_id,
+        "file_name": file_name,
+        "file_key" : calculated_file_key
     }

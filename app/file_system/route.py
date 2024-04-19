@@ -122,7 +122,7 @@ async def create_upload_file(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
 
-    return {"filename": file.filename, "file_id": file_id}
+    return {"filename": file.filename, "file_id": file_id, "file_key" : file_key}
     
 
         

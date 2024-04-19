@@ -1,7 +1,10 @@
+from typing import Optional
 from xml.etree.ElementInclude import include
-from pydantic import BaseModel
+from pandas import to_datetime
+from pydantic import BaseModel, validator
 from fastapi import UploadFile, Form
 from sqlalchemy import true
+from datetime import date as date_type
 
 from app.client_salary import zomato
 
@@ -58,7 +61,8 @@ class SuratZomatoStructureNew2(BaseModel):
 
 
 class SuratZomatoStructureNew3(BaseModel):
-    include_slab : bool = True
+    from_date :Optional[str]
+    to_date : Optional[str]
     zomato_first_order_start: int = 1 
     zomato_first_order_end: int = 29
     zomato_first_week_amount: int = 30
@@ -70,6 +74,14 @@ class SuratZomatoStructureNew3(BaseModel):
     zomato_order_greter_than: int = 26
     zomato_third_week_amount: int = 30
     zomato_third_weekend_amount: int = 32
+
+    class Config:
+        from_attributes = True
+
+class TimeStructureSchema(BaseModel):
+    file_key : str
+    include_slab : bool = True
+    slabs : list[SuratZomatoStructureNew3]
     include_vahicle_charges: bool = True
     fulltime_average: int = 20
     fulltime_greter_than_order : int = 20
@@ -88,7 +100,3 @@ class SuratZomatoStructureNew3(BaseModel):
     include_bad_order : bool = True
     bad_orders : int = 2
     bad_orders_amount : int = 20
-
-    class Config:
-        from_attributes = True
-
