@@ -1,5 +1,6 @@
 from numpy import average
 import pandas as pd
+from datetime import datetime
 
 def is_weekend(date):
     return date.isoweekday() >= 6
@@ -230,3 +231,9 @@ def calculate_bad_orders_rantal(
 
     return amount
 
+
+def validate_date(date):
+    if date:
+        return  datetime.strptime(date, '%d-%m-%Y').date()
+    else:
+        return None

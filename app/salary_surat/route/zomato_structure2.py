@@ -1,9 +1,5 @@
-from ast import For
 from logging import exception
-from wsgiref import validate
-from fastapi import APIRouter, Body, UploadFile, File, Form, Depends, HTTPException, status
-from fastapi.responses import FileResponse
-from sqlalchemy import Time, false
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, status
 from app.salary_surat.schema.zomato_structure2 import (
     TimeStructureSchema
 )
@@ -11,7 +7,6 @@ from app.salary_surat.view.zomato_structure2 import (
     add_bonus,
     calculate_salary_surat,
     create_table,
-    calculate_bike_charges,
     calculate_rejection,
     calculate_bad_orders,
     calculate_amount_for_surat_rental_model,
@@ -20,13 +15,12 @@ from app.salary_surat.view.zomato_structure2 import (
     validate_date
 )
 import pandas as pd
-import tempfile, json
+import tempfile
 import uuid
 from app.salary_surat.model.model import SalaryFile
 from datetime import datetime
 from database.database import SessionLocal
-from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
-from decouple import config
+from app.file_system.s3_events import s3_client
 from app import setting
 import io
 

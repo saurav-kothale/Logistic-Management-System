@@ -1,5 +1,6 @@
 from numpy import average
 import pandas as pd
+from datetime import datetime
 
 
 def calculate_salary_surat(row, data):
@@ -191,3 +192,11 @@ def calculate_bad_orders(
         amount = bad_order * bad_orders_amount
 
     return amount
+
+
+def validate_date(date):
+    if date:
+        return  datetime.strptime(date, '%d-%m-%Y').date()
+    else:
+        return None
+

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import UploadFile, Form
+from typing import Optional
 
 class AhmedabadZomatoSchema(BaseModel):
     zomato_first_order_start: int = 1 
@@ -21,7 +22,8 @@ class AhmedabadZomatoSchema(BaseModel):
 
 
 class AhmedabadZomatoSchema2(BaseModel):
-    include_slab : bool = True
+    from_date : Optional[str]
+    to_date : Optional[str]
     zomato_first_order_start: int = 1 
     zomato_first_order_end: int = 29
     zomato_first_week_amount: int = 30
@@ -33,6 +35,14 @@ class AhmedabadZomatoSchema2(BaseModel):
     zomato_order_greter_than: int = 26
     zomato_third_week_amount: int = 30
     zomato_third_weekend_amount: int = 32
+
+    class Config:
+        from_attributes = True
+
+class AhmedabadZomatoDateModelSchema(BaseModel):
+    raw_file_key : str
+    include_slab : bool = True
+    slabs : list[AhmedabadZomatoSchema2]
     include_vahicle_charges: bool = True
     fulltime_average: int = 20
     fulltime_greter_than_order : int = 20
@@ -51,9 +61,3 @@ class AhmedabadZomatoSchema2(BaseModel):
     include_bad_order : bool = True
     bad_orders : int = 2
     bad_orders_amount : int = 20
-
-    class Config:
-        from_attributes = True
-
-
-

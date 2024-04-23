@@ -1,6 +1,7 @@
 from xml.etree.ElementInclude import include
 from pydantic import BaseModel
 from fastapi import UploadFile, Form
+from typing import Optional
 
 class SuratSwiggySchema(BaseModel):
     file_id: str
@@ -25,9 +26,8 @@ class SuratSwiggySchema(BaseModel):
 
 
 class SuratSwiggySchemaNew(BaseModel):
-    file_id: str
-    file_name : str
-    include_slab : bool = True
+    from_date :Optional[str]
+    to_date : Optional[str]    
     swiggy_first_order_start: int = 1 
     swiggy_first_order_end: int = 19
     swiggy_first_week_amount: int = 20
@@ -39,6 +39,17 @@ class SuratSwiggySchemaNew(BaseModel):
     swiggy_order_greter_than: int = 26
     swiggy_third_week_amount: int = 30
     swiggy_third_weekend_amount: int = 32
+
+    class Config:
+        from_attributes = True
+
+
+class SuratSwiggyDateStructure(BaseModel):
+    raw_file_key : str
+    file_id: str
+    file_name : str
+    include_slab : bool = True
+    slabs : list[SuratSwiggySchemaNew]
     include_vahicle_charges: bool = True
     fulltime_average: int = 20
     fulltime_greter_than_order : int = 20
@@ -57,9 +68,7 @@ class SuratSwiggySchemaNew(BaseModel):
     include_bad_order : bool = True
     bad_orders : int = 2
     bad_orders_amount : int = 20
+    
 
-
-    class Config:
-        from_attributes = True
 
 
