@@ -23,7 +23,7 @@ def get_salary(
     first_amount : int = Form(30),
     order_greter_than: int = Form(16),
     second_amount: int = Form(35)
-    ):
+    ):  
     
     df = pd.read_excel(file.file)
 
@@ -98,7 +98,3 @@ def get_salary(
         "file_name": file_name, 
         "file_key" : file_key
     }
-
-    
-
-
