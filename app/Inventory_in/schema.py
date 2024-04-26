@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 
 class Invetory(BaseModel):
-    invoice_number : int 
+    invoice_number : str 
     invoice_amount : int 
     invoice_date : date  
     inventory_paydate : date
@@ -25,7 +25,7 @@ class InvetoryUpdate(BaseModel):
 
 class InvetoryResponse(BaseModel):
     invoice_id : str
-    invoice_number : int
+    invoice_number : str
     invoice_amount : int
     invoice_date : date
     inventory_paydate : date
