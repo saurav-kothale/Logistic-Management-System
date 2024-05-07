@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, JSON
 from sqlalchemy.orm import Relationship
 from database.database import Base
 import uuid
@@ -13,6 +13,7 @@ class ProductDB(Base):
     size = Column(String)
     city = Column(String)
     color = Column(String)
+    user = Column(JSON)
     invoice_id = Column(String, ForeignKey("inventory.invoice_id"))
     invoice = Relationship("InventoryDB", back_populates="products")
     created_at = Column(DateTime)

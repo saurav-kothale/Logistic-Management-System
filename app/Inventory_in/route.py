@@ -9,6 +9,7 @@ from fastapi import (
     status
 )
 from sqlalchemy import false, true
+from app.utils.util import get_current_user
 from database.database import get_db
 from sqlalchemy.orm import Session
 from app.Inventory_in.schema import Invetory, InvetoryResponse, InvetoryUpdate
@@ -62,7 +63,11 @@ async def upload_inventory_image(file : UploadFile = None):
         
 
 @inventory_router.post("/inventories")
-def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
+def create_inventory(
+    inventory: Invetory,
+    db: Session = Depends(get_db),
+    current_user : str = Depends(get_current_user)
+):
 
     db_invoice = db.query(InventoryDB).filter(
         InventoryDB.invoice_number == inventory.invoice_number,
@@ -83,6 +88,7 @@ def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
         inventory_paydate=inventory.inventory_paydate,
         vendor=inventory.vendor,
         invoice_image_id=inventory.invoice_image_id,
+        user=current_user
     )
 
     db.add(record)
@@ -100,6 +106,7 @@ def create_inventory(inventory: Invetory, db: Session = Depends(get_db)):
             "inventory_paydate": record.inventory_paydate,
             "vendor": record.vendor,
             "invoice_image_id": record.invoice_image_id,
+            "user" : record.user
         }
     }
 

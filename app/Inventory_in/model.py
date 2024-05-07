@@ -2,7 +2,7 @@ import DateTime
 import uuid
 from datetime import datetime, timezone
 from database.database import Base
-from sqlalchemy import Boolean, Column, Integer, Date, String,DateTime, Uuid, true
+from sqlalchemy import JSON, Boolean, Column, Integer, Date, String,DateTime, Uuid, true
 from sqlalchemy.orm import Relationship
 
 class InventoryDB(Base):
@@ -14,6 +14,7 @@ class InventoryDB(Base):
     inventory_paydate = Column(Date)
     vendor = Column(String)
     invoice_image_id = Column(String)
+    user = Column(JSON)
     created_at = Column(DateTime, default= datetime.now(timezone.utc))
     updated_at = Column(DateTime, default = datetime.now(timezone.utc), onupdate = datetime.now(timezone.utc))
     is_deleted = Column(Boolean, default=False)

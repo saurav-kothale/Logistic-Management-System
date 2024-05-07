@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.salary_surat.route.route import salary_router
-from app.User.views.route import login_router, signup_router
+from app.User.views.route import login_router, signup_router, protected_router,forgot_password_route
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from app.file_system.route import file_router
@@ -30,6 +30,8 @@ app = FastAPI()
 app.include_router(salary_router, prefix="/surat", tags= ["Surat Salary Structure 1"])
 app.include_router(signup_router, tags= ["Authentication"])
 app.include_router(login_router, tags= ["Authentication"])
+app.include_router(protected_router, tags= ["Authentication"])
+app.include_router(forgot_password_route, tags= ["Authentication"])
 app.include_router(file_router, tags=["File Operation"])
 app.include_router(client_router, tags= ["Client"])
 app.include_router(vendor_router, tags= ["Vender"])

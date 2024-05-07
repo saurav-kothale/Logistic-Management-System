@@ -14,6 +14,7 @@ from app.file_system.config import s3_client
 from app.salary_surat.model.model import SalaryFile
 from app.salary_surat.view.view import validate_surat_filename, validate_ahmedabad_filename
 from app.file_system.model import FileInfo
+from app.utils.util import get_current_user
 from database.database import SessionLocal, get_db
 from decouple import config
 from sqlalchemy.exc import SQLAlchemyError
@@ -62,7 +63,8 @@ async def create_upload_file(
      
     city : str,       
     db : Session = Depends(get_db),
-    file: UploadFile = None
+    file: UploadFile = None,
+    current_user : str = Depends(get_current_user)
     
 ):  
     if file is None:

@@ -8,6 +8,7 @@ if deployment_env == 'local':
     # Load credentials from local .env file
     SECRET_KEY = config('SECRET_KEY')
     ALGORITHAM = config('ALGORITHAM')
+    ACCESSTOKEN_EXPIRE_TIME = config('ACCESSTOKEN_EXPIRE_TIME')
     DB_USER_NAME = config("DB_USER_NAME")
     DB_PASSWORD = config("DB_PASSWORD")
     DB_PORT = config("DB_PORT")
@@ -18,6 +19,7 @@ if deployment_env == 'local':
     ROW_BUCKET = config("ROW_BUCKET")
     PROCESSED_FILE_BUCKET = config("PROCESSED_FILE_BUCKET")
     INVENTORY = config("INVENTORY")
+
 else:
     # Retrieve credentials from AWS Secrets Manager
     import boto3
@@ -37,3 +39,4 @@ else:
     ROW_BUCKET = secrets["ROW_BUCKET"]
     PROCESSED_FILE_BUCKET = secrets["PROCESSED_FILE_BUCKET"]
     INVENTORY = secrets["INVENTORY"]
+    ACCESSTOKEN_EXPIRE_TIME = config('ACCESSTOKEN_EXPIRE_TIME')
