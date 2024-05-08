@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.product.model.model import ProductDB
 from app.inventory_out.model import ProductOutDb
 from app.Inventory_in.model import InventoryDB
+from app.utils.util import get_current_user
 from database.database import SessionLocal, get_db
 import uuid
 from sqlalchemy import Subquery, distinct, func, and_
@@ -23,7 +24,9 @@ product_router = APIRouter()
 def create_product(
     invoice_id: str,
     product : ProductSchema,
-    db : Session = Depends(get_db)
+    current_user : str = Depends(get_current_user),
+    db : Session = Depends(get_db),
+
 ):
     invoice = db.query(InventoryDB).filter(InventoryDB.invoice_id == invoice_id).first()
     if not invoice:
@@ -39,6 +42,7 @@ def create_product(
         size=product.size,
         city=product.city,
         color=product.color,
+        user = current_user,
         invoice_id=invoice_id,
         created_at = datetime.now(),
         updated_at = datetime.now(),
