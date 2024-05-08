@@ -18,9 +18,10 @@ from app.utils.util import create_access_token, get_current_user
 # from app.utils.auth_bearer import JWTBearer
 from sqlalchemy.orm import Session
 from decouple import config
+from app import setting
 
 signup_router = APIRouter()
-accesstoken_expire_time = config("ACCESSTOKEN_EXPIRE_TIME")
+accesstoken_expire_time = setting.ACCESSTOKEN_EXPIRE_TIME
 
 
 @signup_router.post("/signup" , status_code=status.HTTP_201_CREATED)
