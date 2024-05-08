@@ -54,7 +54,7 @@ from app import setting
 
 secret_key = setting.SECRET_KEY
 algoritham = setting.ALGORITHAM
-accesstoken_expire_time = config("ACCESSTOKEN_EXPIRE_TIME")
+accesstoken_expire_time = setting.ACCESSTOKEN_EXPIRE_TIME
 
 
 
