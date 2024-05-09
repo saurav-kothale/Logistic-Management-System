@@ -14,6 +14,8 @@ class ProductDB(Base):
     city = Column(String)
     color = Column(String)
     user = Column(JSON)
+    HSN_code = Column(String , unique= True)
+    GST = Column(String)
     invoice_id = Column(String, ForeignKey("inventory.invoice_id"))
     invoice = Relationship("InventoryDB", back_populates="products")
     created_at = Column(DateTime)

@@ -44,6 +44,9 @@ def create_product(
         color=product.color,
         user = current_user,
         invoice_id=invoice_id,
+        HSN_code = product.HSN_code,
+        GST = product.GST,
+        Unit = product.unit,
         created_at = datetime.now(),
         updated_at = datetime.now(),
         is_deleted = False
@@ -393,3 +396,4 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
     return {
         "distinct_values": result
     }
+

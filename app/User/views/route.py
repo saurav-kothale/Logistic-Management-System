@@ -111,7 +111,6 @@ def protected (current_user : str = Depends(get_current_user)):
 
 
 
-
 forgot_password_route = APIRouter()
 
 
@@ -148,7 +147,10 @@ def delete_user(user_data : UserLoginData, db : Session = Depends(get_db)):
             "message" : "User delete successfully"
             }
 
-    raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail = "Invalid Username or Password")
+    raise HTTPException(
+        status_code = status.HTTP_404_NOT_FOUND,
+        detail = "Invalid Username or Password"
+    )
 
 
 

@@ -102,6 +102,16 @@ class City(Enum):
     AHMEDABAD = "AHMEDABAD"
     VADODARA = "VADODARA"
 
+class GST(str, Enum):
+    GST5 = "GST 5"
+    GST12 = "GST 12"
+    GST18 = "GST 18"
+    GST28 = "GST 28"
+
+class Unit(str, Enum):
+    NOS = "NOS"
+    PACKET = "PACKET"
+
 
 class ProductSchema(BaseModel):
     product_name: str
@@ -110,7 +120,10 @@ class ProductSchema(BaseModel):
     quantity : int
     size : str
     color : str
-    city : str    
+    city : str  
+    HSN_code : str
+    GST : GST
+    unit : Unit
 
 
 
