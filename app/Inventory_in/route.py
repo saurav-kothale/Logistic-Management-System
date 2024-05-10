@@ -105,8 +105,10 @@ def create_inventory(
             "invoice_date": record.invoice_date,
             "inventory_paydate": record.inventory_paydate,
             "vendor": record.vendor,
+            "created_at" : record.created_at,
+            "updated_at" : record.updated_at,
             "invoice_image_id": record.invoice_image_id,
-            "user" : record.user
+            "user" : record.user,
         }
     }
 
