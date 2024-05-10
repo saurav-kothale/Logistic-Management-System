@@ -14,6 +14,7 @@ class Invetory(BaseModel):
 
 
 class InvetoryUpdate(BaseModel):
+    invoice_number : str
     invoice_amount : int
     invoice_date : date 
     inventory_paydate : date

@@ -78,7 +78,6 @@ def log_in(user_data : UserLoginData, db : Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email_id == user_data.email_id).first()
     if db_user and check_password_hash(db_user.password , user_data.password): # type: ignore
 
-        expire_time = timedelta(days=int(accesstoken_expire_time))
 
         access_token_data = {
             "user_id" : db_user.user_id,
@@ -90,7 +89,7 @@ def log_in(user_data : UserLoginData, db : Session = Depends(get_db)):
 
         }
 
-        access_token = create_access_token(access_token_data, expire_time)
+        access_token = create_access_token(access_token_data, int(accesstoken_expire_time))
 
         response = {
             "access" : access_token,

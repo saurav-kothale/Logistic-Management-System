@@ -191,6 +191,7 @@ def update_inventory(
             detail="Inventory not found to update",
         )
 
+    db_inventory.invoice_number = inventory.invoice_number
     db_inventory.invoice_amount = inventory.invoice_amount
     db_inventory.invoice_date = inventory.invoice_date
     db_inventory.inventory_paydate = inventory.inventory_paydate
@@ -199,9 +200,21 @@ def update_inventory(
 
     db.commit()
 
+    
+
     return {
         "message": "Inventory Updated Sucessfully",
-        "status": status.HTTP_200_OK
+        "status": status.HTTP_200_OK,
+        "inventory" : {
+            "invoice_number" : db_inventory.invoice_number,
+            "invoice_amount" : db_inventory.invoice_amount,
+            "invoice_date" : db_inventory.invoice_date,
+            "inventory_paydate" : db_inventory.inventory_paydate,
+            "vendor" : db_inventory.vendor,
+            "image_id" : db_inventory.invoice_image_id,
+            "create_at" : db_inventory.created_at,
+            "updated_at" : db_inventory.updated_at
+        }
     }
 
 

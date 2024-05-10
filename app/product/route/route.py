@@ -32,6 +32,8 @@ def create_product(
     if not invoice:
         raise HTTPException(status_code=404, detail="Invoice ID not found")
 
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     # Create a new product
     new_product = ProductDB(
         product_id=str(uuid.uuid4()),
@@ -46,9 +48,9 @@ def create_product(
         invoice_id=invoice_id,
         HSN_code = product.HSN_code,
         GST = product.GST,
-        Unit = product.unit,
-        created_at = datetime.now(),
-        updated_at = datetime.now(),
+        unit = product.unit,
+        created_at = formatted_datetime,
+        updated_at = formatted_datetime,
         is_deleted = False
     )
 
@@ -116,6 +118,9 @@ def update_product(
             detail= "Product is not found to update"
         )
     
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
     db_product.product_name = data.product_name
     db_product.category = data.category
     db_product.bike_category = data.bike_category
@@ -123,13 +128,23 @@ def update_product(
     db_product.size = data.size
     db_product.city = data.city
     db_product.color = data.color
-    db_product.updated_at = datetime.now()
+    db_product.updated_at = formatted_datetime
 
     db.commit()
 
     return {
         "message": "Product Updated Sucessfully",
         "status": status.HTTP_200_OK,
+        "product" : {
+            "product_name" : db_product.product_name,
+            "product_category" : db_product.category,
+            "product_bike_category" : db_product.bike_category,
+            "product_quantity" : db_product.quantity,
+            "prodcut_size" : db_product.size,
+            "product_city" : db_product.city,
+            "product_color" : db_product.color,
+            "product_updated_at" : db_product.updated_at
+        }
     }
 
 
