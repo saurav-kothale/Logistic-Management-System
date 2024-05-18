@@ -116,7 +116,7 @@ def delete_bike(
             detail="Bike not found to delete"
         )
 
-    db_bike.is_delete = True
+    db.delete(db_bike)
 
     db.commit()
 

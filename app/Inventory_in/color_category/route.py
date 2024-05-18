@@ -116,7 +116,7 @@ def delete_color(
             detail="Color not found to delete"
         )
 
-    db_color.is_delete = True
+    db.delete(db_color)
 
     db.commit()
 

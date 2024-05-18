@@ -116,7 +116,7 @@ def delete_city(
             detail="City not found to delete"
         )
 
-    db_city.is_delete = True
+    db.delete(db_city)
 
     db.commit()
 

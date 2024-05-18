@@ -117,7 +117,7 @@ def delete_color(
             detail="Category not found to delete"
         )
 
-    db_category.is_delete = True
+    db.delete(db_category)
 
     db.commit()
 

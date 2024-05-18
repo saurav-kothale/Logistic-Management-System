@@ -117,7 +117,7 @@ def delete_size(
             detail="Size not found to delete"
         )
 
-    db_size.is_delete = True
+    db.delete(db_size)
 
     db.commit()
 
