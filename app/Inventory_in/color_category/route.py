@@ -71,10 +71,17 @@ def create_color(
 
     db.commit()
 
+    color_dict = {
+        "color_id" : new_color.color_id,
+        "color_name" : new_color.color_name,
+        "created_at" : new_color.created_at,
+        "updated_at" : new_color.updated_at
+    }
+
     return{
         "status" : status.HTTP_201_CREATED,
         "message" : "Color created sucessfully",
-        "Color" : new_color
+        "Color" : color_dict
     }
 
 
@@ -99,7 +106,12 @@ def update_color(
 
     return{
         "status" : status.HTTP_200_OK,
-        "message" : "record Updated Successfully"
+        "message" : "record Updated Successfully",
+        "color" : {
+            "color_name" : db_color.color_name,
+            "updated_at" : db_color.updated_at
+        }
+
     }
 
 
