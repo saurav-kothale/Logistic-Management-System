@@ -16,7 +16,6 @@ connection_string = (
     f"postgresql://{USER_NAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
-
 Base = declarative_base()
 
 engine = create_engine(connection_string, pool_pre_ping=True)

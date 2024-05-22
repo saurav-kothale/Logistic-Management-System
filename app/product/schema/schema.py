@@ -124,6 +124,7 @@ class ProductSchema(BaseModel):
     HSN_code : str
     GST : GST
     unit : Unit
+    amount : float
 
 
 

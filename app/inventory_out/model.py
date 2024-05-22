@@ -5,6 +5,7 @@ from database.database import Base
 class ProductOutDb(Base):
     __tablename__ = "inventory out"
     product_out_id =  Column(String , primary_key=True)
+    HSN_code  = Column(String)
     product_name = (Column(String))
     category = Column(String)
     bike_category = Column(String)

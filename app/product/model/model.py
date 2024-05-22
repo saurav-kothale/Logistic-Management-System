@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, JSON
+from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer, String, DateTime, JSON
 from sqlalchemy.orm import Relationship
 from database.database import Base
 import uuid
@@ -15,8 +15,10 @@ class ProductDB(Base):
     color = Column(String)
     user = Column(JSON)
     HSN_code = Column(String)
-    GST = Column(String)
+    GST = Column(String)  
     unit = Column(String)
+    amount = Column(Float)
+    amount_with_gst = Column(Float)
     invoice_id = Column(String, ForeignKey("inventory.invoice_id"))
     invoice = Relationship("InventoryDB", back_populates="products")
     created_at = Column(DateTime)

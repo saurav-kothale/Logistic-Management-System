@@ -20,6 +20,7 @@ def create_product(
     new_product = ProductOutDb(
         product_out_id=str(uuid.uuid4()),
         product_name=product.product_name,
+        HSN_code = product.HSN_code,
         category=product.category,
         bike_category=product.bike_category,
         quntity=product.quantity,
@@ -36,4 +37,32 @@ def create_product(
     db.commit()
     db.refresh(new_product)
 
-    return new_product
+    used_quantity = db.query(func.sum(ProductOutDb.quntity)).filter(
+        ProductOutDb.category == product.category,
+        ProductOutDb.bike_category == product.bike_category,
+        ProductOutDb.product_name == product.product_name,
+        ProductOutDb.color == product.color,
+        ProductOutDb.size == product.size,
+        ProductOutDb.city == product.city
+    ).scalar() or 0
+
+    total_quantity = db.query(func.sum(ProductDB.quantity)).filter(
+        ProductDB.category == product.category,
+        ProductDB.bike_category == product.bike_category,
+        ProductDB.product_name == product.product_name,
+        ProductDB.color == product.color,
+        ProductDB.size == product.size,
+        ProductDB.city == product.city
+    ).scalar() or 0
+
+    remaining_quantity = total_quantity - used_quantity
+
+    return {
+        "category": product.category,
+        "bike_category": product.bike_category,
+        "product_name": product.product_name,
+        "color" : product.color,
+        "size" : product.size,
+        "city" : product.city,
+        "remaining_quantity": remaining_quantity
+    }

@@ -23,6 +23,7 @@ from app.Inventory_in.city_category.route import city_router
 from app.Inventory_in.color_category.route import color_router
 from app.Inventory_in.size_category.route import size_router
 from app.inventory_out.route import inventory_out_router
+from app.Inventory_in.product_category.route import product_cateogry_router
 
 app = FastAPI()
 
@@ -51,7 +52,9 @@ app.include_router(bike_router, tags=["Bike Category"])
 app.include_router(city_router, tags=["City Category"])
 app.include_router(color_router, tags=["Color Category"])
 app.include_router(size_router, tags=["Size Category"])
-app.include_router(inventory_out_router, tags=["Inventory_Out_Router"])
+app.include_router(product_cateogry_router, tags=["Product Category Routers"])
+app.include_router(inventory_out_router, tags=["Inventory Out Router"])
+
 
 
 app.add_middleware(

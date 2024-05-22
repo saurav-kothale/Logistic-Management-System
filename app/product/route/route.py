@@ -15,6 +15,7 @@ from app.utils.util import get_current_user
 from database.database import SessionLocal, get_db
 import uuid
 from sqlalchemy import Subquery, distinct, func, and_
+from app.product.view.view import add_gst
 
 
 product_router = APIRouter()
@@ -35,6 +36,12 @@ def create_product(
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
     # Create a new product
+
+    quntity_amount = product.quantity * product.amount
+
+    gst_amount = add_gst(product.GST.value, quntity_amount)
+
+
     new_product = ProductDB(
         product_id=str(uuid.uuid4()),
         product_name=product.product_name,
@@ -49,6 +56,8 @@ def create_product(
         HSN_code = product.HSN_code,
         GST = product.GST,
         unit = product.unit,
+        amount = product.amount,
+        amount_with_gst = gst_amount,
         created_at = formatted_datetime,
         updated_at = formatted_datetime,
         is_deleted = False
@@ -78,9 +87,7 @@ def get_product(product_id : str, db : Session = Depends(get_db)):
             detail = "Inventory is Deleted of this product"
         )
 
-
     return{
-
         "status" : status.HTTP_200_OK,
         "product" : db_product
     }
@@ -101,8 +108,8 @@ def get_products(db : Session = Depends(get_db)):
         "status" : status.HTTP_200_OK,
         "message" : "Products Fetched Successfully",
         "products" : db_products
-
     }
+
 
 @product_router.patch("/products/{product_id}")
 def update_product(
@@ -191,154 +198,11 @@ def get_inventory_products(
     }
 
 
-# @product_router.get("/router/category")
-# def retrieve_products_by_category(db: Session = Depends(get_db)):
-#     db_distinct = db.query(
-#         ProductDB.category,
-#         ProductDB.bike_category,
-#         ProductDB.color,
-#         ProductDB.size,
-#         ProductDB.city,
-        
-#         # func.sum(ProductDB.quantity).label('total_quantity')
-#     ).filter(
-#         ProductDB.is_deleted == False
-#     ).group_by(
-#         ProductDB.category,
-#         ProductDB.bike_category,
-#         ProductDB.color,
-#         ProductDB.size,
-#         ProductDB.city
-#     ).all()
-
-    
-#     # Format the result to include the sum of quantities
-#     result = [
-#         {
-#             "category": row.category,
-#             "bike_category": row.bike_category,
-#             "color": row.color,
-#             "size": row.size,
-#             "city": row.city,
-#             # "total_quantity": row.total_quantity
-#         } 
-#         for row in db_distinct
-#     ]
-    
-#     return {
-#         "distinct_values": result
-#     }
-
-
-# @product_router.get("/router/products")
-# def retrieve_products(
-#     category: Optional[str] = None, 
-#     bike_category: Optional[str] = None, 
-#     color: Optional[str] = None, 
-#     size: Optional[str] = None, 
-#     city: Optional[str] = None, 
-#     db: Session = Depends(get_db)
-# ):
-#     # Calculate total quantity in inventory
-#     query_filters = []
-#     if category:
-#         query_filters.append(ProductDB.category == category)
-#     if bike_category:
-#         query_filters.append(ProductDB.bike_category == bike_category)
-#     if color:
-#         query_filters.append(ProductDB.color == color)
-#     if size:
-#         query_filters.append(ProductDB.size == size)
-#     if city:
-#         query_filters.append(ProductDB.city == city)
-    
-#     total_quantity_in = db.query(func.sum(ProductDB.quantity)).filter(
-#         *query_filters
-#     ).scalar()
-
-#     if total_quantity_in is None:
-#         total_quantity_in = 0
-    
-#     # Calculate total quantity out
-#     total_quantity_out = db.query(func.sum(ProductOutDb.quantity)).scalar()
-#     if total_quantity_out is None:
-#         total_quantity_out = 0
-
-#     # Calculate remaining quantity
-#     remaining_quantity = total_quantity_in - total_quantity_out
-    
-#     return {"remaining_quantity": remaining_quantity}
-   
-
-
-# @product_router.get("/router/my_category")
-# def retrieve_products_by_category12(db: Session = Depends(get_db)):
-#     # Subquery to calculate the total used quantity
-#     used_quantity_subquery = db.query(
-#         ProductOutDb.product_name,
-#         func.sum(ProductOutDb.quntity).label("total_used_quantity")
-#     ).group_by(
-#         ProductOutDb.product_name
-#     ).subquery()
-
-#     # Subquery to calculate the total quantity for each product
-#     total_quantity_subquery = db.query(
-#         ProductDB.product_name,
-#         func.sum(ProductDB.quantity).label("total_quantity")
-#     ).group_by(
-#         ProductDB.product_name
-#     ).subquery()
-
-#     # Main query to retrieve distinct products and calculate remaining quantity
-#     db_distinct = db.query(
-#         ProductDB.category,
-#         ProductDB.bike_category,
-#         ProductDB.color,
-#         ProductDB.size,
-#         ProductDB.city,
-#         ProductDB.product_name,
-#         func.coalesce(total_quantity_subquery.c.total_quantity - used_quantity_subquery.c.total_used_quantity, total_quantity_subquery.c.total_quantity).label('remaining_quantity')
-#     ).outerjoin(
-#         used_quantity_subquery,
-#         ProductDB.product_name == used_quantity_subquery.c.product_name,
-#     ).join(
-#         total_quantity_subquery,
-#         ProductDB.product_name == total_quantity_subquery.c.product_name
-#     ).group_by(
-#         ProductDB.category,
-#         ProductDB.bike_category,
-#         ProductDB.color,
-#         ProductDB.size,
-#         ProductDB.city,
-#         ProductDB.product_name,
-#         used_quantity_subquery.c.total_used_quantity,
-#         total_quantity_subquery.c.total_quantity
-#     ).all()
-
-#     # Format the result
-#     result = [
-#         {
-#             "category": row.category,
-#             "bike_category": row.bike_category,
-#             "color": row.color,
-#             "size": row.size,
-#             "city": row.city,
-#             "product_name": row.product_name,
-#             "remaining_quantity": row.remaining_quantity
-#         } 
-#         for row in db_distinct
-#     ]
-    
-#     return {
-#         "distinct_values": result
-    # }
-
-
-
 @product_router.get("/product/category")
 def retrieve_products_by_category123(db: Session = Depends(get_db)):
     # Subquery to calculate the total used quantity
     used_quantity_subquery = db.query(
+        ProductOutDb.HSN_code,
         ProductOutDb.product_name,
         ProductOutDb.category,
         ProductOutDb.bike_category,
@@ -347,6 +211,7 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
         ProductOutDb.city,
         func.sum(ProductOutDb.quntity).label("total_used_quantity")
     ).group_by(
+        ProductOutDb.HSN_code, 
         ProductOutDb.product_name,
         ProductOutDb.category,
         ProductOutDb.bike_category,
@@ -357,6 +222,7 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
 
     # Subquery to calculate the total quantity for each product
     total_quantity_subquery = db.query(
+        ProductDB.HSN_code,
         ProductDB.category,
         ProductDB.bike_category,
         ProductDB.color,
@@ -365,6 +231,7 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
         ProductDB.product_name,
         func.sum(ProductDB.quantity).label("total_quantity")
     ).group_by(
+        ProductDB.HSN_code,
         ProductDB.category,
         ProductDB.bike_category,
         ProductDB.color,
@@ -375,6 +242,7 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
 
     # Main query to retrieve distinct products and calculate remaining quantity
     db_distinct = db.query(
+        total_quantity_subquery.c.HSN_code,
         total_quantity_subquery.c.category,
         total_quantity_subquery.c.bike_category,
         total_quantity_subquery.c.color,
@@ -385,6 +253,7 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
     ).outerjoin(
         used_quantity_subquery,
         and_(
+            total_quantity_subquery.c.HSN_code == used_quantity_subquery.c.HSN_code,
             total_quantity_subquery.c.product_name == used_quantity_subquery.c.product_name,
             total_quantity_subquery.c.category == used_quantity_subquery.c.category,
             total_quantity_subquery.c.bike_category == used_quantity_subquery.c.bike_category,
@@ -411,4 +280,3 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
     return {
         "distinct_values": result
     }
-
