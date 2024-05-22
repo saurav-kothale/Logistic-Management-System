@@ -81,7 +81,7 @@ def create_color(
     return{
         "status" : status.HTTP_201_CREATED,
         "message" : "Color created sucessfully",
-        "Color" : color_dict
+        "color" : color_dict
     }
 
 
