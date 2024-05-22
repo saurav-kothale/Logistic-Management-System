@@ -72,10 +72,17 @@ def create_size(
 
     db.commit()
 
+    size = {
+       "size_id" : new_size.size_id,
+       "size_name" : new_size.size_name,
+       "created_at" : new_size.created_at,
+       "updated_at" : new_size.updated_at
+    }
+
     return{
         "status" : status.HTTP_201_CREATED,
         "message" : "size created sucessfully",
-        "size" : new_size
+        "size" : size
     }
 
 
@@ -98,9 +105,17 @@ def update_size(
     
     db.commit()
 
+    updated_size = {
+        "size_id" : db_size.size_id,
+        "size_name" : db_size.size_name,
+        "created_at" : db_size.created_at,
+        "updated_at" : db_size.updated_at
+    }
+
     return{
         "status" : status.HTTP_200_OK,
-        "message" : "record Updated Successfully"
+        "message" : "record Updated Successfully",
+        "size" : updated_size
     }
 
 

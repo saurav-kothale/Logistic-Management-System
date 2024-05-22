@@ -74,7 +74,13 @@ def create_city(
     return{
         "status" : status.HTTP_201_CREATED,
         "message" : "City created sucessfully",
-        "bike" : new_city
+        "city" : {
+            "city_id" : new_city.city_id,
+            "city_name" : new_city.city_name,
+            "created_at" : new_city.created_at,
+            "updated_at" : new_city.updated_at,
+            "is_deleted" : new_city.is_deleted
+        }
     }
 
 
@@ -99,7 +105,11 @@ def update_city(
 
     return{
         "status" : status.HTTP_200_OK,
-        "message" : "record Updated Successfully"
+        "message" : "record Updated Successfully",
+        "new_city" : {
+            "city" : db_city.city_name,
+            "updated_at" : db_city.updated_at
+        }
     }
 
 

@@ -108,7 +108,7 @@ def delete_bike(
     bike_id : str,
     db : Session = Depends(get_db) 
 ):
-    db_bike = db.query(BikeDb).filter(BikeDb.bike_id == bike_id)
+    db_bike = db.query(BikeDb).filter(BikeDb.bike_id == bike_id).first()
 
     if db_bike is None:
         raise HTTPException(

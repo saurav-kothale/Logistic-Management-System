@@ -107,7 +107,7 @@ def update_category(category_id : str, schema : CategoryUpdate, db : Session = D
 @category_router.delete('/categories/{category_id}')
 def delete_category(category_id : str, db : Session = Depends(get_db)):
 
-    db_category = db.query(CategoryDB).filter(CategoryDB.category_id == category_id)
+    db_category = db.query(CategoryDB).filter(CategoryDB.category_id == category_id).first()
 
     if db_category is None:
         raise HTTPException(
