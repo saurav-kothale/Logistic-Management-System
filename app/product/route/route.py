@@ -266,6 +266,7 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
     # Format the result
     result = [
         {
+            "hsn_code" : row.HSN_code,
             "category": row.category,
             "bike_category": row.bike_category,
             "color": row.color,
@@ -280,3 +281,13 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
     return {
         "distinct_values": result
     }
+
+
+@product_router.get("/products/amount/sum/{invoice_id}")
+def match_sum(
+    invoice_id : str ,
+    db: Session = Depends(get_db)
+):
+    total_sum = db.query(func.sum(ProductDB.amount_with_gst)).filter(ProductDB.invoice_id == invoice_id).scalar()
+
+    return {"total_sum": total_sum or 0.0}
