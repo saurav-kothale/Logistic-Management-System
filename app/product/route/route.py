@@ -290,4 +290,11 @@ def match_sum(
 ):
     total_sum = db.query(func.sum(ProductDB.amount_with_gst)).filter(ProductDB.invoice_id == invoice_id).scalar()
 
-    return {"total_sum": total_sum or 0.0}
+    invoice = db.query(InventoryDB).filter(InventoryDB.invoice_id == invoice_id).first()
+
+    price_diffrence = invoice.invoice_amount - total_sum
+
+    return {
+        "status" : status.HTTP_200_OK,
+        "Price Difference" : price_diffrence
+    }
