@@ -66,3 +66,21 @@ def create_product(
         "city" : product.city,
         "remaining_quantity": remaining_quantity
     }
+
+
+@inventory_out_router.get("/get/inventory/used")
+def get_used_inventory(db : Session = Depends(get_db)):
+
+    db_products = db.query(ProductOutDb).all()
+
+    if not db_products:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No product found"
+        )
+    
+    return{
+        "status" : status.HTTP_202_ACCEPTED,
+        "message" : "Product fetched successfully",
+        "products" : db_products
+    }
