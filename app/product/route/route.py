@@ -16,6 +16,7 @@ from database.database import SessionLocal, get_db
 import uuid
 from sqlalchemy import Subquery, distinct, func, and_
 from app.product.view.view import add_gst
+from sqlalchemy import desc
 
 
 product_router = APIRouter()
@@ -198,8 +199,8 @@ def get_inventory_products(
     }
 
 
-@product_router.get("/product/category")
-def retrieve_products_by_category123(db: Session = Depends(get_db)):
+@product_router.get("/product/category/deprecated")
+def retrieve_products_by_category123_deprecated(db: Session = Depends(get_db)):
     # Subquery to calculate the total used quantity
     used_quantity_subquery = db.query(
         ProductOutDb.HSN_code,
@@ -262,6 +263,93 @@ def retrieve_products_by_category123(db: Session = Depends(get_db)):
             total_quantity_subquery.c.city == used_quantity_subquery.c.city
         )
     ).all()
+
+    # Format the result
+    result = [
+        {
+            "hsn_code" : row.HSN_code,
+            "category": row.category,
+            "bike_category": row.bike_category,
+            "color": row.color,
+            "size": row.size,
+            "city": row.city,
+            "product_name": row.product_name,
+            "remaining_quantity": row.remaining_quantity
+        } 
+        for row in db_distinct
+    ]
+    
+    return {
+        "distinct_values": result
+    }
+
+
+@product_router.get("/product/category")
+def retrieve_products_by_category123(db: Session = Depends(get_db)):
+    # Subquery to calculate the total used quantity
+    used_quantity_subquery = db.query(
+        ProductOutDb.HSN_code,
+        ProductOutDb.product_name,
+        ProductOutDb.category,
+        ProductOutDb.bike_category,
+        ProductOutDb.color,
+        ProductOutDb.size,
+        ProductOutDb.city,
+        func.sum(ProductOutDb.quntity).label("total_used_quantity")
+    ).group_by(
+        ProductOutDb.HSN_code, 
+        ProductOutDb.product_name,
+        ProductOutDb.category,
+        ProductOutDb.bike_category,
+        ProductOutDb.color,
+        ProductOutDb.size,
+        ProductOutDb.city
+    ).subquery()
+
+    # Subquery to calculate the total quantity for each product
+    total_quantity_subquery = db.query(
+        ProductDB.HSN_code,
+        ProductDB.category,
+        ProductDB.bike_category,
+        ProductDB.color,
+        ProductDB.size,
+        ProductDB.city,
+        ProductDB.product_name,
+        ProductDB.created_at,  # Include created_at in the subquery
+        func.sum(ProductDB.quantity).label("total_quantity")
+    ).group_by(
+        ProductDB.HSN_code,
+        ProductDB.category,
+        ProductDB.bike_category,
+        ProductDB.color,
+        ProductDB.size,
+        ProductDB.city,
+        ProductDB.product_name,
+        ProductDB.created_at  # Group by created_at as well
+    ).subquery()
+
+    # Main query to retrieve distinct products and calculate remaining quantity
+    db_distinct = db.query(
+        total_quantity_subquery.c.HSN_code,
+        total_quantity_subquery.c.category,
+        total_quantity_subquery.c.bike_category,
+        total_quantity_subquery.c.color,
+        total_quantity_subquery.c.size,
+        total_quantity_subquery.c.city,
+        total_quantity_subquery.c.product_name,
+        func.coalesce(total_quantity_subquery.c.total_quantity - used_quantity_subquery.c.total_used_quantity, total_quantity_subquery.c.total_quantity).label('remaining_quantity')
+    ).outerjoin(
+        used_quantity_subquery,
+        and_(
+            total_quantity_subquery.c.HSN_code == used_quantity_subquery.c.HSN_code,
+            total_quantity_subquery.c.product_name == used_quantity_subquery.c.product_name,
+            total_quantity_subquery.c.category == used_quantity_subquery.c.category,
+            total_quantity_subquery.c.bike_category == used_quantity_subquery.c.bike_category,
+            total_quantity_subquery.c.color == used_quantity_subquery.c.color,
+            total_quantity_subquery.c.size == used_quantity_subquery.c.size,
+            total_quantity_subquery.c.city == used_quantity_subquery.c.city
+        )
+    ).order_by(desc(total_quantity_subquery.c.created_at))  # Order by created_at in descending order
 
     # Format the result
     result = [

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import desc, func
 from app.inventory_out.schema import InventoryOut
 from app.product.model.model import ProductDB
 from app.inventory_out.model import ProductOutDb
@@ -14,8 +14,7 @@ inventory_out_router = APIRouter()
 def create_product(
     product : InventoryOut,
     db : Session = Depends(get_db)
-):
-
+):    
     # Create a new product
     new_product = ProductOutDb(
         product_out_id=str(uuid.uuid4()),
@@ -71,7 +70,7 @@ def create_product(
 @inventory_out_router.get("/get/inventory/used")
 def get_used_inventory(db : Session = Depends(get_db)):
 
-    db_products = db.query(ProductOutDb).all()
+    db_products = db.query(ProductOutDb).order_by(desc(ProductOutDb.created_at)).all()
 
     if not db_products:
         raise HTTPException(

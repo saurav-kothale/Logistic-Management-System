@@ -74,7 +74,12 @@ def create_bike(
     return{
         "status" : status.HTTP_201_CREATED,
         "message" : "Bike created sucessfully",
-        "bike" : new_bike
+        "bike" : {
+            "bike_id" : new_bike.bike_id,
+            "bike_name" : new_bike.bike_name,
+            "created_at" : new_bike.created_at,
+            "updated_at" : new_bike.updated_at
+        }
     }
 
 
@@ -84,7 +89,7 @@ def update_bike(
     schema : BikeUpdateSchema,
     db : Session = Depends(get_db)
 ):
-    db_bike = db.query(BikeDb).filter(BikeDb.bike_id == bike_id)
+    db_bike = db.query(BikeDb).filter(BikeDb.bike_id == bike_id).first()
 
     if db_bike is None:
         raise HTTPException(
@@ -99,7 +104,13 @@ def update_bike(
 
     return{
         "status" : status.HTTP_200_OK,
-        "message" : "record Updated Successfully"
+        "message" : "record Updated Successfully",
+        "bike" : {
+            "bike_id" : db_bike.bike_id,
+            "bike_name" : db_bike.bike_name,
+            "created_at" : db_bike.created_at,
+            "updated_at" : db_bike.updated_at
+        }
     }
 
 

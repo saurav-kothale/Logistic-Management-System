@@ -43,7 +43,7 @@ def get_category(category_id : str, db : Session = Depends(get_db)):
     return{
         "status" : status.HTTP_200_OK,
         "message" : "Record Fetched Sucessfully",
-        "colors" : db_category
+        "category" : db_category
     }
 
 
@@ -75,12 +75,17 @@ def create_category(
     return{
         "status" : status.HTTP_201_CREATED,
         "message" : "category created sucessfully",
-        "category" : new_category
+        "category" : {
+            "category_id" : new_category.category_id,
+            "category_name" : new_category.category_name,
+            "created_at" : new_category.created_at,
+            "updated_at" : new_category.updated_at
+        }
     }
 
 
 @new_category_router.patch("/categories/{category_id}")
-def update_size(
+def update_category(
     category_id : str,
     schema : CategoryUpdateSchema,
     db : Session = Depends(get_db)
@@ -100,7 +105,13 @@ def update_size(
 
     return{
         "status" : status.HTTP_200_OK,
-        "message" : "record Updated Successfully"
+        "message" : "record Updated Successfully",
+        "category" : {
+            "category_id" : db_category.category_id,
+            "category_name" : db_category.category_name,
+            "created_at" : db_category.created_at,
+            "updated_at" : db_category.updated_at
+        }
     }
 
 
