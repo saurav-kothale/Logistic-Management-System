@@ -5,6 +5,7 @@ from app.Inventory_in.bike_category.model import BikeDb
 from app.Inventory_in.bike_category.schema import BikeCategorySchema, BikeUpdateSchema
 from database.database import get_db
 import uuid
+from sqlalchemy.sql.expression import func
 
 
 bike_router = APIRouter()
@@ -51,7 +52,7 @@ def create_bike(
     schema : BikeCategorySchema,
     db : Session = Depends(get_db)
 ):
-    db_bike = db.query(BikeDb).filter(BikeDb.bike_name == schema.bike_name).first()
+    db_bike = db.query(BikeDb).filter(func.lower(BikeDb.bike_name) == func.lower(schema.bike_name)).first()
 
     if db_bike:
         raise HTTPException(
@@ -97,6 +98,17 @@ def update_bike(
             detail="Bike not found to update"
         )
     
+    existing_bike_with_same_name = db.query(BikeDb).filter(
+        func.lower(BikeDb.bike_name) == func.lower(schema.bike_name),
+        BikeDb.bike_id!= bike_id
+    ).first()
+
+    if existing_bike_with_same_name:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Bike name already exists"
+        )
+
     db_bike.bike_name = schema.bike_name
     db_bike.updated_at = datetime.now()
     

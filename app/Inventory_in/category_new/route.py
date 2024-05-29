@@ -6,6 +6,7 @@ from app.Inventory_in.category_new.model import NewCategoryDb
 from app.Inventory_in.category_new.schema import CategorySchema, CategoryUpdateSchema
 from database.database import get_db
 import uuid
+from sqlalchemy.sql.expression import func
 
 
 new_category_router = APIRouter()
@@ -52,7 +53,7 @@ def create_category(
     schema : CategorySchema,
     db : Session = Depends(get_db)
 ):
-    db_category = db.query(NewCategoryDb).filter(NewCategoryDb.category_name == schema.category_name).first()
+    db_category = db.query(NewCategoryDb).filter(func.lower(NewCategoryDb.category_name) == func.lower(schema.category_name)).first()
 
     if db_category:
         raise HTTPException(
@@ -97,6 +98,19 @@ def update_category(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Category not found to update"
         )
+    
+    existing_category_with_same_name = db.query(NewCategoryDb).filter(
+        func.lower(NewCategoryDb.category_name) == func.lower(schema.category_name),
+        NewCategoryDb.category_id != category_id
+    ).first()
+
+
+    if existing_category_with_same_name:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail = "Category already exist"
+        )
+
     
     db_category.category_name = schema.category_name
     db_category.updated_at = datetime.now()

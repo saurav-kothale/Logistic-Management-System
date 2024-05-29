@@ -6,6 +6,7 @@ from app.Inventory_in.size_category.model import SizeDb
 from app.Inventory_in.size_category.schema import SizeCategorySchema, SizeUpdateSchema
 from database.database import get_db
 import uuid
+from sqlalchemy.sql.expression import func
 
 
 size_router = APIRouter()
@@ -52,7 +53,7 @@ def create_size(
     schema : SizeCategorySchema,
     db : Session = Depends(get_db)
 ):
-    db_size = db.query(SizeDb).filter(SizeDb.size_name == schema.size_name).first()
+    db_size = db.query(SizeDb).filter(func.lower(SizeDb.size_name) == func.lower(schema.size_name)).first()
 
     if db_size:
         raise HTTPException(
@@ -98,6 +99,17 @@ def update_size(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Size not found to update"
+        )
+    
+    existing_size = db.query(SizeDb).filter(
+        func.lower(SizeDb.size_name) == func.lower(schema.size_name),
+        SizeDb.size_id != size_id
+    ).first()
+    
+    if existing_size:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Size is already exist"
         )
     
     db_size.size_name = schema.size_name

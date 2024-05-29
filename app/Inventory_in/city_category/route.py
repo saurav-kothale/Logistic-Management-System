@@ -5,6 +5,7 @@ from app.Inventory_in.city_category.model import CityDb
 from app.Inventory_in.city_category.schema import CityCategorySchema, CityUpdateSchema
 from database.database import get_db
 import uuid
+from sqlalchemy.sql.expression import func
 
 
 city_router = APIRouter()
@@ -51,7 +52,7 @@ def create_city(
     schema : CityCategorySchema,
     db : Session = Depends(get_db)
 ):
-    db_city = db.query(CityDb).filter(CityDb.city_name == schema.city_name).first()
+    db_city = db.query(CityDb).filter(func.lower(CityDb.city_name) == func.lower(schema.city_name)).first()
 
     if db_city:
         raise HTTPException(
@@ -97,6 +98,18 @@ def update_city(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="City not found to update"
         )
+    
+    existing_city = db.query(CityDb).filter(
+        func.lower(CityDb.city_name) == func.lower(schema.city_name),
+        CityDb.city_id != city_id
+    ).first()
+
+    if existing_city:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="City already exists"
+        )
+    
     
     db_city.city_name = schema.city_name
     db_city.updated_at = datetime.now()

@@ -5,6 +5,7 @@ from app.Inventory_in.color_category.model import ColorDb
 from app.Inventory_in.color_category.schema import ColorCategorySchema, ColorUpdateSchema
 from database.database import get_db
 import uuid
+from sqlalchemy.sql.expression import func
 
 
 color_router = APIRouter()
@@ -51,7 +52,7 @@ def create_color(
     schema : ColorCategorySchema,
     db : Session = Depends(get_db)
 ):
-    db_color = db.query(ColorDb).filter(ColorDb.color_name == schema.color_name).first()
+    db_color = db.query(ColorDb).filter(func.lower(ColorDb.color_name) == func.lower(schema.color_name)).first()
 
     if db_color:
         raise HTTPException(
@@ -97,6 +98,17 @@ def update_color(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Color not found to update"
+        )
+    
+    existing_city = db.query(ColorDb).filter(
+        func.lower(ColorDb.color_name) == func.lower(schema.color_name),
+        ColorDb.color_id != color_id
+    ).first()
+
+    if existing_city:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Color already exists"
         )
     
     db_color.color_name = schema.color_name

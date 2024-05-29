@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.utils.util import get_current_user
 from database.database import get_db
 import uuid
+from sqlalchemy.sql.expression import func
 
 
 product_cateogry_router = APIRouter()
@@ -18,12 +19,12 @@ def create_product(
     current_user = Depends(get_current_user)
 ):
     
-    db_product = db.query(ProductCategoryDB).filter(ProductCategoryDB.HSN_code == schema.hsn_code).first()
+    db_product = db.query(ProductCategoryDB).filter(func.lower(ProductCategoryDB.product_name) == func.lower(schema.product_name)).first()
 
     if db_product:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="HSN code already exist"
+            detail="Product name already exist"
         )
     
     new_product = ProductCategoryDB(
@@ -129,12 +130,12 @@ def update_product(
             detail="Product not found"
         )
     
-    existing_product_with_hsn = db.query(ProductCategoryDB).filter(ProductCategoryDB.HSN_code == schema.hsn_code).filter(ProductCategoryDB.product_id != product_id).first()
+    existing_product_with_product_name = db.query(ProductCategoryDB).filter(func.lower(ProductCategoryDB.product_name) == func.lower(schema.product_name)).filter(ProductCategoryDB.product_id != product_id).first()
 
-    if existing_product_with_hsn:
+    if existing_product_with_product_name:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="HSN code is already associated with another product"
+            detail="Product Name is already present"
         )
     
     
