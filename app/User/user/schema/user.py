@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import phonenumbers
+from phonenumbers.phonenumberutil import NumberParseException
 
 load_dotenv()
 
@@ -41,3 +42,13 @@ def mobile_no_varification(mobile_number):
     phone_number = phonenumbers.parse(mobile_number)
     valid = phonenumbers.is_valid_number(phone_number)
     return valid
+
+
+def mobile_no_varification_updated(mobile_number):
+    try:
+        phone_number = phonenumbers.parse(mobile_number)
+        valid = phonenumbers.is_valid_number(phone_number)
+        return valid
+    except NumberParseException:
+        print(f"Invalid phone number format: {mobile_number}")
+        return False

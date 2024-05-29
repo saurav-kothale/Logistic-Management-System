@@ -5,7 +5,7 @@ from app.User.user.schema.user import (
     ResetPasswordData,
     UserLoginData,
     UserSignupData,
-    mobile_no_varification
+    mobile_no_varification, mobile_no_varification_updated
 )
 from datetime import timedelta
 
@@ -40,10 +40,18 @@ def create_user(user_data: UserSignupData, db : Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exist."
         )
+    db_mobile_number = db.query(User).filter(User.mobile_no == user_data.mobile_no).first()
 
-    if mobile_no_varification(user_data.mobile_no) is False:
+    if db_mobile_number:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST , detail="Mobile Number is not valid."
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Mobile Number already exists"
+        )
+
+
+    if mobile_no_varification_updated(user_data.mobile_no) is False:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST , detail="Mobile Number is not valid.Make sure you provided Contry code as well"
         )    
 
     if user_data.password != user_data.retype_password:
