@@ -47,12 +47,12 @@ app.include_router(ahmedabadbigbascket, prefix="/ahmedabad", tags= ["Ahmedabad S
 app.include_router(ahmedabadbbnow_router, prefix="/ahmedabad", tags= ["Ahmedabad Salary Structure 1"])
 app.include_router(inventory_router, tags=["Inventory"])
 app.include_router(product_router, tags=["Inventory Products"])
-app.include_router(new_category_router, tags=["Product Category"])
+app.include_router(new_category_router, tags=["Category"])
 app.include_router(bike_router, tags=["Bike Category"])
 app.include_router(city_router, tags=["City Category"])
 app.include_router(color_router, tags=["Color Category"])
 app.include_router(size_router, tags=["Size Category"])
-app.include_router(product_cateogry_router, tags=["Product Category Routers"])
+app.include_router(product_cateogry_router, tags=["Product Category"])
 app.include_router(inventory_out_router, tags=["Inventory Out Router"])
 
 
