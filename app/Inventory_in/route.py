@@ -8,7 +8,7 @@ from fastapi import (
     UploadFile,
     status
 )
-from sqlalchemy import false, true
+from sqlalchemy import desc, false, true
 from app.utils.util import get_current_user
 from database.database import get_db
 from sqlalchemy.orm import Session
@@ -145,7 +145,7 @@ def get_inventory(invoice_id: str, db: Session = Depends(get_db)):
 @inventory_router.get("/inventories")
 def get_inventories(db: Session = Depends(get_db)):
 
-    db_inventory = db.query(InventoryDB).filter(InventoryDB.is_deleted.is_(False)).all()
+    db_inventory = db.query(InventoryDB).filter(InventoryDB.is_deleted.is_(False)).order_by(desc(InventoryDB.created_at)).all()
 
     if db_inventory is None:
         raise HTTPException(
