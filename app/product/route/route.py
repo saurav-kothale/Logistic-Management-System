@@ -57,7 +57,7 @@ def create_product(
         HSN_code = product.HSN_code,
         GST = product.GST,
         unit = product.unit,
-        amount = product.amount,
+        amount = quntity_amount,
         amount_with_gst = gst_amount,
         created_at = formatted_datetime,
         updated_at = formatted_datetime,
