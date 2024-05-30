@@ -9,6 +9,7 @@ from fastapi import (
     status
 )
 from sqlalchemy import desc, false, true
+from app.product.model.model import ProductDB
 from app.utils.util import get_current_user
 from database.database import get_db
 from sqlalchemy.orm import Session
@@ -79,6 +80,9 @@ def create_inventory(
             status_code=status.HTTP_406_NOT_ACCEPTABLE,
             detail="invoice already exist"
         )
+    
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     record = InventoryDB(
         invoice_id=str(uuid.uuid4()),
@@ -88,7 +92,9 @@ def create_inventory(
         inventory_paydate=inventory.inventory_paydate,
         vendor=inventory.vendor,
         invoice_image_id=inventory.invoice_image_id,
-        user=current_user
+        user=current_user,
+        created_at = formatted_datetime,
+        updated_at = formatted_datetime
     )
 
     db.add(record)
@@ -128,12 +134,6 @@ def get_inventory(invoice_id: str, db: Session = Depends(get_db)):
             detail="Inventory not found please check inventory number",
         )
     
-    if db_inventory.is_deleted :
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Inventory is deleted",
-        )
-    
 
     return {
         "data": db_inventory,
@@ -145,7 +145,7 @@ def get_inventory(invoice_id: str, db: Session = Depends(get_db)):
 @inventory_router.get("/inventories")
 def get_inventories(db: Session = Depends(get_db)):
 
-    db_inventory = db.query(InventoryDB).filter(InventoryDB.is_deleted.is_(False)).order_by(desc(InventoryDB.created_at)).all()
+    db_inventory = db.query(InventoryDB).order_by(desc(InventoryDB.created_at)).all()
 
     if db_inventory is None:
         raise HTTPException(
@@ -192,6 +192,9 @@ def update_inventory(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Inventory not found to update",
         )
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
 
     db_inventory.invoice_number = inventory.invoice_number
     db_inventory.invoice_amount = inventory.invoice_amount
@@ -199,6 +202,7 @@ def update_inventory(
     db_inventory.inventory_paydate = inventory.inventory_paydate
     db_inventory.vendor = inventory.vendor
     db_inventory.invoice_image_id = inventory.invoice_image_id
+    db_inventory.updated_at = formatted_datetime
 
     db.commit()
 
@@ -232,9 +236,14 @@ def delete_inventory(invoice_id: str, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Inventory not found to delete",
         )
+    
+    products = db.query(ProductDB).filter(ProductDB.invoice_id == invoice_id).all()
 
-    inventory_delete.is_deleted = True
 
+    for product in products:
+        db.delete(product)
+
+    db.delete(inventory_delete)
     db.commit()
 
     return {

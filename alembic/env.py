@@ -7,7 +7,7 @@ from alembic import context
 from app.User.user.model.user import User
 from app.client.model import Client
 from app.vendor.model import Vendor
-from app.file_system.model import FileInfo
+from app.file_system.model import FileInfo, FileRecord
 from app.salary_surat.model.model import SalaryFile
 from app.Inventory_in.model import InventoryDB
 from app.product.model.model import ProductDB
@@ -18,6 +18,7 @@ from app.Inventory_in.color_category.model import ColorDb
 from app.Inventory_in.size_category.model import SizeDb
 from app.inventory_out.model import ProductOutDb
 from app.Inventory_in.product_category.model import ProductCategoryDB
+
 from database.database import Base
 import os
 from decouple import config
