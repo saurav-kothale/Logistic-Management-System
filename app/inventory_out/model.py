@@ -11,6 +11,7 @@ class ProductOutDb(Base):
     bike_category = Column(String)
     size = Column(String)
     quntity = Column(Integer)
+    name = Column(String)
     color = Column(String)
     city = Column(String)
     created_at = Column(DateTime)

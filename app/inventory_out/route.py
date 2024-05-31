@@ -23,6 +23,7 @@ def create_product(
         category=product.category,
         bike_category=product.bike_category,
         quntity=product.quantity,
+        name = product.name,
         size=product.size,
         city=product.city,
         color=product.color,
@@ -63,6 +64,7 @@ def create_product(
         "color" : product.color,
         "size" : product.size,
         "city" : product.city,
+        "name" : product.name,
         "remaining_quantity": remaining_quantity
     }
 
