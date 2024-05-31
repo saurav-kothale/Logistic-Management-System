@@ -57,7 +57,8 @@ def create_product(
         HSN_code = product.HSN_code,
         GST = product.GST,
         unit = product.unit,
-        amount = quntity_amount,
+        amount = product.amount,
+        total_amount = quntity_amount,
         amount_with_gst = gst_amount,
         created_at = formatted_datetime,
         updated_at = formatted_datetime,
@@ -117,7 +118,7 @@ def update_product(
     product_id : str, 
     data : ProductSchema, 
     db : Session = Depends(get_db)
-):
+):  
     db_product = db.query(ProductDB).filter(ProductDB.product_id == product_id).first()
 
     if db_product is None:
@@ -129,6 +130,10 @@ def update_product(
     current_datetime = datetime.now()
     formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
+    quntity_amount = data.quantity * data.amount
+
+    gst_amount = add_gst(data.GST.value, quntity_amount)
+
     db_product.product_name = data.product_name
     db_product.category = data.category
     db_product.bike_category = data.bike_category
@@ -137,6 +142,9 @@ def update_product(
     db_product.city = data.city
     db_product.color = data.color
     db_product.updated_at = formatted_datetime
+    db_product.amount = data.amount
+    db_product.total_amount = quntity_amount
+    db_product.amount_with_gst = gst_amount
 
     db.commit()
 
@@ -151,7 +159,10 @@ def update_product(
             "prodcut_size" : db_product.size,
             "product_city" : db_product.city,
             "product_color" : db_product.color,
-            "product_updated_at" : db_product.updated_at
+            "product_updated_at" : db_product.updated_at,
+            "product_amount" : db_product.amount,
+            "product_total_amount" : db_product.total_amount,
+            "product_with_gst" : db_product.amount_with_gst
         }
     }
 

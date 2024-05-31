@@ -18,6 +18,7 @@ class ProductDB(Base):
     GST = Column(String)  
     unit = Column(String)
     amount = Column(Float)
+    total_amount = Column(Float)
     amount_with_gst = Column(Float)
     invoice_id = Column(String, ForeignKey("inventory.invoice_id"))
     invoice = Relationship("InventoryDB", back_populates="products")
