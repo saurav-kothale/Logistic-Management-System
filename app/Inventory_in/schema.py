@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 class Invetory(BaseModel):
     invoice_number : str 
-    invoice_amount : int 
+    invoice_amount : float 
     invoice_date : date  
     inventory_paydate : date
     vendor : str
@@ -15,7 +15,7 @@ class Invetory(BaseModel):
 
 class InvetoryUpdate(BaseModel):
     invoice_number : str
-    invoice_amount : int
+    invoice_amount : float
     invoice_date : date 
     inventory_paydate : date
     vendor : str

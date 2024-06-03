@@ -4,6 +4,7 @@ from sqlalchemy import desc, func
 from app.inventory_out.schema import InventoryOut
 from app.product.model.model import ProductDB
 from app.inventory_out.model import ProductOutDb
+from app.utils.util import get_current_user
 from database.database import get_db
 from datetime import datetime
 import uuid
@@ -13,7 +14,9 @@ inventory_out_router = APIRouter()
 @inventory_out_router.post("/inventory/use")
 def create_product(
     product : InventoryOut,
-    db : Session = Depends(get_db)
+    db : Session = Depends(get_db),
+    current_user : str = Depends(get_current_user)
+
 ):    
     # Create a new product
     new_product = ProductOutDb(
@@ -29,7 +32,8 @@ def create_product(
         color=product.color,
         created_at = datetime.now(),
         updated_at = datetime.now(),
-        is_deleted = False
+        is_deleted = False,
+        user = current_user
     )
 
     # Add the product to the database
@@ -65,6 +69,7 @@ def create_product(
         "size" : product.size,
         "city" : product.city,
         "name" : product.name,
+        "user" : current_user,
         "remaining_quantity": remaining_quantity
     }
 

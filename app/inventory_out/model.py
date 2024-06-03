@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, String
+from sqlalchemy import JSON, Boolean, Column, DateTime, Integer, String
 from database.database import Base
 
 
@@ -17,3 +17,4 @@ class ProductOutDb(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     is_deleted = Column(Boolean, default=False)
+    user = Column(JSON)
