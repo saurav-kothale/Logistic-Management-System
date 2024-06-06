@@ -187,14 +187,14 @@ def calculate_bike_charges_for_rental_model(
         amount = vahicle_charges_fulltime
 
     elif (
-        job_type == "part Time"
+        job_type == "part time"
         and average <= partime_average
         and orders <= partime_greter_than_order
     ):
         amount = vahicle_charges_partime
     
     elif (
-        job_type == "part Time"
+        job_type == "part time"
         and average <= partime_average
         and orders >= partime_greter_than_order
     ):
