@@ -10,3 +10,6 @@ class InventoryOut(BaseModel):
     size : str
     city : str
     quantity : int
+
+class InventoryBulkOut(BaseModel):
+    products : list[InventoryOut]
