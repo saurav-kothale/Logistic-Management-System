@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Boolean, Column, DateTime, String
 from database.database import Base
 
 
@@ -8,3 +8,4 @@ class SalaryFile(Base):
     file_name = Column(String)
     file_type = Column(String)
     created_at = Column(DateTime)
+    weekly = Column(Boolean)

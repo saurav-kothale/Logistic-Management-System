@@ -1,6 +1,7 @@
 from datetime import datetime
 from fileinput import filename
-from fastapi import APIRouter, Depends, status, Path
+from click import File
+from fastapi import APIRouter, Depends, background, status, Path, BackgroundTasks
 from fastapi.responses import FileResponse
 from fastapi import UploadFile
 from pydantic import HttpUrl
@@ -13,7 +14,7 @@ import io
 from app.file_system.config import s3_client
 from app.salary_surat.model.model import SalaryFile
 from app.salary_surat.view.view import validate_surat_filename, validate_ahmedabad_filename
-from app.file_system.model import FileInfo
+from app.file_system.model import FileInfo, FileRecord
 from app.utils.util import get_current_user
 from database.database import SessionLocal, get_db
 from decouple import config
@@ -22,6 +23,7 @@ from sqlalchemy.orm import Session
 import pandas as pd
 from app import setting
 from io import BytesIO
+from app.file_system.view import insert_records, delete_record
 
 
 file_router = APIRouter()
@@ -52,16 +54,57 @@ desire_order = [
     ]
 
 
-@file_router.get("/uploadfile/")
-async def create_upload_files(file: UploadFile):
+@file_router.post("/uploadfile")
+async def create_upload_files(
+    file: UploadFile, 
+    background_tasks: BackgroundTasks,
+    db : Session = Depends(get_db),
+    
+):
+        
+    try:
+        df = pd.read_excel(file.file)
+        background_tasks.add_task(insert_records, df, file.filename, db) # type: ignore
+        # await insert_records(df, file.filename, db)
+        return{
+            "status" : status.HTTP_202_ACCEPTED,
+            "message" : "Record inserted successfully"
+        }
 
-    return {"filename": file.filename}
+    except Exception as e:
+        
+        print(f"An error occured : {e}")
 
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+    
+
+@file_router.post("/delete/records")
+async def delete_records(file : str, background_tasks : BackgroundTasks, db : Session = Depends(get_db)):
+    try:
+        # await delete_record(db=db, file_name=file.filename)
+        background_tasks.add_task(delete_record, db, file)
+
+        return{
+            "status" : status.HTTP_202_ACCEPTED,
+            "message" : "Record deleted successfully"
+        }
+
+    except Exception as e:
+        db.rollback()
+        print(e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+    
 
 @file_router.post("/uploadfile/{city}")
 async def create_upload_file(
      
-    city : str,       
+    city : str,
     db : Session = Depends(get_db),
     file: UploadFile = None,
     current_user : str = Depends(get_current_user)
@@ -112,6 +155,7 @@ async def create_upload_file(
             filekey=file_key,
             file_name=file.filename,
             file_type="excel",
+            weekly = False,
             created_at=datetime.now(),
         )
 

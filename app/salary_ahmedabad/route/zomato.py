@@ -474,6 +474,7 @@ def claculate_salary_datemodel_structure3(
             filekey=file_key,
             file_name=file_name,
             file_type=".xlsx",
+            weekly = False,
             created_at=datetime.now(),
         )
 

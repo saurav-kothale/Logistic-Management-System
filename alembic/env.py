@@ -18,6 +18,7 @@ from app.Inventory_in.color_category.model import ColorDb
 from app.Inventory_in.size_category.model import SizeDb
 from app.inventory_out.model import ProductOutDb
 from app.Inventory_in.product_category.model import ProductCategoryDB
+from app.weekly_salary.model import WeeklyRawData
 
 from database.database import Base
 import os
