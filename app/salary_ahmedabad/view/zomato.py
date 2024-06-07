@@ -32,6 +32,20 @@ def calculate_bike_charges(row, data):
 
     return amount
 
+def calculate_bike_charges_v2(row, data):
+    average = row['AVERAGE']
+    job_type = row["WORK_TYPE"]
+    orders = row["DONE_PARCEL_ORDERS"]
+    amount = 0
+
+    if job_type == "full time" and average <= data.vahicle_charges_order_fulltime and orders <= data.fulltime_greter_than_order:
+        amount = data.vahicle_charges_fulltime
+
+    elif job_type == "part time" and average <= data.vahicle_charges_order_partime and orders <= data.partime_greter_than_order:
+        amount = data.vahicle_charges_partime
+
+    return amount
+
     
 
 

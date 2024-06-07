@@ -20,6 +20,7 @@ import tempfile, json
 import uuid
 from app.salary_surat.model.model import SalaryFile
 from decouple import config
+from app.salary_surat.view.zomato_structure2 import calculate_bike_charges_for_rental_model_v2
 from database.database import SessionLocal
 from datetime import datetime
 from app.file_system.s3_events import read_s3_contents, s3_client, upload_file
@@ -391,7 +392,7 @@ def claculate_salary_datemodel_structure3(
     if schema.include_vahicle_charges:
 
         df["BIKE_CHARGES"] = df.apply(
-            lambda row: calculate_bike_charges_for_rental_model(
+            lambda row: calculate_bike_charges_for_rental_model_v2(
                 row,
                 schema.fulltime_average,
                 schema.fulltime_greter_than_order,
