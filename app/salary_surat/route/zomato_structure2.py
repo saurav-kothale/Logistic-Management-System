@@ -5,6 +5,7 @@ from app.salary_surat.schema.zomato_structure2 import (
 )
 from app.salary_surat.view.zomato_structure2 import (
     add_bonus,
+    calculate_bike_charges_for_rental_model_v2,
     calculate_salary_surat,
     create_table,
     calculate_rejection,
@@ -329,6 +330,7 @@ def claculate_salary_new(
             filekey=file_key,
             file_name=file.filename,
             file_type=".xlsx",
+            weekly = False,
             created_at=datetime.now(),
         )
 
@@ -513,6 +515,7 @@ def claculate_salary_structure3(
             filekey=file_key,
             file_name=file.filename,
             file_type=".xlsx",
+            weekly = False,
             created_at=datetime.now(),
         )
 
@@ -622,7 +625,7 @@ def claculate_salary_time_structure(
     if schema.include_vahicle_charges:
 
         df["BIKE_CHARGES"] = df.apply(
-            lambda row: calculate_bike_charges_for_rental_model(
+            lambda row: calculate_bike_charges_for_rental_model_v2(
                 row,
                 schema.fulltime_average,
                 schema.fulltime_greter_than_order,
@@ -701,6 +704,7 @@ def claculate_salary_time_structure(
             filekey=calculated_file_key,
             file_name=file_name,
             file_type=".xlsx",
+            weekly = False,
             created_at=datetime.now(),
         )
 

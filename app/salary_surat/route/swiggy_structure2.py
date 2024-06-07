@@ -4,6 +4,7 @@ from app.salary_surat.view.swiggy_structure2 import (
     add_bonus,
     create_table,
     calculate_bike_charges,
+    calculate_bike_charges_v2,
     calculate_bad_orders,
     calculate_rejection,
     calculate_amount_for_surat_rental_model
@@ -468,7 +469,7 @@ def claculate_swiggy_date_model(
     if schema.include_vahicle_charges:
 
         df["BIKE_CHARGES"] = df.apply(
-            lambda row: calculate_bike_charges(
+            lambda row: calculate_bike_charges_v2(
                  row,
                 schema.fulltime_average,
                 schema.fulltime_greter_than_order,

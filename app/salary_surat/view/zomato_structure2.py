@@ -177,6 +177,7 @@ def calculate_bike_charges_for_rental_model(
         and average <= fulltime_average
         and orders <= fulltime_greter_than_order
     ):
+        
         amount = vahicle_charges_fulltime
 
     elif (
@@ -202,6 +203,31 @@ def calculate_bike_charges_for_rental_model(
 
     return amount
 
+def calculate_bike_charges_for_rental_model_v2(
+        row,
+        fulltime_average,
+        fulltime_greter_than_order,
+        vahicle_charges_fulltime,
+        partime_average,
+        partime_greter_than_order,
+        vahicle_charges_partime
+
+):
+    average = row["AVERAGE"]
+    job_type = row["WORK_TYPE"]
+    orders = row["DONE_PARCEL_ORDERS"]
+    amount = 0
+
+    if (
+        job_type == "full time" and average <= fulltime_average and orders <= fulltime_greter_than_order
+    ):
+        
+        amount = vahicle_charges_fulltime
+
+    if job_type == "part time" and average <= partime_average and orders <= partime_greter_than_order:
+        amount = vahicle_charges_partime
+
+    return amount
 
 def calculate_amount_for_surat_time_model(
         row,
