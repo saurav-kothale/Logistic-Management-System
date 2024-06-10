@@ -17,6 +17,7 @@ import uuid
 from sqlalchemy import Subquery, distinct, func, and_, case
 from app.product.view.view import add_gst
 from sqlalchemy import desc
+from sqlalchemy.orm import aliased
 
 
 product_router = APIRouter()
@@ -444,6 +445,9 @@ def retrieve_products_by_category_v2(db: Session = Depends(get_db)):
     ).subquery()
 
     # Main query to retrieve distinct products and calculate remaining quantity
+    ProductDBAlias = aliased(ProductDB)
+
+# Main query to retrieve distinct products and calculate remaining quantity
     db_distinct = db.query(
         total_quantity_subquery.c.HSN_code,
         total_quantity_subquery.c.category,
@@ -452,34 +456,67 @@ def retrieve_products_by_category_v2(db: Session = Depends(get_db)):
         total_quantity_subquery.c.size,
         total_quantity_subquery.c.city,
         total_quantity_subquery.c.product_name,
-        func.coalesce(total_quantity_subquery.c.total_quantity - used_quantity_subquery.c.total_used_quantity, total_quantity_subquery.c.total_quantity).label('remaining_quantity')
+        func.coalesce(
+            total_quantity_subquery.c.total_quantity - used_quantity_subquery.c.total_used_quantity, 
+            total_quantity_subquery.c.total_quantity
+        ).label('remaining_quantity'),
+        ProductDBAlias.created_at,  # Include created_at for ordering
+        func.row_number().over(
+            partition_by=[
+                total_quantity_subquery.c.HSN_code,
+                total_quantity_subquery.c.category,
+                total_quantity_subquery.c.bike_category,
+                total_quantity_subquery.c.color,
+                total_quantity_subquery.c.size,
+                total_quantity_subquery.c.city,
+                total_quantity_subquery.c.product_name
+            ],
+            order_by=desc(ProductDBAlias.created_at)
+        ).label('row_number')
     ).outerjoin(
-            used_quantity_subquery,
-    and_(
-        total_quantity_subquery.c.HSN_code == used_quantity_subquery.c.HSN_code,
-        total_quantity_subquery.c.product_name == used_quantity_subquery.c.product_name,
-        total_quantity_subquery.c.category == used_quantity_subquery.c.category,
-        total_quantity_subquery.c.bike_category == used_quantity_subquery.c.bike_category,
-        total_quantity_subquery.c.color == used_quantity_subquery.c.color,
-        total_quantity_subquery.c.size == used_quantity_subquery.c.size,
-        total_quantity_subquery.c.city == used_quantity_subquery.c.city
+        used_quantity_subquery,
+        and_(
+            total_quantity_subquery.c.HSN_code == used_quantity_subquery.c.HSN_code,
+            total_quantity_subquery.c.product_name == used_quantity_subquery.c.product_name,
+            total_quantity_subquery.c.category == used_quantity_subquery.c.category,
+            total_quantity_subquery.c.bike_category == used_quantity_subquery.c.bike_category,
+            total_quantity_subquery.c.color == used_quantity_subquery.c.color,
+            total_quantity_subquery.c.size == used_quantity_subquery.c.size,
+            total_quantity_subquery.c.city == used_quantity_subquery.c.city
+        )
+    ).join(
+        ProductDBAlias,  # Join with the alias to fetch created_at
+        and_(
+            total_quantity_subquery.c.HSN_code == ProductDBAlias.HSN_code,
+            total_quantity_subquery.c.product_name == ProductDBAlias.product_name,
+            total_quantity_subquery.c.category == ProductDBAlias.category,
+            total_quantity_subquery.c.bike_category == ProductDBAlias.bike_category,
+            total_quantity_subquery.c.color == ProductDBAlias.color,
+            total_quantity_subquery.c.size == ProductDBAlias.size,
+            total_quantity_subquery.c.city == ProductDBAlias.city
+        )
+    ).subquery()
+
+    # Query to filter only the latest entries
+    final_query = db.query(
+        db_distinct.c.HSN_code,
+        db_distinct.c.category,
+        db_distinct.c.bike_category,
+        db_distinct.c.color,
+        db_distinct.c.size,
+        db_distinct.c.city,
+        db_distinct.c.product_name,
+        db_distinct.c.remaining_quantity
+    ).filter(
+        db_distinct.c.row_number == 1
+    ).order_by(
+        desc(db_distinct.c.created_at)
     )
-).join(
-    ProductDB,  # Join with ProductDB to fetch created_at
-    and_(
-        total_quantity_subquery.c.HSN_code == ProductDB.HSN_code,
-        total_quantity_subquery.c.product_name == ProductDB.product_name,
-        total_quantity_subquery.c.category == ProductDB.category,
-        total_quantity_subquery.c.bike_category == ProductDB.bike_category,
-        total_quantity_subquery.c.color == ProductDB.color,
-        total_quantity_subquery.c.size == ProductDB.size,
-        total_quantity_subquery.c.city == ProductDB.city
-    )
-).order_by(desc(ProductDB.created_at)) 
+
     # Format the result
     result = [
         {
-            "hsn_code" : row.HSN_code,
+            "hsn_code": row.HSN_code,
             "category": row.category,
             "bike_category": row.bike_category,
             "color": row.color,
@@ -487,10 +524,10 @@ def retrieve_products_by_category_v2(db: Session = Depends(get_db)):
             "city": row.city,
             "product_name": row.product_name,
             "remaining_quantity": row.remaining_quantity
-        } 
-        for row in db_distinct
+        }
+        for row in final_query
     ]
-    
+
     return {
         "distinct_values": result
     }
