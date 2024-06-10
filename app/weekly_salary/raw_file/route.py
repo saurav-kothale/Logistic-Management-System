@@ -1,8 +1,10 @@
 from calendar import week
 from io import BytesIO
+from sqlite3 import dbapi2
 from fastapi import APIRouter, Depends, UploadFile, HTTPException, status, BackgroundTasks, Path
+from numpy import insert
 from sqlalchemy.orm import Session
-from app.weekly_salary.model import WeeklyRawData
+from app.weekly_salary.raw_file.model import WeeklyRawData
 from database.database import get_db
 from app.file_system.config import s3_client
 from sqlalchemy.orm import Session
@@ -10,17 +12,17 @@ import uuid
 from app.setting import ROW_BUCKET
 from app.file_system.model import FileInfo
 from datetime import datetime
-from app.weekly_salary.view import validate_header, insert_raw_records, delete_record
+from app.weekly_salary.raw_file.view import validate_header, insert_raw_records, delete_record
 import pandas as pd
 
-weekly_salary = APIRouter()
+weekly_raw = APIRouter()
 raw_bucket = ROW_BUCKET
 
-@weekly_salary.post("/upload/weekly/raw_file")
+@weekly_raw.post("/upload/weekly/raw_file")
 async def upload_raw_file(
     file : UploadFile,
     db : Session = Depends(get_db),
-    background_task = BackgroundTasks()
+    background_task : BackgroundTasks = BackgroundTasks()
 ):  
     
     file_extention = file.filename.split(".")[-1]
@@ -74,15 +76,17 @@ async def upload_raw_file(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error From database while adding data"
         )
+    df2 = pd.read_excel(BytesIO(contents))
     
     try:
-        df2 = pd.read_excel(BytesIO(contents))
-        # background_task.add_task(insert_raw_records, df2,file.filename,filekey, db) # type: ignore
-        await insert_raw_records(df2, file.filename,filekey, db)
-        return{
-            "status" : status.HTTP_202_ACCEPTED,
-            "message" : "Record inserted successfully"
-        }
+    
+        # breakpoint()
+        background_task.add_task(insert_raw_records, df2,file.filename,filekey, db) # type: ignore
+        # await insert_raw_records(df2, file.filename,filekey, db)
+        # return{
+        #     "status" : status.HTTP_202_ACCEPTED,
+        #     "message" : "Record inserted successfully"
+        # }
 
     except Exception as e:
         
@@ -93,18 +97,18 @@ async def upload_raw_file(
             detail="Internal server error"
         )
 
-    # return{
-    #     "status" : status.HTTP_200_OK,
-    #     "file" : {
-    #         "file_key" : new_file.filekey,
-    #         "file_name" : new_file.file_name,
-    #         "file_type" : new_file.file_type,
-    #         "weekly" : new_file.weekly,
-    #         "created_at" : new_file.created_at
-    #     }
-    # }
+    return{
+        "status" : status.HTTP_200_OK,
+        "file" : {
+            "file_key" : new_file.filekey,
+            "file_name" : new_file.file_name,
+            "file_type" : new_file.file_type,
+            "weekly" : new_file.weekly,
+            "created_at" : new_file.created_at
+        }
+    }
 
-@weekly_salary.get("/get/weekly/rawfiles")
+@weekly_raw.get("/get/weekly/rawfiles")
 def get_weekly_rawfiles(
     db : Session = Depends(get_db)
 ):
@@ -122,7 +126,7 @@ def get_weekly_rawfiles(
         "files" : db_files
     }
 
-@weekly_salary.get("get/weekly/rawfile/{file_key:path}")
+@weekly_raw.get("/get/weekly/rawfile/{file_key:path}")
 def get_weekly_rawfile(
     file_key: str = Path(..., description="File Key"),
     db : Session = Depends(get_db)
@@ -147,7 +151,7 @@ def get_weekly_rawfile(
     }
 
 
-@weekly_salary.delete("/weekly/rawfile/{file_key:path}")
+@weekly_raw.delete("/weekly/rawfile/{file_key:path}")
 def delete_raw_file(
     background_tasks : BackgroundTasks,
     file_key : str = Path(..., description="File Key"),    
@@ -208,7 +212,7 @@ def delete_raw_file(
     }
 
 
-@weekly_salary.get("/get/rawdata/{file_key:path}")
+@weekly_raw.get("/get/rawdata/{file_key:path}")
 def get_rawdata(
     file_key : str = Path(..., description="File Key"),
     db : Session = Depends(get_db)
@@ -236,6 +240,83 @@ def get_rawdata(
         "record" : db_record
     }
 
+
+@weekly_raw.post("/uploadfile/only/myfile")
+async def upload_raw_file_data(
+    file : UploadFile,
+    db : Session = Depends(get_db)
+):
+    df = pd.read_excel(file.file)
+
+    try:
+        for index, row in df.iterrows():
+            record = WeeklyRawData(
+                FILE_KEY="my_file",
+                FILE_NAME=file.filename,
+                CITY_NAME=row["CITY_NAME"],
+                CLIENT_NAME=row["CLIENT_NAME"],
+                DATE=row["DATE"],
+                JOINING_DATE=row["JOINING_DATE"],
+                COMPANY=row["COMPANY"],
+                SALARY_DATE=row["SALARY_DATE"],
+                SATAUS = row["STATUS"],
+                WEEK_NAME = row["WEEK_NAME"],
+                PHONE_NUMBER = row["PHONE_NUMBER"],
+                AADHAR_NUMBER=row["AADHAR_NUMBER"],
+                DRIVER_ID=row["DRIVER_ID"],
+                DRIVER_NAME=row["DRIVER_NAME"],
+                WORK_TYPE=row["WORK_TYPE"],
+                # LOG_IN_HR=row["LOG_IN_HR"],
+                # PICKUP_DOCUMENT_ORDERS=row["PICKUP_DOCUMENT_ORDERS"],
+                DONE_PARCEL_ORDERS=row["DONE_PARCEL_ORDERS"],
+                DONE_DOCUMENT_ORDERS=row["DONE_DOCUMENT_ORDERS"],
+                # PICKUP_PARCEL_ORDERS=row["PICKUP_PARCEL_ORDERS"],
+                # PICKUP_BIKER_ORDERS=row["PICKUP_BIKER_ORDERS"],
+                DONE_BIKER_ORDERS=row["DONE_BIKER_ORDERS"],
+                # PICKUP_MICRO_ORDERS=row["PICKUP_MICRO_ORDERS"],
+                DONE_MICRO_ORDERS=row["DONE_MICRO_ORDERS"],
+                RAIN_ORDER=row["RAIN_ORDER"],
+                IGCC_AMOUNT=row["IGCC_AMOUNT"],
+                BAD_ORDER=row["BAD_ORDER"],
+                REJECTION=row["REJECTION"],
+                ATTENDANCE=row["ATTENDANCE"],
+                CASH_COLLECTED=row["CASH_COLLECTED"],
+                CASH_DEPOSITED=row["CASH_DEPOSITED"],
+                PAYMENT_SENT_ONLINE = row["PAYMENT_SENT_ONLINE"],
+                POCKET_WITHDRAWAL = row["POCKET_WITHDRAWAL"],
+                OTHER_PANALTY = row["OTHER_PANALTY"]
+            )
+                
+                
+                
+                
+
+            db.add(record)
+
+        db.commit()
+    # except IntegrityError:
+    #     db.rollback()
+    #     return {
+    #         "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+    #         "message": "Failed to insert records due to integrity constraint violation."
+    #     }
+    except Exception as e:
+        db.rollback()
+        return {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "message": f"An unexpected error occurred: {str(e)}"
+        }
+
+    return {
+        "status": status.HTTP_201_CREATED,
+        "message": "Records inserted successfully."
+    }
+    
+    # return {
+    #     "status" : "data inserted successfully"
+    # }
+
+    
     
     
     
