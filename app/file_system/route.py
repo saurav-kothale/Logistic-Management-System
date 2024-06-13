@@ -334,7 +334,7 @@ async def delete_processed_file(
 @file_router.get("/salayfiles")
 def get_salary_files(db : Session = Depends(get_db)):
 
-    db_files = db.query(SalaryFile).all()
+    db_files = db.query(SalaryFile).filter(SalaryFile.weekly == False).all()
 
     if db_files is None:
         raise HTTPException(
@@ -351,7 +351,7 @@ def get_salary_files(db : Session = Depends(get_db)):
 @file_router.get("/rawfiles")
 def get_raw_files(db : Session = Depends(get_db)):
 
-    db_files = db.query(FileInfo).all()
+    db_files = db.query(FileInfo).filter(FileInfo.weekly == False).all()
 
     if db_files is None:
         raise HTTPException(
