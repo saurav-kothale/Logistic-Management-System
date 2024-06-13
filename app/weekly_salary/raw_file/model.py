@@ -1,5 +1,5 @@
 from database.database import Base
-from sqlalchemy import Column, String, Integer, Date
+from sqlalchemy import VARCHAR, Column, String, Integer, Date
 
 class WeeklyRawData(Base):
     __tablename__ = "weekly_raw_data"

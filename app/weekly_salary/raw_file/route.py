@@ -263,7 +263,7 @@ async def upload_raw_file_data(
                 WEEK_NAME = row["WEEK_NAME"],
                 PHONE_NUMBER = row["PHONE_NUMBER"],
                 AADHAR_NUMBER=row["AADHAR_NUMBER"],
-                DRIVER_ID=row["DRIVER_ID"],
+                DRIVER_ID=str(row["DRIVER_ID"]),
                 DRIVER_NAME=row["DRIVER_NAME"],
                 WORK_TYPE=row["WORK_TYPE"],
                 # LOG_IN_HR=row["LOG_IN_HR"],

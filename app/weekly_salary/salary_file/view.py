@@ -10,20 +10,20 @@ def calculate_payment(df):
         attendance = row['ATTENDANCE']
         
         if city_name == "surat":
-            if client_name in ["zomato", "swiggy", "ecom"]:
+            if client_name in ["zomato", "swiggy", "e com"]:
                 return done_parcel_orders * 25
-            elif client_name == "bbnow":
+            elif client_name == "bb now":
                 return done_parcel_orders * 30
-            elif client_name == "bigbasket":
+            elif client_name == "bb 5k":
                 return done_parcel_orders * 14
             elif client_name == "bluedart biker" or client_name == "flipkart":
                 return done_parcel_orders * 13
         elif city_name == "ahmedabad":
-            if client_name in ["zomato", "blinkit", "ecom"]:
+            if client_name in ["zomato", "blinkit", "e com"]:
                 return done_parcel_orders * 25
-            elif client_name == "bbnow":
+            elif client_name == "bb now":
                 return done_parcel_orders * 30
-            elif client_name == "bigbasket":
+            elif client_name == "bb 5k":
                 return done_parcel_orders * 14
             elif client_name == "bluedart biker" or client_name == "flipkart":
                 return done_parcel_orders * 13
@@ -49,11 +49,11 @@ async def insert_salary_records(df, filename, file_key, db):
             JOINING_DATE=row["JOINING_DATE"],
             COMPANY=row["COMPANY"],
             SALARY_DATE=row["SALARY_DATE"],
-            SATAUS = row["STATUS"],
+            STATUS = row["STATUS"],
             WEEK_NAME = row["WEEK_NAME"],
             PHONE_NUMBER = row["PHONE_NUMBER"],
             AADHAR_NUMBER=row["AADHAR_NUMBER"],
-            DRIVER_ID=row["DRIVER_ID"],
+            DRIVER_ID=str(row["DRIVER_ID"]),
             DRIVER_NAME=row["DRIVER_NAME"],
             WORK_TYPE=row["WORK_TYPE"],
             # LOG_IN_HR=row["LOG_IN_HR"],
