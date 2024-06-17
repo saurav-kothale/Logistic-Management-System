@@ -38,7 +38,7 @@ def calculate_weekly_salary(
     
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="Please Calculate Zomato First"
+            detail="File not found"
         )
     file_name = file_key.split("/")[2]
     file_data = response["Body"].read()
