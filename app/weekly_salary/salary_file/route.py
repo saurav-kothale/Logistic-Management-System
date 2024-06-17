@@ -23,7 +23,7 @@ raw_bucket = setting.ROW_BUCKET
 processed_bucket = setting.PROCESSED_FILE_BUCKET
 
 
-@weekly_salary.post("/calculate/weekly/salary")
+@weekly_salary.post("/calculate/weekly/salary/{file_key:path}")
 def calculate_weekly_salary(
     background_tasks : BackgroundTasks,
     file_key : str,
