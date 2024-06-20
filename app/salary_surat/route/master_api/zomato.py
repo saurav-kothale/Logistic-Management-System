@@ -39,8 +39,3 @@ master_router = APIRouter()
 #         raise HTTPException(status_code=400, detail="Invalid structure_name or structure_data mismatch")
 
 #     return result
-
-
-
-
-    

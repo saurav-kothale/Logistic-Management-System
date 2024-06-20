@@ -26,6 +26,7 @@ from app.inventory_out.route import inventory_out_router
 from app.Inventory_in.product_category.route import product_cateogry_router
 from app.weekly_salary.raw_file.route import weekly_raw
 from app.weekly_salary.salary_file.route import weekly_salary
+from app.sales.route import sales_router
 
 app = FastAPI()
 
@@ -58,6 +59,7 @@ app.include_router(product_cateogry_router, tags=["Product Category"])
 app.include_router(inventory_out_router, tags=["Inventory Out Router"])
 app.include_router(weekly_raw, tags=["Weekly Raw"])
 app.include_router(weekly_salary, tags=["Weekly Salary"])
+app.include_router(sales_router, tags=["Sales"])
 
 
 

@@ -111,6 +111,7 @@ class GST(str, Enum):
 class Unit(str, Enum):
     NOS = "NOS"
     PACKET = "PACKET"
+    SET = "SET"
 
 
 class ProductSchema(BaseModel):

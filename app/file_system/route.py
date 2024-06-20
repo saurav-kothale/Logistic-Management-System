@@ -106,7 +106,7 @@ async def create_upload_file(
      
     city : str,
     db : Session = Depends(get_db),
-    file: UploadFile = None,
+    file: UploadFile = None, 
     current_user : str = Depends(get_current_user)
     
 ):  

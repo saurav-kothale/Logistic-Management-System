@@ -16,7 +16,8 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from database.database import get_db
 from app.weekly_salary.salary_file.model import WeeklySalaryData
-
+from fastapi.responses import StreamingResponse
+import io
 
 weekly_salary = APIRouter()
 raw_bucket = setting.ROW_BUCKET
@@ -277,3 +278,37 @@ def get_date(
             status_code=500,
             detail=str(e)
         )
+    
+@weekly_salary.get("/weekly/salaryfile/download/{file_key:path}")
+def download_salaryfile(
+    file_key: str = Path(..., description="File Key"),
+    db : Session = Depends(get_db)
+):
+    file_name = file_key.split("/")[2]
+
+    db_file = db.query(SalaryFile).filter(SalaryFile.filekey == file_key, SalaryFile.weekly == True).first()
+
+    if not db_file:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found to download"
+        )
+    
+    try:
+
+        response = s3_client.get_object(Bucket=raw_bucket, Key=file_key)
+
+        file_data = response["Body"].read()
+
+        return StreamingResponse(
+            io.BytesIO(file_data),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename={file_name}"},
+        )
+
+    except Exception as e:
+        # Log the error for debugging purposes
+        print(f"Unexpected error: {e}")
+
+        # Return a custom HTTPException response with 500 status and detail message
+        raise HTTPException(status_code=500, detail="Internal Server Error")
