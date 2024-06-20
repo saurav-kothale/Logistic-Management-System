@@ -296,7 +296,7 @@ def download_salaryfile(
     
     try:
 
-        response = s3_client.get_object(Bucket=raw_bucket, Key=file_key)
+        response = s3_client.get_object(Bucket=processed_bucket, Key=file_key)
 
         file_data = response["Body"].read()
 
