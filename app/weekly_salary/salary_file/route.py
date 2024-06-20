@@ -187,7 +187,7 @@ def delete_salary_file(
         )
     
     try :
-        s3_client.delete_object(Bucket=raw_bucket, Key=file_key)
+        s3_client.delete_object(Bucket=processed_bucket, Key=file_key)
 
     except Exception as e:
 
