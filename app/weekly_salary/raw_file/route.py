@@ -40,11 +40,17 @@ async def upload_raw_file(
         file_data = BytesIO(contents)
         # Validate the headers in the file
         validate_header(file_data)
+        
     except Exception as e:
-        return {
-            "status": status.HTTP_400_BAD_REQUEST,
-            "detail": str(e)
-        }
+
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=f"Invalid Header : {e}"
+        )
+        # return {
+        #     "status": status.HTTP_400_BAD_REQUEST,
+        #     "detail": str(e)
+        # }
 
     filekey = f"weekly_file/{uuid.uuid4()}/{file.filename}"
 
