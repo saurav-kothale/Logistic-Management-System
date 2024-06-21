@@ -20,6 +20,7 @@ from app.inventory_out.model import ProductOutDb
 from app.Inventory_in.product_category.model import ProductCategoryDB
 from app.weekly_salary.raw_file.model import WeeklyRawData
 from app.weekly_salary.salary_file.model import WeeklySalaryData
+from app.sales.model import SalesModel
 from database.database import Base
 import os
 from decouple import config
