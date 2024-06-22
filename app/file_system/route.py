@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 import pandas as pd
 from app import setting
 from io import BytesIO
-from app.file_system.view import insert_records, delete_record
+from app.file_system.view import insert_records, delete_record, validate_header,validate_client, validate_city, validate_worktype
 
 
 file_router = APIRouter()
@@ -143,13 +143,56 @@ async def create_upload_file(
                 detail= "please enter valid ahmedabad file name"
             )
     
+    contents = await file.read()
+
+    try:
+        file_data = BytesIO(contents)
+        validate_header(file_data)
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail=f"Invalid Header : {e}"
+        )
+    
+    try : 
+
+        validate_city(BytesIO(contents))
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail = f"{e}"
+        )
+    
+    try : 
+
+        validate_client(BytesIO(contents))
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail = f"{e}"
+        )
+    
+    try : 
+
+        validate_worktype(BytesIO(contents))
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail = f"{e}"
+        )
+    
     try:
         # Generate a unique file key using UUID and the original filename
         file_id = uuid.uuid4()
         file_key = f"uploads/{file_id}/{file.filename}"
 
         # Upload the file to S3
-        s3_client.upload_fileobj(file.file, row_bucket, file_key)
+        s3_client.upload_fileobj(BytesIO(contents), row_bucket, file_key)
 
         new_file = FileInfo(
             filekey=file_key,

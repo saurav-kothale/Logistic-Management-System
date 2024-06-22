@@ -4,6 +4,7 @@ from app.sales.model import SalesModel
 from sqlalchemy.orm import Session
 from database.database import get_db
 import uuid
+from app.sales.view import kilometer_run, vehicle_repair
 
 sales_router = APIRouter()
 
@@ -11,8 +12,21 @@ sales_router = APIRouter()
 def create_sales(
     schema : SalesSchema,
     db : Session = Depends(get_db)
-
+    
 ):
+    battery_run_count = (schema.shift_1 * 1) + (schema.shift_2 * 2) + (schema.shift_3 * 3) + (schema.shift_4 * 4)
+    bike_run_count = schema.shift_1 + schema.shift_2 + schema.shift_3 + schema.shift_4
+    battery_kilometer_run = kilometer_run(schema.client, battery_run_count)
+    bike_kilometer_run = kilometer_run(schema.client, bike_run_count)
+    co2_emision = battery_kilometer_run * 0.137
+    total_riders = schema.partime_rider + schema.fulltime_rider
+    total_orders = schema.partime_order + schema.fulltime_order
+    average_rider_count = schema.vehicle_deploy
+    total_vehicle = schema.opening_vehicles + schema.vehicles_added - schema.vehicles_remove
+    active_vehicle = schema.vehicle_deploy,
+    vehicle_under_repair = vehicle_repair(schema, total_vehicle, schema.vehicle_deploy)
+
+
     db_sales = SalesModel(
         id = str(uuid.uuid4()),
         year = schema.year,
@@ -40,8 +54,17 @@ def create_sales(
         vehicles_remove = schema.vehicles_remove,
         active_vehicles = schema.active_vehicle,
         vehicle_deploy = schema.vehicle_deploy,
-        vehicle_under_repair = schema.vehicle_under_repair
-
+        battery_run_count = battery_run_count,
+        bike_run_count = bike_run_count,
+        battery_kilometer_run = battery_kilometer_run,
+        bike_kilometer_run = bike_kilometer_run,
+        co2_emision = co2_emision,
+        total_riders = total_riders,
+        total_orders = total_orders,
+        average_rider_count = average_rider_count,
+        total_vehicle = total_vehicle,
+        active_vehicle = active_vehicle,
+        vehicle_under_repair = vehicle_under_repair
     )
 
     db.add(db_sales)
@@ -109,6 +132,17 @@ def update_sale(
             status_code=status.HTTP_404_NOT_FOUND,
             detail= "record not found to update"
         )
+    battery_run_count = (schema.shift_1 * 1) + (schema.shift_2 * 2) + (schema.shift_3 * 3) + (schema.shift_4 * 4)
+    bike_run_count = schema.shift_1 + schema.shift_2 + schema.shift_3 + schema.shift_4
+    battery_kilometer_run = kilometer_run(schema.client, battery_run_count)
+    bike_kilometer_run = kilometer_run(schema.client, bike_run_count)
+    co2_emision = battery_kilometer_run * 0.137
+    total_riders = schema.partime_rider + schema.fulltime_rider
+    total_orders = schema.partime_order + schema.fulltime_order
+    average_rider_count = schema.vehicle_deploy
+    total_vehicle = schema.opening_vehicles + schema.vehicles_added - schema.vehicles_remove
+    active_vehicle = schema.vehicle_deploy,
+    vehicle_under_repair = vehicle_repair(schema, total_vehicle, schema.vehicle_deploy)
     
     db_sales.year = schema.year
     db_sales.client = schema.client
@@ -133,10 +167,19 @@ def update_sale(
     db_sales.opening_vehicles = schema.opening_vehicles
     db_sales.vehicles_added = schema.vehicles_added
     db_sales.vehicles_remove = schema.vehicles_remove
-    db_sales.active_vehicles = schema.active_vehicle
     db_sales.vehicle_deploy = schema.vehicle_deploy
-    db_sales.vehicle_under_repair = schema.vehicle_under_repair
-    
+    db_sales.battery_run_count = battery_run_count
+    db_sales.bike_run_count = bike_run_count
+    db_sales.battery_kilometer_run = battery_kilometer_run
+    db_sales.bike_kilometer_run = bike_kilometer_run
+    db_sales.co2_emission = co2_emision
+    db_sales.total_rider = total_riders
+    db_sales.total_orders = total_orders
+    db_sales.average_rider_count = average_rider_count
+    db_sales.total_vehicle = total_vehicle
+    db_sales.active_vehicle = active_vehicle
+    db_sales.vehicle_under_repair = vehicle_under_repair
+
     db.commit()
 
     return{

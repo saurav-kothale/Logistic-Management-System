@@ -1,5 +1,6 @@
 from io import BytesIO
 import pandas as pd
+from sqlalchemy import true
 from sqlalchemy.orm import Session
 from app.weekly_salary.raw_file.model import WeeklyRawData
 from fastapi import status
@@ -28,6 +29,42 @@ def validate_header(file_data):
         raise ValueError(f"Missing Header in file : {', '.join(missing_header)}")
     
     file_data.seek(0)
+
+def validate_city(file_data):
+    df = pd.read_excel(file_data)
+
+    cities = ["surat", "ahmedabad", "vadodara"]
+    
+    df_cities_count = df["CITY_NAME"].nunique()
+    df_cities = df["CITY_NAME"].unique()
+
+    for count in range(df_cities_count):
+        if df_cities[count] not in cities:
+            raise Exception(f"Invalid field : {df_cities[count]}")
+        
+    return True
+
+def validate_client(file_data):
+    df = pd.read_excel(file_data)
+
+    clients = ["bb 5k", "bb now", "blinkit", "e com", "flipkart", "zomato", "swiggy", "bluedart biker", "bluedart van", "uptown fresh"]
+    
+    df_client_count = df["CLIENT_NAME"].nunique()
+    df_client = df["CLIENT_NAME"].unique()
+
+    for count in range(df_client_count):
+        if df_client[count] not in clients:
+            raise Exception(f"Invalid field : {df_client[count]}")
+        
+    return True
+
+
+            
+
+
+
+
+
 
 
 

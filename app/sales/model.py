@@ -1,3 +1,4 @@
+from re import T
 from numpy import average
 from database.database import Base
 from sqlalchemy import Column, Integer, String
@@ -28,7 +29,16 @@ class SalesModel(Base):
     opening_vehicles = Column(Integer)
     vehicles_added = Column(Integer)
     vehicles_remove = Column(Integer)
-    active_vehicles = Column(Integer)
     vehicle_deploy = Column(Integer)
+    battery_run_count = Column(Integer)
+    bike_run_count = Column(Integer)
+    battery_kilometer_run = Column(Integer)
+    bike_kilometer_run = Column(Integer)
+    co2_emission = Column(Integer)
+    total_rider = Column(Integer)
+    total_orders = Column(Integer)
+    average_rider_count = Column(Integer)
+    total_vehicle = Column(Integer)
+    active_vehicle = Column(Integer)
     vehicle_under_repair = Column(Integer)
 

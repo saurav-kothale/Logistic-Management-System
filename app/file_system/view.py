@@ -65,3 +65,70 @@ async def delete_record(db, file_name):
         "message" : "record deleted successfully"
     }
 
+
+def validate_header(file_data):
+
+    df = pd.read_excel(file_data)
+
+    expected_header = ["CITY_NAME","CLIENT_NAME","DATE",
+          "ADDAR_NUMBER","DRIVER_ID","DRIVER_NAME",
+          "WORK_TYPE","LOG_IN_HR","PICKUP_DOCUMENT_ORDERS",
+          "DONE_DOCUMENT_ORDERS","PICKUP_PARCEL_ORDERS","DONE_PARCEL_ORDERS",
+          "PICKUP_BIKER_ORDERS","DONE_BIKER_ORDERS","PICKUP_MICRO_ORDERS",
+          "DONE_MICRO_ORDERS","CUSTOMER_TIP","RAIN_ORDER",	
+          "IGCC_AMOUNT","BAD_ORDER","REJECTION",
+          "ATTENDANCE","CASH_COLLECTION","CASH_DEPOSIT"]
+
+    missing_header = [header for header in expected_header if header not in df.columns]
+
+    if missing_header:
+        raise ValueError(f"Missing Header in file : {', '.join(missing_header)}")
+    
+    file_data.seek(0)
+
+
+def validate_city(file_data):
+    df = pd.read_excel(file_data)
+
+    cities = ["surat", "ahmedabad", "vadodara"]
+    
+    df_cities_count = df["CITY_NAME"].nunique()
+    df_cities = df["CITY_NAME"].unique()
+
+    for count in range(df_cities_count):
+        if df_cities[count] not in cities:
+            raise Exception(f"Invalid field : {df_cities[count]}")
+        
+    return True
+
+
+def validate_client(file_data):
+    df = pd.read_excel(file_data)
+
+    clients = ["bb 5k", "bb now", "blinkit", "e com", "flipkart", "zomato", "swiggy", "bluedart biker", "bluedart van", "uptown fresh"]
+    
+    df_client_count = df["CLIENT_NAME"].nunique()
+    df_client = df["CLIENT_NAME"].unique()
+
+    for count in range(df_client_count):
+        if df_client[count] not in clients:
+            raise Exception(f"Invalid field : {df_client[count]}")
+        
+    return True
+
+
+def validate_worktype(filedata):
+    df = pd.read_excel(filedata)
+
+    worktype = ["full time", "part time", "rent free"]
+
+    df_worktype_count = df["WORK_TYPE"].nunique()
+    df_worktype = df["WORK_TYPE"].unique()
+
+    for count in range(df_worktype_count):
+        if df_worktype[count] not in worktype:
+            raise Exception(f"Invalid field : {df_worktype[count]}")
+        
+    return True
+
+

@@ -12,7 +12,7 @@ import uuid
 from app.setting import ROW_BUCKET
 from app.file_system.model import FileInfo
 from datetime import datetime
-from app.weekly_salary.raw_file.view import validate_header, insert_raw_records, delete_record
+from app.weekly_salary.raw_file.view import validate_header, insert_raw_records, delete_record, validate_city, validate_client
 import pandas as pd
 from fastapi.responses import StreamingResponse
 import io
@@ -51,6 +51,27 @@ async def upload_raw_file(
         #     "status": status.HTTP_400_BAD_REQUEST,
         #     "detail": str(e)
         # }
+    
+    try : 
+
+        validate_city(BytesIO(contents))
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail = f"{e}"
+        )
+    
+    try : 
+
+        validate_client(BytesIO(contents))
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail = f"{e}"
+        )
+        
 
     filekey = f"weekly_file/{uuid.uuid4()}/{file.filename}"
 
