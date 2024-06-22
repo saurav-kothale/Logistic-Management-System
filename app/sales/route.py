@@ -23,6 +23,10 @@ def create_sales(
         fulltime_order = schema.fulltime_order,
         partime_rider = schema.partime_rider,
         partime_order = schema.partime_order,
+        average_rider = schema.average_rider,
+        carry_forward = schema.carry_forward,
+        new_join_rider = schema.new_join_rider,
+        left_rider = schema.left_rider,
         shift_1 = schema.shift_1,
         shift_2 = schema.shift_2,
         shift_3 = schema.shift_3,
@@ -114,6 +118,10 @@ def update_sale(
     db_sales.fulltime_order = schema.fulltime_order
     db_sales.partime_rider = schema.partime_rider
     db_sales.partime_order = schema.partime_order
+    db_sales.average_rider = schema.average_rider
+    db_sales.carry_forward = schema.carry_forward
+    db_sales.new_join_rider = schema.new_join_rider
+    db_sales.left_rider = schema.left_rider
     db_sales.shift_1 = schema.shift_1
     db_sales.shift_2 = schema.shift_2
     db_sales.shift_3 = schema.shift_3

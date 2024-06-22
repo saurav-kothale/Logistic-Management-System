@@ -9,6 +9,10 @@ class SalesSchema(BaseModel):
     fulltime_order : int
     partime_rider : int
     partime_order : int
+    average_rider : int
+    carry_forward : int
+    new_join_rider : int
+    left_rider : int
     shift_1 : int
     shift_2 : int
     shift_3 : int

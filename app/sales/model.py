@@ -1,3 +1,4 @@
+from numpy import average
 from database.database import Base
 from sqlalchemy import Column, Integer, String
 
@@ -12,6 +13,10 @@ class SalesModel(Base):
     fulltime_order = Column(Integer)
     partime_rider = Column(Integer)
     partime_order = Column(Integer)
+    average_rider = Column(Integer)
+    carry_forward = Column(Integer)
+    new_join_rider = Column(Integer)
+    left_rider = Column(Integer)
     shift_1 = Column(Integer)
     shift_2 = Column(Integer)
     shift_3 = Column(Integer)

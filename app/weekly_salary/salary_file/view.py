@@ -7,32 +7,64 @@ def calculate_payment(df):
         city_name = row['CITY_NAME']
         client_name = row['CLIENT_NAME']
         done_parcel_orders = row['DONE_PARCEL_ORDERS']
+        done_document_orders = row["DONE_DOCUMENT_ORDERS"]
         attendance = row['ATTENDANCE']
+        payment_sent_online = row['PAYMENT_SENT_ONLINE']
+        pocket_withdrawal = row['POCKET_WITHDRAWAL']
+        other_panalty = row['OTHER_PANALTY']
+        igcc_amount = row['IGCC_AMOUNT']
+        rejection = row['REJECTION']
+        bad_order = row['BAD_ORDER']
+        amount = 0
         
         if city_name == "surat":
-            if client_name in ["zomato", "swiggy", "e com"]:
-                return done_parcel_orders * 25
+            if client_name in ["zomato", "swiggy"]:
+                amount = done_parcel_orders * 28
+            elif client_name == "e com":
+                amount = done_parcel_orders * 13
             elif client_name == "bb now":
-                return done_parcel_orders * 30
-            elif client_name == "bb 5k":
-                return done_parcel_orders * 14
-            elif client_name == "bluedart biker" or client_name == "flipkart":
-                return done_parcel_orders * 13
-        elif city_name == "ahmedabad":
-            if client_name in ["zomato", "blinkit", "e com"]:
-                return done_parcel_orders * 25
-            elif client_name == "bb now":
-                return done_parcel_orders * 30
-            elif client_name == "bb 5k":
-                return done_parcel_orders * 14
-            elif client_name == "bluedart biker" or client_name == "flipkart":
-                return done_parcel_orders * 13
+                amount = done_parcel_orders * 28
+            elif client_name == "bluedart biker":
+                amount = done_parcel_orders * 10
+            elif client_name == "bluedart biker":
+                amount = done_document_orders * 5
+            elif client_name == "flipkart":
+                amount = done_parcel_orders * 12
             elif client_name == "bluedart van":
-                return attendance * 400
-        return 0
+                amount = attendance * 450
+            elif client_name == "uptown fresh":
+                amount = attendance * 400
+
+
+                
+        elif city_name == "ahmedabad":
+            if client_name == "zomato":
+                amount = done_parcel_orders * 28
+            elif client_name == "e com":
+                amount = done_parcel_orders * 12
+            elif client_name == "bb now":
+                amount = done_parcel_orders * 28
+            elif client_name == "bb 5k":
+                amount = done_parcel_orders * 24
+            elif client_name == "blinkit":
+                amount = done_parcel_orders * 23
+            elif client_name == "flipkart":
+                amount = done_parcel_orders * 11
+            
+            
+        elif city_name == "vadodara":
+
+            if client_name == "bb now":
+                amount = done_parcel_orders * 28
+
+
+
+        if client_name in ["zomato", "swiggy"]:
+            panalty = payment_sent_online + pocket_withdrawal + other_panalty + igcc_amount + (rejection*20) + (bad_order*20) + 100
+            amount = amount - panalty    
+        return amount
     
     df["FINAL_AMOUNT"] = df.apply(calculate_row, axis=1)
-    df["FINAL_AMOUNT"] = df["FINAL_AMOUNT"] - 100
     
     return df
 
