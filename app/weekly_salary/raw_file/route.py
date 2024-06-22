@@ -12,7 +12,7 @@ import uuid
 from app.setting import ROW_BUCKET
 from app.file_system.model import FileInfo
 from datetime import datetime
-from app.weekly_salary.raw_file.view import validate_header, insert_raw_records, delete_record, validate_city, validate_client
+from app.weekly_salary.raw_file.view import validate_header, insert_raw_records, delete_record, validate_city, validate_client, validate_week
 import pandas as pd
 from fastapi.responses import StreamingResponse
 import io
@@ -65,6 +65,16 @@ async def upload_raw_file(
     try : 
 
         validate_client(BytesIO(contents))
+    
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail = f"{e}"
+        )
+    
+    try : 
+
+        validate_week(BytesIO(contents))
     
     except Exception as e:
         raise HTTPException(

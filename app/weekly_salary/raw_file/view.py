@@ -59,6 +59,21 @@ def validate_client(file_data):
     return True
 
 
+def validate_week(file_data):
+    df = pd.read_excel(file_data)
+
+    weeks = ["weekone", "weektwo", "weekthree", "weekfour", "weekfive"]
+
+    df_weeks_count = df["WEEK_NAME"].nunique()
+    df_weeks = df["WEEK_NAME"].unique()
+
+    for count in range(df_weeks_count):
+        if df_weeks[count] not in weeks:
+            raise Exception(f"Invalid field : {df_weeks[count]}")
+        
+    return True
+
+
             
 
 
