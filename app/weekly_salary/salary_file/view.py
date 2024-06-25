@@ -6,6 +6,7 @@ def calculate_payment(df):
     def calculate_row(row):
         city_name = row['CITY_NAME']
         client_name = row['CLIENT_NAME']
+        done_biker_orders = row["DONE_BIKER_ORDERS"]
         done_parcel_orders = row['DONE_PARCEL_ORDERS']
         done_document_orders = row["DONE_DOCUMENT_ORDERS"]
         attendance = row['ATTENDANCE']
@@ -19,17 +20,17 @@ def calculate_payment(df):
         
         if city_name == "surat":
             if client_name in ["zomato", "swiggy"]:
-                amount = done_parcel_orders * 28
+                amount = done_parcel_orders * 25
             elif client_name == "e com":
-                amount = done_parcel_orders * 13
+                amount = done_parcel_orders * 12
             elif client_name == "bb now":
-                amount = done_parcel_orders * 28
+                amount = done_parcel_orders * 25
             elif client_name == "bluedart biker":
                 amount = done_parcel_orders * 10
             elif client_name == "bluedart biker":
                 amount = done_document_orders * 5
             elif client_name == "flipkart":
-                amount = done_parcel_orders * 12
+                amount = done_parcel_orders * 10
             elif client_name == "bluedart van":
                 amount = attendance * 450
             elif client_name == "uptown fresh":
@@ -39,28 +40,28 @@ def calculate_payment(df):
                 
         elif city_name == "ahmedabad":
             if client_name == "zomato":
-                amount = done_parcel_orders * 28
+                amount = done_parcel_orders * 25
             elif client_name == "e com":
-                amount = done_parcel_orders * 12
-            elif client_name == "bb now":
-                amount = done_parcel_orders * 28
-            elif client_name == "bb 5k":
-                amount = done_parcel_orders * 24
-            elif client_name == "blinkit":
-                amount = done_parcel_orders * 23
-            elif client_name == "flipkart":
                 amount = done_parcel_orders * 11
+            elif client_name == "bb now":
+                amount = done_parcel_orders * 25
+            elif client_name == "bb 5k":
+                amount = done_biker_orders * 25
+            elif client_name == "blinkit":
+                amount = done_parcel_orders * 20
+            elif client_name == "flipkart":
+                amount = done_parcel_orders * 10
             
             
         elif city_name == "vadodara":
 
             if client_name == "bb now":
-                amount = done_parcel_orders * 28
+                amount = done_parcel_orders * 25
 
 
 
         if client_name in ["zomato", "swiggy"]:
-            panalty = payment_sent_online + pocket_withdrawal + other_panalty + igcc_amount + (rejection*20) + (bad_order*20) + 100
+            panalty = payment_sent_online + pocket_withdrawal + other_panalty + igcc_amount + (rejection*30) + (bad_order*50) + 100
             amount = amount - panalty    
         return amount
     
@@ -80,14 +81,15 @@ async def insert_salary_records(df, filename, file_key, db):
             DATE=row["DATE"],
             JOINING_DATE=row["JOINING_DATE"],
             COMPANY=row["COMPANY"],
-            SALARY_DATE=row["SALARY_DATE"],
+            SALARY_DAY=str(row["SALARY_DAY"]),
             STATUS = row["STATUS"],
+            EXIT_DATE = str(row["EXIT_DATE"]),
             WEEK_NAME = row["WEEK_NAME"],
             PHONE_NUMBER = row["PHONE_NUMBER"],
             AADHAR_NUMBER=row["AADHAR_NUMBER"],
             DRIVER_ID=str(row["DRIVER_ID"]),
             DRIVER_NAME=row["DRIVER_NAME"],
-            WORK_TYPE=row["WORK_TYPE"],
+            DESIGNATION_NAME=row["DESIGNATION_NAME"],
             # LOG_IN_HR=row["LOG_IN_HR"],
             # PICKUP_DOCUMENT_ORDERS=row["PICKUP_DOCUMENT_ORDERS"],
             DONE_PARCEL_ORDERS=row["DONE_PARCEL_ORDERS"],
@@ -146,7 +148,7 @@ def create_pivot_table(df):
     table = pd.pivot_table(
             data= df,
             index=[
-                "DRIVER_ID"
+                "PHONE_NUMBER"
                 # "CITY_NAME", "DATE", "JOINING_DATE", "COMPANY",
                 # "SALARY_DATE", "STATUS", "WEEK_NAME",
                 # "PHONE_NUMBER", "AADHAR_NUMBER", "WORK_TYPE",
@@ -174,12 +176,12 @@ def create_pivot_table(df):
     non_aggregated_fields = df[[
         "DRIVER_ID", "DRIVER_NAME", "CLIENT_NAME",
         "CITY_NAME", "DATE", "JOINING_DATE", "COMPANY",
-        "SALARY_DATE", "STATUS", "WEEK_NAME",
-        "PHONE_NUMBER", "AADHAR_NUMBER", "WORK_TYPE"
-    ]].drop_duplicates(subset=["DRIVER_ID"])
+        "SALARY_DAY", "STATUS", "WEEK_NAME",
+        "PHONE_NUMBER", "AADHAR_NUMBER", "WORK_TYPE","EXIT_DATE", "DESIGNATION_NAME"
+    ]].drop_duplicates(subset=["PHONE_NUMBER"])
 
     # Merge the pivot table with non-aggregated fields
-    result = pd.merge(table, non_aggregated_fields, on="DRIVER_ID", how="left")
+    result = pd.merge(table, non_aggregated_fields, on="PHONE_NUMBER", how="left")
 
     return result
 

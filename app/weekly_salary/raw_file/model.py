@@ -11,14 +11,15 @@ class WeeklyRawData(Base):
     DATE = Column(String)
     JOINING_DATE = Column(Date)
     COMPANY = Column(String) 
-    SALARY_DATE = Column(Date)
-    SATAUS = Column(String)
+    SALARY_DAY = Column(String)
+    STATUS = Column(String)
+    EXIT_DATE = Column(String, nullable= True) ## new column add    
     WEEK_NAME = Column(String)
-    PHONE_NUMBER = Column(String)
-    AADHAR_NUMBER = Column(String(12))
+    PHONE_NUMBER = Column(String) ## Add the 10 for validation
+    AADHAR_NUMBER = Column(String)
     DRIVER_ID = Column(String)
     DRIVER_NAME = Column(String)
-    WORK_TYPE = Column(String)
+    DESIGNATION_NAME = Column(String)   ## replace with the week_type
     DONE_PARCEL_ORDERS = Column(Integer)
     DONE_DOCUMENT_ORDERS = Column(Integer)
     DONE_BIKER_ORDERS = Column(Integer)

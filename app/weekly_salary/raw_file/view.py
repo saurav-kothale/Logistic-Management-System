@@ -3,7 +3,7 @@ import pandas as pd
 from sqlalchemy import true
 from sqlalchemy.orm import Session
 from app.weekly_salary.raw_file.model import WeeklyRawData
-from fastapi import status
+from fastapi import status, HTTPException
 
 from sqlalchemy.exc import IntegrityError
     
@@ -13,14 +13,14 @@ def validate_header(file_data):
 
     expected_header = [
     "CITY_NAME" ,"CLIENT_NAME","DATE",
-    "JOINING_DATE", "COMPANY", "SALARY_DATE",
-    "STATUS", "WEEK_NAME", "PHONE_NUMBER",
+    "JOINING_DATE","COMPANY", "DESIGNATION_NAME",
+    "STATUS", "WEEK_NAME", "PHONE_NUMBER","SALARY_DAY",
     "AADHAR_NUMBER", "DRIVER_ID", "DRIVER_NAME",
-    "WORK_TYPE", "DONE_PARCEL_ORDERS", "DONE_DOCUMENT_ORDERS",
+    "DONE_PARCEL_ORDERS", "DONE_DOCUMENT_ORDERS",
     "DONE_BIKER_ORDERS", "DONE_MICRO_ORDERS", "RAIN_ORDER",
     "IGCC_AMOUNT", "BAD_ORDER", "REJECTION",
     "ATTENDANCE","OTHER_PANALTY", "CASH_COLLECTED", 
-    "CASH_DEPOSITED", "PAYMENT_SENT_ONLINE", "POCKET_WITHDRAWAL"
+    "CASH_DEPOSITED", "PAYMENT_SENT_ONLINE", "POCKET_WITHDRAWAL","EXIT_DATE"
     ]
 
     missing_header = [header for header in expected_header if header not in df.columns]
@@ -73,13 +73,50 @@ def validate_week(file_data):
         
     return True
 
+# Status validation 
 
-            
+# def validate_week(file_data):
+#     df = pd.read_excel(file_data)
+
+#     status = ["Active", "Inactive"]
+
+#     df_status_count = df["STATUS"].nunique()
+#     df_status = df["STATUS"].unique()
+
+#     for count in range(df_status_count):
+#         if df_status[count] not in status:
+#             raise Exception(f"Invalid field : {df_status[count]}")
+        
+#     return True
 
 
+def validate_phone_and_adhar(file_data):
+    df = pd.read_excel(file_data)
+    
+    # Validate 'phonenumber' column
+    invalid_phones = df[~df['PHONE_NUMBER'].astype(str).str.match(r'^\d{10}$')]
+    if not invalid_phones.empty:
+        invalid_phone_rows = invalid_phones.index.tolist()
+    else:
+        invalid_phone_rows = []
 
+    # Validate 'adhar' column
+    invalid_adhars = df[~df['AADHAR_NUMBER'].astype(str).str.match(r'^\d{12}$')]
+    if not invalid_adhars.empty:
+        invalid_adhar_rows = invalid_adhars.index.tolist()
+    else:
+        invalid_adhar_rows = []
 
-
+    errors = []
+    
+    if invalid_phone_rows:
+        errors.append(f"Invalid phone numbers in rows: {invalid_phone_rows}")
+    if invalid_adhar_rows:
+        errors.append(f"Invalid Aadhaar numbers in rows: {invalid_adhar_rows}")
+    if errors:
+        raise HTTPException(status_code=400, detail="; ".join(errors))
+    
+    return {"message": "Validation successful"} 
 
 
 
@@ -93,15 +130,14 @@ async def insert_raw_records(df, filename, file_key, db):
             CLIENT_NAME=row["CLIENT_NAME"],
             DATE=row["DATE"],
             JOINING_DATE=row["JOINING_DATE"],
-            COMPANY=row["COMPANY"],
-            SALARY_DATE=row["SALARY_DATE"],
-            SATAUS = row["STATUS"],
+            COMPANY= row["COMPANY"],
+            SALARY_DAY=row["SALARY_DAY"],
+            STATUS = row["STATUS"],
             WEEK_NAME = row["WEEK_NAME"],
             PHONE_NUMBER = row["PHONE_NUMBER"],
             AADHAR_NUMBER=row["AADHAR_NUMBER"],
             DRIVER_ID=str(row["DRIVER_ID"]),
             DRIVER_NAME=row["DRIVER_NAME"],
-            WORK_TYPE=row["WORK_TYPE"],
             # LOG_IN_HR=row["LOG_IN_HR"],
             # PICKUP_DOCUMENT_ORDERS=row["PICKUP_DOCUMENT_ORDERS"],
             DONE_PARCEL_ORDERS=row["DONE_PARCEL_ORDERS"],
@@ -111,6 +147,7 @@ async def insert_raw_records(df, filename, file_key, db):
             DONE_BIKER_ORDERS=row["DONE_BIKER_ORDERS"],
             # PICKUP_MICRO_ORDERS=row["PICKUP_MICRO_ORDERS"],
             DONE_MICRO_ORDERS=row["DONE_MICRO_ORDERS"],
+            DESIGNATION_NAME = row["DESIGNATION_NAME"],
             RAIN_ORDER=row["RAIN_ORDER"],
             IGCC_AMOUNT=row["IGCC_AMOUNT"],
             BAD_ORDER=row["BAD_ORDER"],
@@ -120,7 +157,8 @@ async def insert_raw_records(df, filename, file_key, db):
             CASH_DEPOSITED=row["CASH_DEPOSITED"],
             PAYMENT_SENT_ONLINE = row["PAYMENT_SENT_ONLINE"],
             POCKET_WITHDRAWAL = row["POCKET_WITHDRAWAL"],
-            OTHER_PANALTY = row["OTHER_PANALTY"]
+            OTHER_PANALTY = row["OTHER_PANALTY"],
+            EXIT_DATE = str(row["EXIT_DATE"])
         )
 
         db.add(record)

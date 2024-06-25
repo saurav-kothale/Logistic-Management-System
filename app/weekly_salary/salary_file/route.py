@@ -244,10 +244,11 @@ def get_salarydata(
     }
 
 
-@weekly_salary.post("/date-by-month")
+@weekly_salary.post("/date-by-month/{week_name}")
 def get_date(
     month : int,
     year : int,
+    week_name : str,
     db : Session = Depends(get_db)
 ):
     try:
@@ -257,7 +258,7 @@ def get_date(
         else:
             end_date = datetime(year, month + 1, 1)
 
-        data = db.query(WeeklySalaryData).filter(
+        data = db.query(WeeklySalaryData).filter(WeeklySalaryData.WEEK_NAME == week_name,
             and_(
             func.to_timestamp(WeeklySalaryData.DATE, 'YYYY-MM-DD HH24:MI:SS') >= start_date,
             func.to_timestamp(WeeklySalaryData.DATE, 'YYYY-MM-DD HH24:MI:SS') < end_date
@@ -270,8 +271,19 @@ def get_date(
                 status_code = status.HTTP_204_NO_CONTENT,
                 detail= "No data found for given month"
             )
+        
+        processed_data = [
+            {key: getattr(item, key) for key in ["DATE", "WEEK_NAME", "STATUS",
+                "COMPANY", "SALARY_DAY", "JOINING_DATE",
+                "CITY_NAME", "CLIENT_NAME", "EXIT_DATE",
+                "AADHAR_NUMBER","PHONE_NUMBER", "DESIGNATION_NAME",
+                "DRIVER_ID", "DRIVER_NAME", "FINAL_AMOUNT"]}
+            for item in data
+        ]
 
-        return data
+        # print([i.AADHAR_NUMBER for i in data])
+            # print(i.AADHAR_NUMBER)
+        return processed_data
 
     except Exception as e:
         raise HTTPException(
