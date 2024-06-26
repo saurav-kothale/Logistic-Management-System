@@ -20,7 +20,8 @@ def validate_header(file_data):
     "DONE_BIKER_ORDERS", "DONE_MICRO_ORDERS", "RAIN_ORDER",
     "IGCC_AMOUNT", "BAD_ORDER", "REJECTION",
     "ATTENDANCE","OTHER_PANALTY", "CASH_COLLECTED", 
-    "CASH_DEPOSITED", "PAYMENT_SENT_ONLINE", "POCKET_WITHDRAWAL","EXIT_DATE"
+    "CASH_DEPOSITED", "PAYMENT_SENT_ONLINE", "POCKET_WITHDRAWAL",
+    "EXIT_DATE"
     ]
 
     missing_header = [header for header in expected_header if header not in df.columns]

@@ -35,7 +35,7 @@ class SalesModel(Base):
     battery_kilometer_run = Column(Integer)
     bike_kilometer_run = Column(Integer)
     co2_emission = Column(Integer)
-    total_rider = Column(Integer)
+    total_riders = Column(Integer)
     total_orders = Column(Integer)
     average_rider_count = Column(Integer)
     total_vehicle = Column(Integer)

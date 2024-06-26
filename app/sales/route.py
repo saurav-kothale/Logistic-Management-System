@@ -52,13 +52,12 @@ def create_sales(
         opening_vehicles = schema.opening_vehicles,
         vehicles_added = schema.vehicles_added,
         vehicles_remove = schema.vehicles_remove,
-        active_vehicles = schema.active_vehicle,
         vehicle_deploy = schema.vehicle_deploy,
         battery_run_count = battery_run_count,
         bike_run_count = bike_run_count,
         battery_kilometer_run = battery_kilometer_run,
         bike_kilometer_run = bike_kilometer_run,
-        co2_emision = co2_emision,
+        co2_emission = co2_emision,
         total_riders = total_riders,
         total_orders = total_orders,
         average_rider_count = average_rider_count,
@@ -74,7 +73,7 @@ def create_sales(
     return {
         "status" : status.HTTP_201_CREATED,
         "message" : "sale created successfully",
-        "sales" : db_sales
+        "sales" : db_sales.id
     }
 
 
@@ -173,7 +172,7 @@ def update_sale(
     db_sales.battery_kilometer_run = battery_kilometer_run
     db_sales.bike_kilometer_run = bike_kilometer_run
     db_sales.co2_emission = co2_emision
-    db_sales.total_rider = total_riders
+    db_sales.total_riders = total_riders
     db_sales.total_orders = total_orders
     db_sales.average_rider_count = average_rider_count
     db_sales.total_vehicle = total_vehicle
@@ -185,7 +184,7 @@ def update_sale(
     return{
         "status" : status.HTTP_200_OK,
         "message" : "Record Updated successfully",
-        "record" : db_sales
+        "record" : db_sales.id
     }
 
 

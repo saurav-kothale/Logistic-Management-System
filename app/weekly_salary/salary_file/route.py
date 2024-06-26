@@ -18,6 +18,7 @@ from database.database import get_db
 from app.weekly_salary.salary_file.model import WeeklySalaryData
 from fastapi.responses import StreamingResponse
 import io
+from app.weekly_salary.salary_file.schema import WeekName
 
 weekly_salary = APIRouter()
 raw_bucket = setting.ROW_BUCKET
@@ -248,7 +249,7 @@ def get_salarydata(
 def get_date(
     month : int,
     year : int,
-    week_name : str,
+    week_name : WeekName,
     db : Session = Depends(get_db)
 ):
     try:
